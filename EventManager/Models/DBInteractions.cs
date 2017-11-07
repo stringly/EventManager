@@ -24,6 +24,7 @@ namespace EventManager.Models
 
         public Boolean IsSelectedDay(int[] selectedDays, DateTime day)
         {
+            //HACK: Day-of-week test method 7-if-block-stack
             if (selectedDays.Contains(1))
             {
                 if (day.DayOfWeek == DayOfWeek.Sunday) { return true; }

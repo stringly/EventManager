@@ -16,10 +16,12 @@ namespace EventManager.Controllers
             return View();
         }
 
+        //TODO: Move code in DB Context into DBInteractions class?
         public JsonResult GetEvents()
         {
             using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())
             {
+                //TODO: Limit the returned list of events to exclude full/past events
                 var events = dc.Events.ToList();
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
