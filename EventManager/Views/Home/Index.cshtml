@@ -157,11 +157,11 @@
                     </div>
                     <div class="form-group">
                         <label>Minimum Staffing</label>
-                        <input type="number" id="minStaff" min="1" max="50" class="form-control" required />
+                        <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label>Maximum Staffing</label>
-                        <input type="number" id="maxStaff" min="1" max="50" class="form-control" required />
+                        <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label>Fund Center:</label>
@@ -248,6 +248,7 @@
                     },
                     selectable: true,
                     select: function (start, end) {
+                        console.log("Select Event Fired")
                         selectedEvent = {
                             eventID: 0,
                             enteredBy: 1,
@@ -255,11 +256,12 @@
                             description: '',
                             start: start,
                             end: end,
-                            minstaff: 0,
-                            maxStaff: 0,
+                            minstaff: 1,
+                            maxStaff: 1,
                             fundCenter: ''
 
                         };
+                        console.log(selectedEvent);
                         openAddEditForm();
                         $('#calendar').fullCalendar('unselect');
                     }
@@ -356,7 +358,7 @@
                 });
                 $('#repeatMenu').hide();
                     
-                if (selectedEvent != null) {
+                if (selectedEvent.eventID != 0) {
                     //User is editing an existing event
                     $('#hdEventID').val(selectedEvent.eventID);
                     $('#hdEnteredBy').val(selectedEvent.enteredBy);
@@ -364,9 +366,15 @@
                     $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
                     $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
                     $('#txtDescription').val(selectedEvent.description);
-                    $('#minStaff').val(selectedEvent.minStaff);
-                    $('#maxStaff').val(selectedEvent.maxStaff);
+                    $('#txtminStaff').val(selectedEvent.minStaff);
+                    $('#txtmaxStaff').val(selectedEvent.maxStaff);
                     $('#txtFundCenter').val(selectedEvent.fundCenter);
+                }
+                else {
+                    $('#txtminStaff').val(1);
+                    $('#txtmaxStaff').val(1);
+                    $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                    $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
                 }
                 $('#myModal').modal('hide');
                 $('#myModalSave').modal();
@@ -388,11 +396,11 @@
                 //    alert('An end date/time is required');
                 //    return;
                 //}
-                //if ($('#minStaff').val().trim() == "") {
+                //if ($('#txtminStaff').val().trim() == "") {
                 //    alert('Minimum staffing is required');
                 //    return;
                 //}
-                //if ($('#maxStaff').val().trim() == "") {
+                //if ($('#txtmaxStaff').val().trim() == "") {
                 //    alert('Maximum staffing is required');
                 //    return;
                 //}
@@ -500,8 +508,8 @@
                         StartTime: $('#txtStart').val(),
                         EndTime: $('#txtEnd').val(),
                         Description: $('#txtDescription').val(),
-                        MinStaff: $('#minStaff').val(),
-                        MaxStaff: $('#maxStaff').val(),
+                        MinStaff: $('#txtminStaff').val(),
+                        MaxStaff: $('#txtmaxStaff').val(),
                         FundCenter: $('#txtFundCenter').val(),
                         EnteredBy: 1,
                         repeatType: $('#cboRepeat').val(),
@@ -521,8 +529,8 @@
                         StartTime: $('#txtStart').val(),
                         EndTime: $('#txtEnd').val(),
                         Description: $('#txtDescription').val(),
-                        MinStaff: $('#minStaff').val(),
-                        MaxStaff: $('#maxStaff').val(),
+                        MinStaff: $('#txtminStaff').val(),
+                        MaxStaff: $('#txtmaxStaff').val(),
                         FundCenter: $('#txtFundCenter').val(),
                         EnteredBy: 1,
                     }

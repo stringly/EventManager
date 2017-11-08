@@ -1,0 +1,194 @@
+﻿@model EventManager.User
+
+@{
+    ViewBag.Title = "User Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>User Information</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4></h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @{
+                List<SelectListItem> rankList = new List<SelectListItem>();
+                rankList.Add(new SelectListItem
+                {
+                    Text = "Police Officer",
+                    Value = "1",
+                    Selected = true
+                });
+                rankList.Add(new SelectListItem
+                {
+                    Text = "Police Officer First Class",
+                    Value = "2"
+
+                });
+                rankList.Add(new SelectListItem
+                {
+                    Text = "Corporal",
+                    Value = "3"
+                });
+                rankList.Add(new SelectListItem
+                {
+                    Text = "Sergeant",
+                    Value = "4"
+                });
+                rankList.Add(new SelectListItem
+                {
+                    Text = "Lieutenant",
+                    Value = "5"
+                });
+            }
+        <div class="form-group">
+            <input type="hidden" id="hdUserID"/>
+            <label class="control-label col-md-2">User Name:</label>
+            <div class="col-md-10">
+                <input readonly type="text" id="hdLDAPName" class="form-control" data-toggle="popover" data-trigger="hover" data-content="You cannot edit this. This is your Windows Logon Name.">
+                <span class="field-validation-valid text-danger" data-valmsg-for="hdLDAPName"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rank, "Rank:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Rank, rankList, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Rank, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, "Last Name:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IDNumber, "ID Number:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IDNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IDNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PayRollID, "Payroll ID:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PayRollID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PayRollID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, "Email:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactNumber, "Contact Phone:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContactNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" id="btnSave" value="Save" class="btn btn-success" />
+                <input type="button" id="btnCancel" value="Cancel" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("Document Ready Function Entered")
+            GetUserInfo();
+            function GetUserInfo() {
+                console.log("GetUserInfoEntered");
+                $.ajax({
+                    type: "GET",
+                    url: "/UserInfo/GetUser",
+                    success: function (data) {
+                        $('#Rank').val(data.Rank);
+                        $('#FirstName').val(data.FirstName);
+                        $('#LastName').val(data.LastName);
+                        $('#IDNumber').val(data.IDNumber);
+                        $('#PayRollID').val(data.PayRollID);
+                        $('#Email').val(data.Email);
+                        $('#ContactNumber').val(data.ContactNumber);
+                        $('#hdUserID').val(data.UserId);
+                        $('#hdLDAPName').val(data.LDAPName);
+                        console.log(data);
+
+                    },
+                    error: function (error) {
+                        //alert('failed');
+                    }
+                })
+            }
+
+            $('#hdLDAPName').popover();
+            $('#btnSave').click(function () {
+                var userData = {
+                    UserId: parseInt($('#hdUserID').val()),
+                    Rank: parseInt($('#Rank').val()),
+                    FirstName: $('#FirstName').val(),
+                    LastName: $('#LastName').val(),
+                    IDNumber: parseInt($('#IDNumber').val()),
+                    PayRollID: $('#PayRollID').val(),
+                    Email: $('#Email').val(),
+                    ContactNumber: $('#ContactNumber').val(),
+                    LDAPName: $('#hdLDAPName').val(),
+                    RegisteredDate: moment().format("MM/DD/YYYY HH:mm")
+                }
+                console.log(userData);
+                SaveUser(userData);
+            })
+
+
+            function SaveUser(userData) {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserInfo/SaveUser",
+                    data: userData,
+                    success: function (data) {
+                        if (data.status) {
+                            alert("User Info Updated");
+                            GetUserInfo();
+                        }
+                        else {
+                            alert("POST Success received, but status is false?");
+                        }
+                    },
+                    error: function () {
+                        alert("POST error returned");
+                    }
+                })
+            }
+        })
+    </script>
+}

@@ -5,7 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="140a1eea713542e6ab9ec5120dba0ff6" Name="Diagram1">
-        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Event" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Registration" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.User" Width="1.5" PointX="0.75" PointY="4.75" />
+        <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_UserID" />
+        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Event" Width="1.5" PointX="5.5" PointY="0.875" />
+        <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_EventID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

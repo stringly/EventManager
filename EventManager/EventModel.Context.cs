@@ -25,6 +25,8 @@ namespace EventManager
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Registration> Registrations { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Event> Events { get; set; }
     }
 }

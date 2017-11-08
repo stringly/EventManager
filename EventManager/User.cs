@@ -12,23 +12,24 @@ namespace EventManager
     using System;
     using System.Collections.Generic;
     
-    public partial class Event
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Event()
+        public User()
         {
             this.Registrations = new HashSet<Registration>();
         }
     
-        public int EventID { get; set; }
-        public string EventName { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public System.DateTime EndTime { get; set; }
-        public string Description { get; set; }
-        public int MaxStaff { get; set; }
-        public int MinStaff { get; set; }
-        public string FundCenter { get; set; }
-        public int EnteredBy { get; set; }
+        public int UserId { get; set; }
+        public int Rank { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int IDNumber { get; set; }
+        public string PayRollID { get; set; }
+        public string Email { get; set; }
+        public string ContactNumber { get; set; }
+        public System.DateTime RegisteredDate { get; set; }
+        public string LDAPName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Registration> Registrations { get; set; }

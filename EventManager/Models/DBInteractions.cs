@@ -11,6 +11,7 @@ namespace EventManager.Models
 {
     public class DBInteractions
     {
+        //Event Interactions
         public IEnumerable<DateTime> Weekdays(DateTime from, DateTime thru)
         {
             for(DateTime day = from.Date; day.Date <= thru.Date; day= day.AddDays(1))
@@ -21,7 +22,6 @@ namespace EventManager.Models
                 }
             }
         }
-
         public Boolean IsSelectedDay(int[] selectedDays, DateTime day)
         {
             //HACK: Day-of-week test method 7-if-block-stack
@@ -55,7 +55,6 @@ namespace EventManager.Models
             }
             return false;
         }
-
         public Boolean EditExistingEvent(Event e)
         {
             Boolean result = false;
@@ -78,7 +77,6 @@ namespace EventManager.Models
             }
             return result;
         }
-
         public Boolean AddNewEvent(Event e)
         {
             Boolean result = false;
@@ -90,7 +88,6 @@ namespace EventManager.Models
             }
             return result;
         }
-
         public Boolean RepeatEvent(Event e, EventRepeater r)
         {
             Debug.WriteLine("Repeat method Entered");
@@ -173,6 +170,56 @@ namespace EventManager.Models
                         Debug.WriteLine("Default switch case");
                         break;
             
+                }
+            }
+            return result;
+        }
+        //User Interactions
+        public Boolean AddNewUser(User u)
+        {
+            bool result = false;
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    _db.Users.Add(u);
+                    _db.SaveChanges();
+                    result = true;
+                }
+                catch(Exception e)
+                {
+                    //TODO: Error Logging
+                    Debug.Write(e.Message);
+                }
+            }
+            return result;
+        }
+        public Boolean EditUser(User u)
+        {
+            bool result = false;
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    var v = _db.Users.Where(a => a.UserId == u.UserId).FirstOrDefault();
+                    if (v != null)
+                    {
+                            v.UserId = u.UserId;
+                            v.Rank = u.Rank;
+                            v.FirstName = u.FirstName;
+                            v.LastName = u.LastName;
+                            v.IDNumber = u.IDNumber;
+                            v.PayRollID = u.PayRollID;
+                            v.Email = u.Email;
+                            v.ContactNumber = u.ContactNumber;
+                            _db.SaveChanges();
+                            result = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    //TODO: Add Error Logging
+                    Debug.WriteLine(e.Message);
                 }
             }
             return result;
