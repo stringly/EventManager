@@ -10,6 +10,8 @@
         <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_UserID" />
         <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Event" Width="1.5" PointX="5.5" PointY="0.875" />
         <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_EventID" />
+        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Role" Width="1.5" PointX="0.75" PointY="1.625" />
+        <AssociationConnector Association="EVENTS_MGR_TESTINGModel.UserRole" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

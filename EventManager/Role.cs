@@ -12,15 +12,18 @@ namespace EventManager
     using System;
     using System.Collections.Generic;
     
-    public partial class Registration
+    public partial class Role
     {
-        public int RegistrationID { get; set; }
-        public int UserID { get; set; }
-        public int EventID { get; set; }
-        public System.DateTime TimeStamp { get; set; }
-        public RegistrationStats Status { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Role()
+        {
+            this.Users = new HashSet<User>();
+        }
     
-        public virtual User User { get; set; }
-        public virtual Event Event { get; set; }
+        public System.Guid RoleId { get; set; }
+        public string Name { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> Users { get; set; }
     }
 }

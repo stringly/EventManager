@@ -1,0 +1,270 @@
+﻿@using Newtonsoft.Json
+
+@model EventManager.ViewModels.EventRegistrationViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<h4></h4>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#333333;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px"><span>Confirm Registration?</span></h3>
+            </div>
+            <div class="modal-body" style="padding-top:10px; padding-left:20px">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancel" class="btn btn-danger btn-lg pull-left" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove-circle"></span> Cancel
+                </button>
+                <button id="btnConfirm" class="btn btn-success btn-lg pull-right" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-ok-circle"></span> Register
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myRegistrationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#333333;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px"><span>Registration Info</span></h3>
+            </div>
+            <div class="modal-body" style="padding-top:10px; padding-left:20px">
+                <p id="myRegistrationModalpDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnOK" class="btn btn-success btn-lg pull-left" data-dismiss="modal" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-ok-circle"></span> Ok
+                </button>
+                <button id="btnCancel" class="btn btn-danger btn-lg pull-right" >
+                    <span class="glyphicon glyphicon-remove-circle"></span> Cancel Registration
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="bootstrap-overrides">
+    <div class="row">
+        <div class="sidebar col-xs-3">
+            <div class="well" style="padding:5px;background-color:#333333; color:#fff" data-spy="affix" >
+                <h4 style="margin-top:5px">Current Registrations:</h4>
+                <div class="well-sm" style="background-color:#fff; color:black; padding:0px; border-style:solid; border-color:black; border-width:1px">
+                    <table class="table">
+                        <tr style="background-color:#808080; color:#fff; border-top:none">
+                            <th>
+                                Event
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                        </tr>
+                        @foreach (var r in Model.ViewUserRegistrations)
+                        {
+                            var date = r.EventStartTime.ToShortDateString();
+                            <tr>
+                                <td style="vertical-align: middle">
+                                    @Html.DisplayFor(modelItem => r.EventName)
+                                </td>
+                                <td style="vertical-align: middle">
+                                    @date
+                                </td>
+                                <td style="text-align:center">
+                                    <button class="btn btn-sm" id="@r.RegistrationID" onclick="RegistrationClick(this.id)">
+                                        @{ 
+                                            switch(r.Status)
+                                            { 
+                                                case RegistrationStats.Pending:
+                                                    <text>
+                                                    <span class="glyphicon glyphicon-share"
+                                                          style ="color:deepskyblue; text-align:center"
+                                                          data-toggle="popover"
+                                                          data-trigger="hover"
+                                                          data-placement="bottom"
+                                                          title="Registration Status"
+                                                          data-content="Registration is Pending approval.">
+                                                    </span>
+                                                    </text>
+                                                    break;
+                                                case RegistrationStats.Confirmed:
+                                                    <text>
+                                                    <span class="glyphicon glyphicon-ok" 
+                                                          style="color:green; text-align:center"
+                                                          data-toggle="popover"
+                                                          data-trigger="hover"
+                                                          data-placement="bottom"
+                                                          title="Registration Status"
+                                                          data-content="Registration is Confirmed.">
+                                                    </span>
+                                                    </text>
+                                                    break;
+                                                case RegistrationStats.Standby:
+                                                    <text>
+                                                    <span class="glyphicon glyphicon-ok" 
+                                                          style="color:green; text-align:center"
+                                                          data-toggle="popover"
+                                                          data-trigger="hover"
+                                                          data-placement="bottom"
+                                                          title="Registration Status"
+                                                          data-content="You are on standby for this event.">
+                                                    </span>
+                                                    </text>
+                                                    break;
+                                            }
+                                        }
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="main col-xs-9">
+            <h4>Available Events:</h4>
+            <table class="table">
+                <tr style="background-color:#333333; color:#fff;">
+                    <th>
+                        Event Name
+                    </th>
+                    <th>
+                        Start Date/Time
+                    </th>
+                    <th>
+                        End Date/Time
+                    </th>
+                    <th style="text-align:center">
+                        Total Hours
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th style="text-align:center">
+                        Staffing
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var group in Model.ViewUserAvailableEvents.GroupBy(date => date.StartTime.ToShortDateString()))
+                {
+                    var d = Convert.ToString(group.Key);
+                    DateTime dt = Convert.ToDateTime(d);
+
+
+                    <tr>
+                        <th colspan="7" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
+                    </tr>
+
+                    foreach (var item in group)
+                    {
+                        var total = (item.EndTime - item.StartTime).TotalHours;
+                        <tr id="row + @item.EventID" rel="popover" >
+                            <td style="vertical-align:middle">
+                                @Html.DisplayFor(modelItem => item.EventName)                               
+                            </td>
+                            <td style="vertical-align:middle">
+                                @Html.DisplayFor(modelItem => item.StartTime)
+                            </td>
+                            <td style="vertical-align:middle">
+                                @Html.DisplayFor(modelItem => item.EndTime)
+                            </td>
+                            <td style="text-align:center; vertical-align:middle">
+                                @total
+                            </td>
+                            <td style="vertical-align:middle">
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td style="text-align:center; vertical-align:middle">
+                                @Html.DisplayFor(modelItem => item.MaxStaff)
+                            </td>
+                            <td>
+                                <button id="@item.EventID" onClick="RegisterClick(this.id)" 
+                                        value="@item.EventID,@item.EventName,@item.StartTime,@item.EndTime,@item.Description" 
+                                        class="btn btn-success">Register
+                                </button>
+                            </td>                                                        
+                        </tr>
+                                       
+                    }
+                }
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts{
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+    <script type="text/javascript">
+        var events = @Html.Raw(JsonConvert.SerializeObject(this.Model.ViewUserAvailableEvents));
+        var registrations = @Html.Raw(JsonConvert.SerializeObject(this.Model.ViewUserRegistrations));
+        @*var registrations = @Html.Raw(JsonConvert.SerializeObject(this.Model.UserRegistrations))*@
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover(); 
+        })
+
+        function RegisterClick(id) {
+            console.log(id);
+            var Event = events.find(item => item.EventID == id);
+            console.log('Event Name is:' + Event.EventName);
+            $('#modalEventTitle').text(Event.EventName);
+            var $description = $('<div/>');
+            $description.append($('<p/>').html('<h5><b>' + Event.EventName + '</b></h5>'));
+            $description.append($('<p/>').html('<b>Starts: </b>' + moment(Event.StartTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Ends: </b>' + moment(Event.EndTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Description: </b>' + Event.Description));
+            $('#myModal #pDetails').empty().html($description);
+            $('#myModal').modal();
+        }
+        function RegistrationClick(id){
+            console.log("You clicked registration number:" +id)
+            var Registration = registrations.find(item => item.RegistrationID == id);
+
+            switch (Registration.Status){
+                case 1:
+                    var Status = "Pending"
+                    break;
+                case 2:
+                    var Status = "Confirmed"
+                    break;
+                case 3:
+                    var Status = "Standby"
+                    break;
+            }
+            $('#modalEventTitle').text(Event.EventName);
+            var $description = $('<div/>');
+            $description.append($('<p/>').html('<h5><b>' + Registration.EventName + '</b></h5>'));
+            $description.append($('<p/>').html('<b>Starts: </b>' + moment(Registration.EventStartTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Ends: </b>' + moment(Registration.EventEndTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Description: </b>' + Registration.EventDescription));
+            $description.append($('<p/>').html('<b>Date Registered: </b>' + moment(Registration.TimeStamp).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Status: </b>' + Status));
+            $('#myRegistrationModalpDetails').empty().html($description);
+            $('#myRegistrationModal').modal();
+        }
+    </script>
+
+
+
+
+
+
+
+    }

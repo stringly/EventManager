@@ -224,5 +224,6 @@ namespace EventManager.Models
             }
             return result;
         }
+
     }
 }

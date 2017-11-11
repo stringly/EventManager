@@ -8,9 +8,12 @@ using EventManager.Models;
 
 namespace EventManager.Controllers
 {
+    //[Authorize(Roles = "Administrator")]
+    //TODO: VIEW ADD NEW EVENT MODAL REMEMBERS DATA
     public class HomeController : Controller
     {
         // GET: Home
+        
         public ActionResult Index()
         {
             return View();

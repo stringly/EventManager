@@ -29,6 +29,21 @@
           <Property Name="TimeStamp" Type="smalldatetime" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserId" />
@@ -68,9 +83,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserRole_Role_Id">
+          <End Role="Role" Type="Self.Role" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_User_Id">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="EVENTS_MGR_TESTINGModelStoreContainer">
           <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Registrations" EntityType="Self.Registrations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_EventID" Association="Self.FK_EventID">
             <End Role="Events" EntitySet="Events" />
@@ -79,6 +124,14 @@
           <AssociationSet Name="FK_UserID" Association="Self.FK_UserID">
             <End Role="Users" EntitySet="Users" />
             <End Role="Registrations" EntitySet="Registrations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_Role_Id" Association="Self.FK_UserRole_Role_Id">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_User_Id" Association="Self.FK_UserRole_User_Id">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -97,6 +150,11 @@
             <End Role="Event" EntitySet="Events" />
             <End Role="Registration" EntitySet="Registrations" />
           </AssociationSet>
+          <EntitySet Name="Roles" EntityType="EVENTS_MGR_TESTINGModel.Role" />
+          <AssociationSet Name="UserRole" Association="EVENTS_MGR_TESTINGModel.UserRole">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Registration">
           <Key>
@@ -106,7 +164,7 @@
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="EventID" Type="Int32" Nullable="false" />
           <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="EVENTS_MGR_TESTINGModel.RegistrationStats" Nullable="false" />
           <NavigationProperty Name="User" Relationship="EVENTS_MGR_TESTINGModel.FK_UserID" FromRole="Registration" ToRole="User" />
           <NavigationProperty Name="Event" Relationship="EVENTS_MGR_TESTINGModel.FK_EventID" FromRole="Registration" ToRole="Event" />
         </EntityType>
@@ -125,6 +183,7 @@
           <Property Name="RegisteredDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Registrations" Relationship="EVENTS_MGR_TESTINGModel.FK_UserID" FromRole="User" ToRole="Registration" />
           <Property Name="LDAPName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Roles" Relationship="EVENTS_MGR_TESTINGModel.UserRole" FromRole="User" ToRole="Role" />
         </EntityType>
         <Association Name="FK_UserID">
           <End Type="EVENTS_MGR_TESTINGModel.User" Role="User" Multiplicity="1" />
@@ -165,6 +224,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="EVENTS_MGR_TESTINGModel.UserRole" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <Association Name="UserRole">
+          <End Type="EVENTS_MGR_TESTINGModel.Role" Role="Role" Multiplicity="*" />
+          <End Type="EVENTS_MGR_TESTINGModel.User" Role="User" Multiplicity="*" />
+        </Association>
+        <EnumType Name="RegistrationStats">
+          <Member Name="Pending" Value="1" />
+          <Member Name="Confirmed" Value="2" />
+          <Member Name="Standby" Value="3" />
+          <Member Name="Declined" Value="4" />
+          <Member Name="Deleted" Value="5" />
+          <Member Name="NoShow" Value="6" />
+        </EnumType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -213,6 +292,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="EVENTS_MGR_TESTINGModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserRole" TypeName="EVENTS_MGR_TESTINGModel.UserRole" StoreEntitySet="UserRole">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="Role">
+              <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

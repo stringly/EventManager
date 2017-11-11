@@ -18,6 +18,7 @@ namespace EventManager
         public User()
         {
             this.Registrations = new HashSet<Registration>();
+            this.Roles = new HashSet<Role>();
         }
     
         public int UserId { get; set; }
@@ -33,5 +34,7 @@ namespace EventManager
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Registration> Registrations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Role> Roles { get; set; }
     }
 }
