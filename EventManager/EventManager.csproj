@@ -208,6 +208,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Resources\Fonts\" />
     <Folder Include="Views\Registration\" />
   </ItemGroup>
   <ItemGroup>

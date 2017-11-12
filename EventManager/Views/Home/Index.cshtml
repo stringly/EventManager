@@ -3,60 +3,83 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-<div id="calendar"></div>
+<h3></h3>
+<div class="wrapper">
+    <nav id="sidebar" data-spy="affix">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header" style="border-bottom:solid; border-top:solid; border-color:#fff; border-width:1px">
+            <h4 >Event Management</h4>
+        </div>
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li>
+                <!-- Link with dropdown items -->
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li><a href="#">Page</a></li>
+                    <li><a href="#">Page</a></li>
+                    <li><a href="#">Page</a></li>
+                </ul>
+            <li><a href="#">Portfolio</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="container col-xs-10" id="calendar"style="background-color:#eeeeee; padding:10px; border:solid; border-width:1px"></div>
+</div>
 
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><span id="eventTitle"></span></h4>
-            </div>
-            <div class="modal-body">
-                <button id="btnDelete" class="btn btn-default btn-sm pull-right">
-                    <span class="glyphicon glyphicon-remove"></span> Remove
-                </button>
-                <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
-                    <span class="glyphicon glyphicon-pencil"></span> Edit
-                </button>
-                <p id="pDetails"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                    <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                        <span class="glyphicon glyphicon-pencil"></span> Edit
+                    </button>
+                    <p id="pDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="myModalSave" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add/Edit Event</h4>
-            </div>
-            <div class="modal-body">
-                <form class="col-md-12 form-horizontal">
-                    <input type="hidden" id="hdEventID" value="0" />
-                    <input type="hidden" id="hdEnteredBy" value="1" />
-                    <div class="form-group">
-                        <label>Event Name</label>
-                        <input type="text" id="txtEventName" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Start Time:</label>
-                        <div class="input-group date" id="dtp1">
-                            <input type="text" id="txtStart" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+    <div id="myModalSave" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add/Edit Event</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="col-md-12 form-horizontal">
+                        <input type="hidden" id="hdEventID" value="0" />
+                        <input type="hidden" id="hdEnteredBy" value="1" />
+                        <div class="form-group">
+                            <label>Event Name</label>
+                            <input type="text" id="txtEventName" class="form-control" />
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label><input type="checkbox" value="" id="chkRepeat"> Repeat</label>
-                    </div>
+                        <div class="form-group">
+                            <label>Start Time:</label>
+                            <div class="input-group date" id="dtp1">
+                                <input type="text" id="txtStart" class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><input type="checkbox" value="" id="chkRepeat"> Repeat</label>
+                        </div>
                         <div class="form-horizonal" id="repeatMenu" style="display: none">
                             <div class="well" style="border: solid">
                                 <div class="form-group">
@@ -105,31 +128,31 @@
                                 </div>
                                 <div id="weekRepeat" class="form-horizontal" style="display: none">
 
-                                        <div class="form-group">
-                                            <label>Repeat for:</label>
-                                            <select id="repeatWeekInterval" title="Repeat every 1 weeks">
-                                                <option value="1" selected="selected">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
-                                                <option value="9">9</option>
-                                                <option value="10">10</option>
-                                            </select>
-                                            <label> weeks</label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkSun" value="1">S</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkMon" value="2">M</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkTue" value="3">T</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkWed" value="4">W</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkThu" value="5">T</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkFri" value="6">F</label>
-                                            <label class="checkbox-inline"><input type="checkbox" id="chkSat" value="7">S</label>
-                                        </div>
+                                    <div class="form-group">
+                                        <label>Repeat for:</label>
+                                        <select id="repeatWeekInterval" title="Repeat every 1 weeks">
+                                            <option value="1" selected="selected">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                        <label> weeks</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkSun" value="1">S</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkMon" value="2">M</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkTue" value="3">T</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkWed" value="4">W</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkThu" value="5">T</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkFri" value="6">F</label>
+                                        <label class="checkbox-inline"><input type="checkbox" id="chkSat" value="7">S</label>
+                                    </div>
 
                                 </div>
                                 <div class="form-group" id="startsOnDate">
@@ -142,428 +165,429 @@
                                 </div>
                             </div>
                         </div>
-                    <div class="form-group">
-                        <label>End Time:</label>
-                        <div class="input-group date" id="dtp2">
-                            <input type="text" id="txtEnd" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+                        <div class="form-group">
+                            <label>End Time:</label>
+                            <div class="input-group date" id="dtp2">
+                                <input type="text" id="txtEnd" class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="txtDescription" rows="3" class="form-control"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Minimum Staffing</label>
-                        <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Maximum Staffing</label>
-                        <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" required />
-                    </div>
-                    <div class="form-group">
-                        <label>Fund Center:</label>
-                        <input type="text" id="txtFundCenter" class="form-control" /> 
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="btnSave" class="btn btn-success">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Minimum Staffing</label>
+                            <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Maximum Staffing</label>
+                            <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Fund Center:</label>
+                            <input type="text" id="txtFundCenter" class="form-control" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css" rel="stylesheet" media="print"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <link href="~/Content/Custom.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 
 
-@section Scripts{
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var events = [];
-            var selectedEvent = null;
-            FetchEventAndRenderCalendar();
-            function FetchEventAndRenderCalendar() {
-                events = [];
-                $.ajax({
-                    type: "GET",
-                    url: "/home/GetEvents",
-                    success: function (data) {
-                        $.each(data, function (i, v) {
-                            events.push({
-                                eventID: v.EventID,
-                                title: v.EventName,
-                                description: v.Description,
-                                start: moment(v.StartTime),
-                                end: v.EndTime != null ? moment(v.EndTime) : null,
-                                maxStaff: v.MaxStaff,
-                                minStaff: v.MinStaff,
-                                fundCenter: v.FundCenter,
-                                enteredBy: v.EnteredBy
-
-                            });
-                        })
-
-                        GenerateCalendar(events);
-                    },
-                    error: function (error) {
-                        alert('failed');
-                    }
-                })
-            }  
-            function GenerateCalendar(events) {
-                $('#calendar').fullCalendar('destroy');
-                $('#calendar').fullCalendar({
-                    contentHeight: 800,
-                    defaultDate: new Date(),
-                    timeFormat: 'h(:mm)a',
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,basicWeek,basicDay,agenda'
-                    },
-                    eventLimit: true,
-                    eventColor: '#378006',
-                    events: events,
-                    eventClick: function (calEvent, jsEvent, view) {
-                        selectedEvent = calEvent;
-                        $('#myModal #eventTitle').text(calEvent.title);
-                        var $description = $('<div/>');
-                        $description.append($('<p/>').html('<b>Starts: </b>' + calEvent.start.format("MMMM DD, YYYY HH:mm a")));
-                        $description.append($('<p/>').html('<b>Ends: </b>' + calEvent.end.format("MMMM DD, YYYY HH:mm a")));
-                        $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
-                        $('#myModal #pDetails').empty().html($description);
-
-                        $('#myModal').modal();
-                    },
-                    selectable: true,
-                    select: function (start, end) {
-                        console.log("Select Event Fired")
-                        selectedEvent = {
-                            eventID: 0,
-                            enteredBy: 1,
-                            title: '',
-                            description: '',
-                            start: start,
-                            end: end,
-                            minstaff: 1,
-                            maxStaff: 1,
-                            fundCenter: ''
-
-                        };
-                        console.log(selectedEvent);
-                        openAddEditForm();
-                        $('#calendar').fullCalendar('unselect');
-                    }
-                })
-            }
-            $('#btnEdit').click(function () {
-                //Open modal dialog for editing an event
-                openAddEditForm();
-            });
-            $('#btnDelete').click(function () {
-                if (selectedEvent != null && confirm('Delete this event?')) {
+    @section Scripts{
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var events = [];
+                var selectedEvent = null;
+                FetchEventAndRenderCalendar();
+                function FetchEventAndRenderCalendar() {
+                    events = [];
                     $.ajax({
-                        type: "POST",
-                        url: "/home/DeleteEvent",
-                        data: { 'eventID': selectedEvent.eventID },
+                        type: "GET",
+                        url: "/home/GetEvents",
                         success: function (data) {
-                            if (data.status) {
-                                //Refresh the calendar
-                                FetchEventAndRenderCalendar();
-                                $('#myModal').modal('hide');
-                            }
+                            $.each(data, function (i, v) {
+                                events.push({
+                                    eventID: v.EventID,
+                                    title: v.EventName,
+                                    description: v.Description,
+                                    start: moment(v.StartTime),
+                                    end: v.EndTime != null ? moment(v.EndTime) : null,
+                                    maxStaff: v.MaxStaff,
+                                    minStaff: v.MinStaff,
+                                    fundCenter: v.FundCenter,
+                                    enteredBy: v.EnteredBy
+
+                                });
+                            })
+
+                            GenerateCalendar(events);
                         },
-                        error: function () {
-                            alert('Could not delete the selected event.');
+                        error: function (error) {
+                            alert('failed');
                         }
                     })
                 }
-            });
-            $('#dtp1, #dtp2').datetimepicker({
-                format: 'MM/DD/YYYY HH:mm',
-                sideBySide: true,
-                showClose: true
+                function GenerateCalendar(events) {
+                    $('#calendar').fullCalendar('destroy');
+                    $('#calendar').fullCalendar({
+                        contentHeight: 800,
+                        defaultDate: new Date(),
+                        timeFormat: 'h(:mm)a',
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,basicWeek,basicDay,agenda'
+                        },
+                        eventLimit: true,
+                        eventColor: '#546e7a',
+                        events: events,
+                        eventClick: function (calEvent, jsEvent, view) {
+                            selectedEvent = calEvent;
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Starts: </b>' + calEvent.start.format("MMMM DD, YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>Ends: </b>' + calEvent.end.format("MMMM DD, YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $('#myModal #pDetails').empty().html($description);
 
-            });
-            $('#chkRepeat').change(function () {
-                if (this.checked) {
-                    $('#repeatMenu').show();
-                }
-                else {
-                    $('#repeatMenu').hide();
-                }
-            })
-            $('#cboRepeat').on('change', function () {
-                switch (this.value) {
-                    case '1':
-                        $('#dayRepeat').show();
-                        $('#startsOnDate').show();
-                        $('#weekdayRepeat').hide();
-                        $('#weekRepeat').hide();
-                        $('#endsOnDate').hide();
-                        break;
-                    case '2':
-                        $('#dayRepeat').hide();
-                        $('#startsOnDate').show();
-                        $('#weekdayRepeat').show();
-                        $('#weekRepeat').hide();
-                        $('#endsOnDate').show();
-                        break;
-                    case '3':
-                        $('#dayRepeat').hide();
-                        $('#startsOnDate').hide();
-                        $('#weekdayRepeat').hide();
-                        $('#weekRepeat').show();
-                        $('#endsOnDate').hide();
-                        break;
-                }
-            })
+                            $('#myModal').modal();
+                        },
+                        selectable: true,
+                        select: function (start, end) {
+                            console.log("Select Event Fired")
+                            selectedEvent = {
+                                eventID: 0,
+                                enteredBy: 1,
+                                title: '',
+                                description: '',
+                                start: start,
+                                end: end,
+                                minstaff: 1,
+                                maxStaff: 1,
+                                fundCenter: ''
 
-            function openAddEditForm() {
-                $('#chkRepeat').attr('checked', false);
-                //$('#repeatMenu').find('input:text').val('');
-                //$('#repeatMenu').find('input:checkbox').attr('checked, false');
-                //$('#repeatMenu').find('input:select').val(1);
-                $('#repeatMenu').find(':input').each(function () {
-                    switch (this.type) {
-                        case 'button':
-                        case 'text':
-                        case 'submit':
-                        case 'password':
-                        case 'file':
-                        case 'email':
-                        case 'date':
-                        case 'number':
-                            $(this).val('');
-                            break;
-                        case 'checkbox':
-                        case 'radio':
-                            this.checked = false;
-                            break;
-                        case 'select':
-                            $(this).val(1);
-                            break;
+                            };
+                            console.log(selectedEvent);
+                            openAddEditForm();
+                            $('#calendar').fullCalendar('unselect');
+                        }
+                    })
+                }
+                $('#btnEdit').click(function () {
+                    //Open modal dialog for editing an event
+                    openAddEditForm();
+                });
+                $('#btnDelete').click(function () {
+                    if (selectedEvent != null && confirm('Delete this event?')) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/home/DeleteEvent",
+                            data: { 'eventID': selectedEvent.eventID },
+                            success: function (data) {
+                                if (data.status) {
+                                    //Refresh the calendar
+                                    FetchEventAndRenderCalendar();
+                                    $('#myModal').modal('hide');
+                                }
+                            },
+                            error: function () {
+                                alert('Could not delete the selected event.');
+                            }
+                        })
                     }
                 });
-                $('#repeatMenu').hide();
-                    
-                if (selectedEvent.eventID != 0) {
-                    //User is editing an existing event
-                    $('#hdEventID').val(selectedEvent.eventID);
-                    $('#hdEnteredBy').val(selectedEvent.enteredBy);
-                    $('#txtEventName').val(selectedEvent.title);
-                    $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
-                    $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
-                    $('#txtDescription').val(selectedEvent.description);
-                    $('#txtminStaff').val(selectedEvent.minStaff);
-                    $('#txtmaxStaff').val(selectedEvent.maxStaff);
-                    $('#txtFundCenter').val(selectedEvent.fundCenter);
-                }
-                else {
-                    $('#txtminStaff').val(1);
-                    $('#txtmaxStaff').val(1);
-                    $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
-                    $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
-                }
-                $('#myModal').modal('hide');
-                $('#myModalSave').modal();
+                $('#dtp1, #dtp2').datetimepicker({
+                    format: 'MM/DD/YYYY HH:mm',
+                    sideBySide: true,
+                    showClose: true
 
-            }
-            $('#btnSave').click(function () {
-                // TODO: Re-Enable and finalize client form validation
-                //Validation
-                ////Blank Checks
-                //if ($('#txtEventName').val().trim() == "") {
-                //    alert('An event name is required');
-                //    return;
-                //}
-                //if ($('#txtStart').val().trim() == "") {
-                //    alert('A start date/time is required');
-                //    return;
-                //}
-                //if ($('#txtEnd').val().trim() == "") {
-                //    alert('An end date/time is required');
-                //    return;
-                //}
-                //if ($('#txtminStaff').val().trim() == "") {
-                //    alert('Minimum staffing is required');
-                //    return;
-                //}
-                //if ($('#txtmaxStaff').val().trim() == "") {
-                //    alert('Maximum staffing is required');
-                //    return;
-                //}
-                //if ($('#txtFundCenter').val().trim() == "") {
-                //    alert('Fund Center is Required');
-                //    return;
-                //}
-                //if ($('#chkRepeat').prop('checked')) {
-                //    switch ($('#cboRepeat').val()) {
-                //        case "1":
-                //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                //                alert('To repeat this event daily, you must provide a start date.');
-                //                return;
-
-                //            }
-                //            break;
-                //        case "2":
-                //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                //                alert('To repeat this event every weekday, you must provide a start date.');
-                //                return;
-
-                //            }
-                //            if ($('#txtRepeatEndDate').val().trim() == "") {
-                //                alert('To repeat this event every weekday, you must provide an end date.');
-                //                return;
-
-                //            }
-                //            break;
-                //        case "3":
-                //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                //                alert('To repeat this event weekly, you must provide a start date.');
-                //                return;
-                //                break;
-                //            }
-                //            if ($('#txtRepeatEndDate').val().trim() == "") {
-                //                alert('To repeat this event weekly, you must provide an end date.');
-                //                return;
-                //            }
-                //            if ($('#chkSun').prop('checked') == false &&
-                //                $('#chkMon').prop('checked') == false &&
-                //                $('#chkTue').prop('checked') == false &&
-                //                $('#chkWed').prop('checked') == false &&
-                //                $('#chkThu').prop('checked') == false &&
-                //                $('#chkFri').prop('checked') == false &&
-                //                $('#chkSat').prop('checked') == false) {
-
-                //                alert("To repeat this event weekly, you must select at least one day of the week");
-                //                return;
-                //            }
-                //    }//end switch $('#cboRepeat').val()       
-                //}
-                //else {
-                //    var startDate = moment($('#txtStart').val(), "MMMM DD, YYYY HH:mm A").toDate();
-                //    var endDate = moment($('#txtEnd').val(), "MMMM DD, YYYY HH:mm A").toDate();
-                //    if (startDate > endDate) {
-                //        alert('Invalid end date/time');
-                //        return;
-                //    }
-                //}
-     
-                
-                
-                
-                
-                //Begin repeat selection data
-                var daysOfWeek = [];
-                var repeatNumber;     
-                if ($('#chkRepeat').is(':checked')) {
-                    switch ($('#cboRepeat').val()){
-                        case '1':
-                            repeatNumber = $('#repeatDayInterval').val();
-                            break;
-                        case '2':
-
-                            break;
-                        case '3':
-                            repeatNumber = $('#repeatWeekInterval').val();
-                            if ($('#chkSun').prop('checked') == true){
-                                daysOfWeek.push(1);
-                            }
-                            if ($('#chkMon').prop('checked') == true) {
-                                daysOfWeek.push(2);
-                            }
-                            if ($('#chkTue').prop('checked') == true) {
-                                daysOfWeek.push(3);
-                            }
-                            if ($('#chkWed').prop('checked') == true) {
-                                daysOfWeek.push(4);
-                            }
-                            if ($('#chkThu').prop('checked') == true) {
-                                daysOfWeek.push(5);
-                            }
-                            if ($('#chkFri').prop('checked') == true) {
-                                daysOfWeek.push(6);
-                            }
-                            if ($('#chkSat').prop('checked') == true) {
-                                daysOfWeek.push(7);
-                            }
-                            break;
+                });
+                $('#chkRepeat').change(function () {
+                    if (this.checked) {
+                        $('#repeatMenu').show();
                     }
-                    console.log("Creating Repeater eventData");
-                    var eventData = {
-                        EventID: $('#hdEventID').val(),
-                        EventName: $('#txtEventName').val(),
-                        StartTime: $('#txtStart').val(),
-                        EndTime: $('#txtEnd').val(),
-                        Description: $('#txtDescription').val(),
-                        MinStaff: $('#txtminStaff').val(),
-                        MaxStaff: $('#txtmaxStaff').val(),
-                        FundCenter: $('#txtFundCenter').val(),
-                        EnteredBy: 1,
-                        repeatType: $('#cboRepeat').val(),
-                        startDate: $('#txtRepeatStartDate').val(),
-                        endDate: $('#txtRepeatEndDate').val(),
-                        dow: daysOfWeek,
-                        repeatCount: repeatNumber
-                    }
-                    console.log(eventData);
-                }
-                else {
-
-
-                    var eventData = {
-                        EventID: $('#hdEventID').val(),
-                        EventName: $('#txtEventName').val(),
-                        StartTime: $('#txtStart').val(),
-                        EndTime: $('#txtEnd').val(),
-                        Description: $('#txtDescription').val(),
-                        MinStaff: $('#txtminStaff').val(),
-                        MaxStaff: $('#txtmaxStaff').val(),
-                        FundCenter: $('#txtFundCenter').val(),
-                        EnteredBy: 1,
-                    }
-                }
-
-                SaveEvent(eventData);
-                
-            })
-            function SaveEvent(formData) {
-                $.ajax({
-                    type: "POST",
-                    url: "/home/SaveEvent",
-                    data: formData,
-                    //contentType: 'application/json; charset=utf-8',
-                    success: function (data) {
-                        if (data.status && data.repeat) {
-                            alert("Event and repeats added")
-                            //Refresh the calendar
-                            FetchEventAndRenderCalendar();
-                            $('#myModalSave').modal('hide');
-                        }
-                        if (data.status && !data.repeat) {
-                            alert("Event added, no repeats added")
-                            FetchEventAndRenderCalendar();
-                            $('#myModalSave').modal('hide');
-                        }
-                    },
-                    error: function () {
-                        alert('Could not add the event.');
+                    else {
+                        $('#repeatMenu').hide();
                     }
                 })
-            }
+                $('#cboRepeat').on('change', function () {
+                    switch (this.value) {
+                        case '1':
+                            $('#dayRepeat').show();
+                            $('#startsOnDate').show();
+                            $('#weekdayRepeat').hide();
+                            $('#weekRepeat').hide();
+                            $('#endsOnDate').hide();
+                            break;
+                        case '2':
+                            $('#dayRepeat').hide();
+                            $('#startsOnDate').show();
+                            $('#weekdayRepeat').show();
+                            $('#weekRepeat').hide();
+                            $('#endsOnDate').show();
+                            break;
+                        case '3':
+                            $('#dayRepeat').hide();
+                            $('#startsOnDate').hide();
+                            $('#weekdayRepeat').hide();
+                            $('#weekRepeat').show();
+                            $('#endsOnDate').hide();
+                            break;
+                    }
+                })
 
-        })
-    </script>
-    
+                function openAddEditForm() {
+                    $('#chkRepeat').attr('checked', false);
+                    //$('#repeatMenu').find('input:text').val('');
+                    //$('#repeatMenu').find('input:checkbox').attr('checked, false');
+                    //$('#repeatMenu').find('input:select').val(1);
+                    $('#repeatMenu').find(':input').each(function () {
+                        switch (this.type) {
+                            case 'button':
+                            case 'text':
+                            case 'submit':
+                            case 'password':
+                            case 'file':
+                            case 'email':
+                            case 'date':
+                            case 'number':
+                                $(this).val('');
+                                break;
+                            case 'checkbox':
+                            case 'radio':
+                                this.checked = false;
+                                break;
+                            case 'select':
+                                $(this).val(1);
+                                break;
+                        }
+                    });
+                    $('#repeatMenu').hide();
+
+                    if (selectedEvent.eventID != 0) {
+                        //User is editing an existing event
+                        $('#hdEventID').val(selectedEvent.eventID);
+                        $('#hdEnteredBy').val(selectedEvent.enteredBy);
+                        $('#txtEventName').val(selectedEvent.title);
+                        $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                        $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                        $('#txtDescription').val(selectedEvent.description);
+                        $('#txtminStaff').val(selectedEvent.minStaff);
+                        $('#txtmaxStaff').val(selectedEvent.maxStaff);
+                        $('#txtFundCenter').val(selectedEvent.fundCenter);
+                    }
+                    else {
+                        $('#txtminStaff').val(1);
+                        $('#txtmaxStaff').val(1);
+                        $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                        $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                    }
+                    $('#myModal').modal('hide');
+                    $('#myModalSave').modal();
+
+                }
+                $('#btnSave').click(function () {
+                    // TODO: Re-Enable and finalize client form validation
+                    //Validation
+                    ////Blank Checks
+                    //if ($('#txtEventName').val().trim() == "") {
+                    //    alert('An event name is required');
+                    //    return;
+                    //}
+                    //if ($('#txtStart').val().trim() == "") {
+                    //    alert('A start date/time is required');
+                    //    return;
+                    //}
+                    //if ($('#txtEnd').val().trim() == "") {
+                    //    alert('An end date/time is required');
+                    //    return;
+                    //}
+                    //if ($('#txtminStaff').val().trim() == "") {
+                    //    alert('Minimum staffing is required');
+                    //    return;
+                    //}
+                    //if ($('#txtmaxStaff').val().trim() == "") {
+                    //    alert('Maximum staffing is required');
+                    //    return;
+                    //}
+                    //if ($('#txtFundCenter').val().trim() == "") {
+                    //    alert('Fund Center is Required');
+                    //    return;
+                    //}
+                    //if ($('#chkRepeat').prop('checked')) {
+                    //    switch ($('#cboRepeat').val()) {
+                    //        case "1":
+                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
+                    //                alert('To repeat this event daily, you must provide a start date.');
+                    //                return;
+
+                    //            }
+                    //            break;
+                    //        case "2":
+                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
+                    //                alert('To repeat this event every weekday, you must provide a start date.');
+                    //                return;
+
+                    //            }
+                    //            if ($('#txtRepeatEndDate').val().trim() == "") {
+                    //                alert('To repeat this event every weekday, you must provide an end date.');
+                    //                return;
+
+                    //            }
+                    //            break;
+                    //        case "3":
+                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
+                    //                alert('To repeat this event weekly, you must provide a start date.');
+                    //                return;
+                    //                break;
+                    //            }
+                    //            if ($('#txtRepeatEndDate').val().trim() == "") {
+                    //                alert('To repeat this event weekly, you must provide an end date.');
+                    //                return;
+                    //            }
+                    //            if ($('#chkSun').prop('checked') == false &&
+                    //                $('#chkMon').prop('checked') == false &&
+                    //                $('#chkTue').prop('checked') == false &&
+                    //                $('#chkWed').prop('checked') == false &&
+                    //                $('#chkThu').prop('checked') == false &&
+                    //                $('#chkFri').prop('checked') == false &&
+                    //                $('#chkSat').prop('checked') == false) {
+
+                    //                alert("To repeat this event weekly, you must select at least one day of the week");
+                    //                return;
+                    //            }
+                    //    }//end switch $('#cboRepeat').val()
+                    //}
+                    //else {
+                    //    var startDate = moment($('#txtStart').val(), "MMMM DD, YYYY HH:mm A").toDate();
+                    //    var endDate = moment($('#txtEnd').val(), "MMMM DD, YYYY HH:mm A").toDate();
+                    //    if (startDate > endDate) {
+                    //        alert('Invalid end date/time');
+                    //        return;
+                    //    }
+                    //}
+
+
+
+
+
+                    //Begin repeat selection data
+                    var daysOfWeek = [];
+                    var repeatNumber;
+                    if ($('#chkRepeat').is(':checked')) {
+                        switch ($('#cboRepeat').val()) {
+                            case '1':
+                                repeatNumber = $('#repeatDayInterval').val();
+                                break;
+                            case '2':
+
+                                break;
+                            case '3':
+                                repeatNumber = $('#repeatWeekInterval').val();
+                                if ($('#chkSun').prop('checked') == true) {
+                                    daysOfWeek.push(1);
+                                }
+                                if ($('#chkMon').prop('checked') == true) {
+                                    daysOfWeek.push(2);
+                                }
+                                if ($('#chkTue').prop('checked') == true) {
+                                    daysOfWeek.push(3);
+                                }
+                                if ($('#chkWed').prop('checked') == true) {
+                                    daysOfWeek.push(4);
+                                }
+                                if ($('#chkThu').prop('checked') == true) {
+                                    daysOfWeek.push(5);
+                                }
+                                if ($('#chkFri').prop('checked') == true) {
+                                    daysOfWeek.push(6);
+                                }
+                                if ($('#chkSat').prop('checked') == true) {
+                                    daysOfWeek.push(7);
+                                }
+                                break;
+                        }
+                        console.log("Creating Repeater eventData");
+                        var eventData = {
+                            EventID: $('#hdEventID').val(),
+                            EventName: $('#txtEventName').val(),
+                            StartTime: $('#txtStart').val(),
+                            EndTime: $('#txtEnd').val(),
+                            Description: $('#txtDescription').val(),
+                            MinStaff: $('#txtminStaff').val(),
+                            MaxStaff: $('#txtmaxStaff').val(),
+                            FundCenter: $('#txtFundCenter').val(),
+                            EnteredBy: 1,
+                            repeatType: $('#cboRepeat').val(),
+                            startDate: $('#txtRepeatStartDate').val(),
+                            endDate: $('#txtRepeatEndDate').val(),
+                            dow: daysOfWeek,
+                            repeatCount: repeatNumber
+                        }
+                        console.log(eventData);
+                    }
+                    else {
+
+
+                        var eventData = {
+                            EventID: $('#hdEventID').val(),
+                            EventName: $('#txtEventName').val(),
+                            StartTime: $('#txtStart').val(),
+                            EndTime: $('#txtEnd').val(),
+                            Description: $('#txtDescription').val(),
+                            MinStaff: $('#txtminStaff').val(),
+                            MaxStaff: $('#txtmaxStaff').val(),
+                            FundCenter: $('#txtFundCenter').val(),
+                            EnteredBy: 1,
+                        }
+                    }
+
+                    SaveEvent(eventData);
+
+                })
+                function SaveEvent(formData) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/home/SaveEvent",
+                        data: formData,
+                        //contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.status && data.repeat) {
+                                alert("Event and repeats added")
+                                //Refresh the calendar
+                                FetchEventAndRenderCalendar();
+                                $('#myModalSave').modal('hide');
+                            }
+                            if (data.status && !data.repeat) {
+                                alert("Event added, no repeats added")
+                                FetchEventAndRenderCalendar();
+                                $('#myModalSave').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('Could not add the event.');
+                        }
+                    })
+                }
+
+            })
+        </script>
+
     }

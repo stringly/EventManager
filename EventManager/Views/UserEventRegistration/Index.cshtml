@@ -52,154 +52,156 @@
         </div>
     </div>
 </div>
-<div class="container" id="bootstrap-overrides">
+<div class="container-fluid" id="bootstrap-overrides">
     <div class="row">
-        <div class="sidebar col-xs-3">
-            <div class="well" style="padding:5px;background-color:#333333; color:#fff" data-spy="affix" >
-                <h4 style="margin-top:5px">Current Registrations:</h4>
-                <div class="well-sm" style="background-color:#fff; color:black; padding:0px; border-style:solid; border-color:black; border-width:1px">
-                    <table class="table">
-                        <tr style="background-color:#808080; color:#fff; border-top:none">
-                            <th>
-                                Event
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                        </tr>
-                        @foreach (var r in Model.ViewUserRegistrations)
-                        {
-                            var date = r.EventStartTime.ToShortDateString();
-                            <tr>
-                                <td style="vertical-align: middle">
-                                    @Html.DisplayFor(modelItem => r.EventName)
-                                </td>
-                                <td style="vertical-align: middle">
-                                    @date
-                                </td>
-                                <td style="text-align:center">
-                                    <button class="btn btn-sm" id="@r.RegistrationID" onclick="RegistrationClick(this.id)">
-                                        @{ 
-                                            switch(r.Status)
-                                            { 
-                                                case RegistrationStats.Pending:
-                                                    <text>
-                                                    <span class="glyphicon glyphicon-share"
-                                                          style ="color:deepskyblue; text-align:center"
-                                                          data-toggle="popover"
-                                                          data-trigger="hover"
-                                                          data-placement="bottom"
-                                                          title="Registration Status"
-                                                          data-content="Registration is Pending approval.">
-                                                    </span>
-                                                    </text>
-                                                    break;
-                                                case RegistrationStats.Confirmed:
-                                                    <text>
-                                                    <span class="glyphicon glyphicon-ok" 
-                                                          style="color:green; text-align:center"
-                                                          data-toggle="popover"
-                                                          data-trigger="hover"
-                                                          data-placement="bottom"
-                                                          title="Registration Status"
-                                                          data-content="Registration is Confirmed.">
-                                                    </span>
-                                                    </text>
-                                                    break;
-                                                case RegistrationStats.Standby:
-                                                    <text>
-                                                    <span class="glyphicon glyphicon-ok" 
-                                                          style="color:green; text-align:center"
-                                                          data-toggle="popover"
-                                                          data-trigger="hover"
-                                                          data-placement="bottom"
-                                                          title="Registration Status"
-                                                          data-content="You are on standby for this event.">
-                                                    </span>
-                                                    </text>
-                                                    break;
+            <div class="sidebar col-xs-3">
+                <div class="well" style="padding:5px;background-color:#333333; color:#fff" data-spy="affix">
+                    <h4 style="margin-top:5px">Current Registrations:</h4>
+                    <div class="well-sm" style="background-color:#fff; color:black; padding:0px; border-style:solid; border-color:black; border-width:1px">
+                        <table class="table">
+                            <tr style="background-color:#808080; color:#fff; border-top:none">
+                                <th>
+                                    Event
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                            @foreach (var r in Model.ViewUserRegistrations)
+                            {
+                                var date = r.EventStartTime.ToShortDateString();
+                                <tr>
+                                    <td style="vertical-align: middle">
+                                        @Html.DisplayFor(modelItem => r.EventName)
+                                    </td>
+                                    <td style="vertical-align: middle">
+                                        @date
+                                    </td>
+                                    <td style="text-align:center">
+                                        <button class="btn btn-sm" id="@r.RegistrationID" onclick="RegistrationClick(this.id)">
+                                            @{
+                                                switch (r.Status)
+                                                {
+                                                    case RegistrationStats.Pending:
+                                                        <text>
+                                                            <span class="glyphicon glyphicon-share"
+                                                                  style="color:deepskyblue; text-align:center"
+                                                                  data-toggle="popover"
+                                                                  data-trigger="hover"
+                                                                  data-placement="bottom"
+                                                                  data-content="Registration is Pending approval.">
+                                                            </span>
+                                                        </text>
+                                                        break;
+                                                    case RegistrationStats.Confirmed:
+                                                        <text>
+                                                            <span class="glyphicon glyphicon-ok"
+                                                                  style="color:green; text-align:center"
+                                                                  data-toggle="popover"
+                                                                  data-trigger="hover"
+                                                                  data-placement="bottom"
+                                                                  data-content="Registration is Confirmed.">
+                                                            </span>
+                                                        </text>
+                                                        break;
+                                                    case RegistrationStats.Standby:
+                                                        <text>
+                                                            <span class="glyphicon glyphicon-ok"
+                                                                  style="color:green; text-align:center"
+                                                                  data-toggle="popover"
+                                                                  data-trigger="hover"
+                                                                  data-placement="bottom"
+                                                                  data-content="You are on standby for this event.">
+                                                            </span>
+                                                        </text>
+                                                        break;
+                                                }
                                             }
-                                        }
+                                        </button>
+                                    </td>
+                                </tr>
+                                                }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <div class="container-fluid">
+            <div class="main col-xs-9">
+                <h4>Available Events:</h4>
+                <table class="table">
+                    <tr style="background-color:#333333; color:#fff;">
+                        <th>
+                            Event Name
+                        </th>
+                        <th>
+                            Start Date/Time
+                        </th>
+                        <th>
+                            End Date/Time
+                        </th>
+                        <th style="text-align:center">
+                            Total Hours
+                        </th>
+                        <th>
+                            Description
+                        </th>
+                        <th style="text-align:center">
+                            Staffing
+                        </th>
+                        <th></th>
+                    </tr>
+                    @foreach (var group in Model.ViewUserAvailableEvents.GroupBy(date => date.StartTime.ToShortDateString()))
+                    {
+                        var d = Convert.ToString(group.Key);
+                        DateTime dt = Convert.ToDateTime(d);
+
+
+                        <tr>
+                            <th colspan="7" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
+                        </tr>
+
+                        foreach (var item in group)
+                        {
+                            var total = (item.EndTime - item.StartTime).TotalHours;
+                            <tr id="row + @item.EventID" rel="popover">
+                                <td style="vertical-align:middle">
+                                    @Html.DisplayFor(modelItem => item.EventName)
+                                </td>
+                                <td style="vertical-align:middle">
+                                    @Html.DisplayFor(modelItem => item.StartTime)
+                                </td>
+                                <td style="vertical-align:middle">
+                                    @Html.DisplayFor(modelItem => item.EndTime)
+                                </td>
+                                <td style="text-align:center; vertical-align:middle">
+                                    @total
+                                </td>
+                                <td style="vertical-align:middle">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td style="text-align:center; vertical-align:middle">
+                                    @Html.DisplayFor(modelItem => item.MaxStaff)
+                                </td>
+                                <td>
+                                    <button id="@item.EventID" onClick="RegisterClick(this.id)"
+                                            value="@item.EventID,@item.EventName,@item.StartTime,@item.EndTime,@item.Description"
+                                            class="btn btn-success">
+                                        Register
                                     </button>
                                 </td>
                             </tr>
+
                         }
-                    </table>
-                </div>
+                    }
+
+                </table>
             </div>
         </div>
-        <div class="main col-xs-9">
-            <h4>Available Events:</h4>
-            <table class="table">
-                <tr style="background-color:#333333; color:#fff;">
-                    <th>
-                        Event Name
-                    </th>
-                    <th>
-                        Start Date/Time
-                    </th>
-                    <th>
-                        End Date/Time
-                    </th>
-                    <th style="text-align:center">
-                        Total Hours
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th style="text-align:center">
-                        Staffing
-                    </th>
-                    <th></th>
-                </tr>
-                @foreach (var group in Model.ViewUserAvailableEvents.GroupBy(date => date.StartTime.ToShortDateString()))
-                {
-                    var d = Convert.ToString(group.Key);
-                    DateTime dt = Convert.ToDateTime(d);
 
 
-                    <tr>
-                        <th colspan="7" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
-                    </tr>
-
-                    foreach (var item in group)
-                    {
-                        var total = (item.EndTime - item.StartTime).TotalHours;
-                        <tr id="row + @item.EventID" rel="popover" >
-                            <td style="vertical-align:middle">
-                                @Html.DisplayFor(modelItem => item.EventName)                               
-                            </td>
-                            <td style="vertical-align:middle">
-                                @Html.DisplayFor(modelItem => item.StartTime)
-                            </td>
-                            <td style="vertical-align:middle">
-                                @Html.DisplayFor(modelItem => item.EndTime)
-                            </td>
-                            <td style="text-align:center; vertical-align:middle">
-                                @total
-                            </td>
-                            <td style="vertical-align:middle">
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
-                            <td style="text-align:center; vertical-align:middle">
-                                @Html.DisplayFor(modelItem => item.MaxStaff)
-                            </td>
-                            <td>
-                                <button id="@item.EventID" onClick="RegisterClick(this.id)" 
-                                        value="@item.EventID,@item.EventName,@item.StartTime,@item.EndTime,@item.Description" 
-                                        class="btn btn-success">Register
-                                </button>
-                            </td>                                                        
-                        </tr>
-                                       
-                    }
-                }
-
-            </table>
-        </div>
 
     </div>
 </div>
@@ -213,7 +215,7 @@
     <script type="text/javascript">
         var events = @Html.Raw(JsonConvert.SerializeObject(this.Model.ViewUserAvailableEvents));
         var registrations = @Html.Raw(JsonConvert.SerializeObject(this.Model.ViewUserRegistrations));
-        @*var registrations = @Html.Raw(JsonConvert.SerializeObject(this.Model.UserRegistrations))*@
+
     </script>
     <script>
         $(document).ready(function () {
@@ -222,6 +224,9 @@
 
         function RegisterClick(id) {
             console.log(id);
+            if (events == null){
+                return;
+            }
             var Event = events.find(item => item.EventID == id);
             console.log('Event Name is:' + Event.EventName);
             $('#modalEventTitle').text(Event.EventName);
@@ -235,6 +240,9 @@
         }
         function RegistrationClick(id){
             console.log("You clicked registration number:" +id)
+            if (registrations == null){
+                return;
+            }
             var Registration = registrations.find(item => item.RegistrationID == id);
 
             switch (Registration.Status){
