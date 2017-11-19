@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
-<body id="bootstrap-overrides" style="background-color:#90a4ae">
+<body id="page container" style="background-color:#e0e0e0;">
     <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
+        <div class="container-fluid" style=" border-bottom:solid; border-bottom-width:1px; border-bottom-color:#ef6c00">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -26,6 +26,7 @@
                     <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                         <li>@Html.ActionLink("Events", "Index", "UserEventRegistration")</li>
+                        <li>@Html.ActionLink("Landing", "Index","Landing")</li>
                         @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                     </ul>
                 </div>
@@ -38,13 +39,41 @@
         </div>
     </div>
 
-    <div class="container-fluid body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+    
+    <div class="container-fluid">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-xs-2">
+                @RenderSection("SideBar", required:false)
+                @*<nav id="sidebar" data-spy="affix">
+                    <!-- Sidebar Links -->
+                    <ul class="list-unstyled components">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li>
+                            <!-- Link with dropdown items -->
+                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                            <ul class="collapse list-unstyled" id="homeSubmenu">
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                                <li><a href="#">Page</a></li>
+                            </ul>
+                        <li><a href="#">Portfolio</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>*@
+            </div>
+            <div class="col-xs-10">
+                <div class="container body-content">
+                    @RenderBody()
+                    <hr />
+                    <footer>
+                        
+                    </footer>
+                </div>
+            </div>
+        </div>
     </div>
+   
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>

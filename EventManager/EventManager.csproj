@@ -123,7 +123,13 @@
     </Content>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Resources\Images\Grey-Pricing-Background.png" />
+    <Content Include="Resources\Images\blue.jpg" />
+    <Content Include="Resources\Images\Documentation.png" />
+    <Content Include="Resources\Images\employee-profile-icon_398760.png" />
+    <Content Include="Resources\Images\LightsWide.jpg" />
+    <Content Include="Resources\Images\Seal.png" />
+    <Content Include="Resources\Images\SOD.png" />
+    <Content Include="Resources\Images\Working-Schedule.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Notes\DBTables.xlsx" />
@@ -138,6 +144,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LandingController.cs" />
     <Compile Include="Controllers\UserEventRegistrationController.cs" />
     <Compile Include="Controllers\UserHomeController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
@@ -200,6 +207,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\UserInfo\Index.cshtml" />
     <Content Include="Views\UserEventRegistration\Index.cshtml" />
+    <Content Include="Views\Landing\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
