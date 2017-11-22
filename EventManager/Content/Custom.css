@@ -92,7 +92,7 @@ a, a:hover, a:focus {
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    background: #333333;
+    
     color: #fff;
     transition: all 0.3s;
     padding-right: 0;
@@ -149,6 +149,10 @@ h1, h2, h3, h4, h5, h6{
 
 .navbar-inverse {
     background-color: #333333;
+    background-image: url(../Resources/Images/blue.jpg);
+    background-position: 0% 51%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .navbar-inverse .navbar-brand {
@@ -374,5 +378,10 @@ html{
     height:100%;
 }
 
-
+.gradientcontainer{
+    background-image: url(../Resources/Images/blue.jpg);
+    background-position: 0% 51%;
+    background-size: cover;
+    background-repeat: no-repeat;oleId] ASC)
+}
 

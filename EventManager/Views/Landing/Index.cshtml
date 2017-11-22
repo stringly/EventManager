@@ -17,7 +17,7 @@
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
 </head>
 <body style="padding-top:0px; height:100%">
-    <div class="container-fluid body-content" style="height:100%; background-color: #828a8a; padding:0px; background: url(../Resources/Images/LightsWide.jpg) no-repeat center center; background-size:cover">
+    <div class="container-fluid body-content" style="height:100%; background-color: #828a8a; padding:0px; background-size:cover">
 
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4">
@@ -52,7 +52,7 @@
                         }
                         else
                         {
-                            <a href="#" class="btn btn-danger btn-lg">Login Required!</a>
+                            <a href="/UserInfo/Index" class="btn btn-danger btn-lg">Login Required!</a>
                         }
                     </div>
                 </div>
@@ -68,11 +68,11 @@
                     <div class="card-footer">
                         @if (User.IsInRole("Administrator") || User.IsInRole("Development") || User.IsInRole("Approver"))
                         {
-                            <a href="#" class="btn btn-primary btn-lg">Go!</a>
+                            <a href="/Home/Index" class="btn btn-primary btn-lg">Go!</a>
                         }
                         else
                         {
-                            <a href="#" class="btn btn-danger btn-lg" style="cursor:not-allowed">Admin Account Required!</a>
+                            <a href="" class="btn btn-danger btn-lg" style="cursor:not-allowed">Admin Account Required!</a>
                         }
                     </div>
                 </div>
@@ -88,11 +88,11 @@
                     <div class="card-footer">
                         @if (User.IsInRole("User"))
                         {
-                            <a href="#" class="btn btn-primary btn-lg">Go!</a>
+                            <a href="/UserInfo/Index" class="btn btn-primary btn-lg">Go!</a>
                         }
                         else
                         {
-                            <a href="#" class="btn btn-success btn-lg">Login Here!</a>
+                            <a href="/UserInfo/Index" class="btn btn-success btn-lg">Login Here!</a>
                         }
                     </div>
                 </div>
