@@ -28,7 +28,7 @@
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#333333;">
+                <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
                     <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px"><span id="eventTitle"></span></h4>
                 </div>
@@ -52,7 +52,7 @@
     <div id="myModalSave" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="color:#fff;border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Add/Edit Event</h4>
                 </div>
@@ -62,13 +62,13 @@
                         <input type="hidden" id="hdEnteredBy" value="1" />
                         <div class="form-group">
                             <label>Event Name</label>
-                            <input type="text" id="txtEventName" class="form-control" />
+                            <input type="text" id="txtEventName" class="form-control" style="max-width:100%" />
                         </div>
                         <div class="form-group">
                             <label>Start Time:</label>
                             <div class="input-group date" id="dtp1">
-                                <input type="text" id="txtStart" class="form-control" />
-                                <span class="input-group-addon">
+                                <input type="text" id="txtStart" class="form-control" style="max-width:250px" />
+                                <span class="input-group-addon" style="width:auto">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
@@ -164,23 +164,23 @@
                         <div class="form-group">
                             <label>End Time:</label>
                             <div class="input-group date" id="dtp2">
-                                <input type="text" id="txtEnd" class="form-control" />
-                                <span class="input-group-addon">
+                                <input type="text" id="txtEnd" class="form-control" style="max-width:250px" />
+                                <span class="input-group-addon" style="width:auto">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                            <textarea id="txtDescription" rows="3" class="form-control" style="max-width:100%"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Minimum Staffing</label>
-                            <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" required />
+                            <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
                         </div>
                         <div class="form-group">
                             <label>Maximum Staffing</label>
-                            <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" required />
+                            <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
                         </div>
                         <div class="form-group">
                             <label>Fund Center:</label>
@@ -189,8 +189,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btnSave" class="btn btn-success">Save</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnSave" class="btn-success btn">Save</button>
+                    <button type="button" class="btn-danger btn" data-dismiss="modal">Close</button>
 
                 </div>
             </div>

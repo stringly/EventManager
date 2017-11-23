@@ -29,7 +29,7 @@
 
 .btn {
   display: inline-block;
-  padding: 3px 6px;
+  padding: 10px 16px;
   margin-bottom: 0;
   font-size: 12px;
   font-weight: normal;
@@ -385,3 +385,16 @@ html{
     background-repeat: no-repeat;oleId] ASC)
 }
 
+.navbar-inverse .navbar-nav>li>a {
+    color: #fff;
+}
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .2;
+    filter: alpha(opacity=20);
+}

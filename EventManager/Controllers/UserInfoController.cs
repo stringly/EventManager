@@ -61,7 +61,12 @@ namespace EventManager.Controllers
             else
             {
                 //New User, call new user in DBInteractions
+
                 status = db.AddNewUser(u);
+                if (status == true)
+                {
+                    db.PushUserToCache();
+                }
             }
 
             return new JsonResult { Data = new { status = status } };

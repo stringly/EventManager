@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EventManager.ViewModels;
+using EventManager.Models;
 using EventManager.Helpers;
 
 namespace EventManager.Controllers
@@ -54,10 +55,10 @@ namespace EventManager.Controllers
         public List<UserRegistrations> GetUserRegistrations()
         {
             List<UserRegistrations> userRegistrations = new List<UserRegistrations>();
-            var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId 
-                                        && e.Event.StartTime >= DateTime.Now 
-                                        && (e.Status != RegistrationStats.Deleted 
-                                        && e.Status != RegistrationStats.Declined 
+            var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
+                                        && e.Event.StartTime >= DateTime.Now
+                                        && (e.Status != RegistrationStats.Deleted
+                                        && e.Status != RegistrationStats.Declined
                                         && e.Status != RegistrationStats.NoShow)).ToList();
             foreach (var item in registrationList)
             {
@@ -74,6 +75,35 @@ namespace EventManager.Controllers
                 userRegistrations.Add(ur);
             }
             return userRegistrations;
+        }
+
+
+        //TODO:Add validation
+        [HttpPost]
+        public JsonResult RegisterForEvent(Event e)
+        {
+            var status = false;
+            try
+            {
+                
+                DBInteractions db = new DBInteractions();
+                int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+                status = db.Register(e.EventID, id);
+                
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.Message);
+            }
+
+            
+
+
+
+
+
+            return new JsonResult { Data = new { status = status } };
         }
     }
 }

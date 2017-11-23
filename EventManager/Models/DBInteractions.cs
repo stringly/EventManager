@@ -225,5 +225,48 @@ namespace EventManager.Models
             return result;
         }
 
+        public Boolean Register(int eventID, int userID)
+        {
+            bool result = false;
+
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    Registration r = new Registration();
+                    r.EventID = eventID;
+                    r.UserID = userID;
+                    r.TimeStamp = DateTime.Now;
+                    r.Status = RegistrationStats.Pending;
+                    _db.Registrations.Add(r);
+                    _db.SaveChanges();
+                    result = true;
+                }
+                catch (Exception e)
+                {
+                    //TODO: Add Error Logging
+                    Debug.WriteLine(e.Message);
+                }
+            }
+            return result;
+        }
+
+        public void PushUserToCache()
+        {
+            string nameWithoutDomain = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.LastIndexOf(@"\") + 1);
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                User user = new EventManager.User();
+                user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
+                if (user != null)
+                {
+                    if (System.Web.HttpContext.Current.Cache["userID"] == null)
+                    {
+                        System.Web.HttpContext.Current.Cache["userID"] = user.UserId;
+                    }
+                }
+            }
+        }
+
     }
 }

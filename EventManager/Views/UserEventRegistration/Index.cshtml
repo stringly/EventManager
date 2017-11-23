@@ -31,7 +31,7 @@
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#333333;">
+            <div class="modal-header" style="color:#fff;border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
                 <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
                 <h3 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px"><span>Confirm Registration?</span></h3>
             </div>
@@ -245,9 +245,43 @@
 
     </script>
     <script>
+        var selectedEvent = null;
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover(); 
+            
+            
+            
+            
+            $('#btnConfirm').click(function (){
+                console.log("Click!");
+                RegisterForEvent();
+
+
+            })
+        
+        function RegisterForEvent() {
+            console.log("Current EventID is:" + selectedEvent.EventID)
+            $.ajax({
+                type: "POST",
+                url: "/UserEventRegistration/RegisterForEvent",
+                data: selectedEvent,
+                //contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    //alert("Registration Added")
+                    //$('#myModal').modal('hide');
+                    if (data.status == true) {
+                        alert("Registration Added")
+                        //Need to refresh the viewmodel here
+                        $('#myModal').modal('hide');
+                    }
+                },
+                error: function () {
+                    alert('Could not register for the event.');
+                }
+            })
+        }    
         })
+
         function SideBarClick(option){
             console.log(option)
             switch (option){
@@ -265,20 +299,21 @@
                     break;
             }
         }
+         
 
         function RegisterClick(id) {
             console.log(id);
             if (events == null){
                 return;
             }
-            var Event = events.find(item => item.EventID == id);
-            console.log('Event Name is:' + Event.EventName);
-            $('#modalEventTitle').text(Event.EventName);
+            selectedEvent = events.find(item => item.EventID == id);
+            console.log('Event Name is:' + selectedEvent.EventName);
+            $('#modalEventTitle').text(selectedEvent.EventName);
             var $description = $('<div/>');
-            $description.append($('<p/>').html('<h5><b>' + Event.EventName + '</b></h5>'));
-            $description.append($('<p/>').html('<b>Starts: </b>' + moment(Event.StartTime).format("MM/DD/YY HHmm")));
-            $description.append($('<p/>').html('<b>Ends: </b>' + moment(Event.EndTime).format("MM/DD/YY HHmm")));
-            $description.append($('<p/>').html('<b>Description: </b>' + Event.Description));
+            $description.append($('<p/>').html('<h5><b>' + selectedEvent.EventName + '</b></h5>'));
+            $description.append($('<p/>').html('<b>Starts: </b>' + moment(selectedEvent.StartTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Ends: </b>' + moment(selectedEvent.EndTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Description: </b>' + selectedEvent.Description));
             $('#myModal #pDetails').empty().html($description);
             $('#myModal').modal();
         }
@@ -311,6 +346,7 @@
             $('#myRegistrationModalpDetails').empty().html($description);
             $('#myRegistrationModal').modal();
         }
+
     </script>
 
 

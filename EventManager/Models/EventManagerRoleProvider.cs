@@ -52,12 +52,16 @@ namespace EventManager.Models
             {
                 string nameWithoutDomain = username.Substring(username.LastIndexOf(@"\") + 1);
                 User user = _dc.Users.FirstOrDefault(u => u.LDAPName.Equals(nameWithoutDomain, StringComparison.CurrentCultureIgnoreCase));
-                var roles = from ur in user.Roles
-                            from r in _dc.Roles
-                            where ur.RoleId == r.RoleId
-                            select r.Name;
+
                 if (user != null)
+                {
+                    var roles = from ur in user.Roles
+                                from r in _dc.Roles
+                                where ur.RoleId == r.RoleId
+                                select r.Name;
                     return roles.ToArray();
+                }
+                    
                 else
                     return new string[] { };
                 
