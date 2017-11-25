@@ -48,11 +48,11 @@
                     <div class="card-footer">
                         @if (User.IsInRole("User"))
                         {
-                            <a href="/UserEventRegistration/Index" class="btn btn-primary btn-lg">Go!</a>
+                            <a href="/UserEventRegistration/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
                         }
                         else
                         {
-                            <a href="/UserInfo/Index" class="btn btn-danger btn-lg">Login Required!</a>
+                            <a href="/UserInfo/Index" class="btn btn-block btn-danger btn-lg" style="max-width:200px; font-size:1vw">Login Required!</a>
                         }
                     </div>
                 </div>
@@ -68,11 +68,12 @@
                     <div class="card-footer">
                         @if (User.IsInRole("Administrator") || User.IsInRole("Development") || User.IsInRole("Approver"))
                         {
-                            <a href="/Home/Index" class="btn btn-primary btn-lg">Go!</a>
+                            <a href="/Home/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
                         }
                         else
                         {
-                            <a href="" class="btn btn-danger btn-lg" style="cursor:not-allowed">Admin Account Required!</a>
+
+                            <button class="btn btn-block btn-danger btn-lg" style="max-width:200px; cursor:not-allowed; font-size:1vw" disabled>Admin Only</button>
                         }
                     </div>
                 </div>
@@ -88,11 +89,11 @@
                     <div class="card-footer">
                         @if (User.IsInRole("User"))
                         {
-                            <a href="/UserInfo/Index" class="btn btn-primary btn-lg">Go!</a>
+                            <a href="/UserInfo/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
                         }
                         else
                         {
-                            <a href="/UserInfo/Index" class="btn btn-success btn-lg">Login Here!</a>
+                            <a href="/UserInfo/Index" class="btn btn-block btn-success btn-lg" style="max-width:200px; font-size:1vw">Login Here!</a>
                         }
                     </div>
                 </div>

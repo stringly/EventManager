@@ -17,8 +17,10 @@ namespace EventManager.Controllers
         // GET: UserEventRegistration
         public ActionResult Index()
         {
-            string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-            user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
+            //string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
+            //user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
+            int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+            user = _dc.Users.Where(u => u.UserId == id).FirstOrDefault();
             EventRegistrationViewModel ervm = new EventRegistrationViewModel();
             ervm.ViewUserAvailableEvents = GetUserAvailableEvents();
             ervm.ViewUserRegistrations = GetUserRegistrations();
@@ -55,11 +57,15 @@ namespace EventManager.Controllers
         public List<UserRegistrations> GetUserRegistrations()
         {
             List<UserRegistrations> userRegistrations = new List<UserRegistrations>();
-            var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
-                                        && e.Event.StartTime >= DateTime.Now
-                                        && (e.Status != RegistrationStats.Deleted
-                                        && e.Status != RegistrationStats.Declined
-                                        && e.Status != RegistrationStats.NoShow)).ToList();
+            //var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
+            //                            && e.Event.StartTime >= DateTime.Now
+            //                            && (e.Status != RegistrationStats.Deleted
+            //                            && e.Status != RegistrationStats.Declined
+            //                            && e.Status != RegistrationStats.NoShow)).ToList();
+
+            //I changed the below because I wanted the view to be able to show the user all of their registrations
+            var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId).OrderByDescending(e => e.Event.StartTime).ToList();
+
             foreach (var item in registrationList)
             {
                 UserRegistrations ur = new UserRegistrations();
@@ -89,21 +95,29 @@ namespace EventManager.Controllers
                 DBInteractions db = new DBInteractions();
                 int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
                 status = db.Register(e.EventID, id);
-                
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.InnerException.Message);
             }
+            return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
-            
+        public JsonResult CancelRegistration(Registration r)
+        {
+            var status = false;
+            try
+            {
+                DBInteractions db = new DBInteractions();
+                status = db.DeleteRegistration(r.RegistrationID);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.Message);
+            }
+            return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
-
-
-
-
-            return new JsonResult { Data = new { status = status } };
         }
     }
 }

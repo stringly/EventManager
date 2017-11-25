@@ -1,0 +1,92 @@
+﻿@model IEnumerable<EventManager.Event>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@section SideBar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li class="active" id="AllEventsSideBarButton"><a href="#" onclick="SideBarClick(1)">All Events</a></li>
+            <li class="" id="UserOwnedEventsSideBarButton"><a href="#" onclick="SideBarClick(2)">My Events</a></li>
+            <li>
+                <!-- Link with dropdown items -->
+                @*<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li><a href="#">Page</a></li>
+                            <li><a href="#">Page</a></li>
+                            <li><a href="#">Page</a></li>
+                        </ul>
+                    <li><a href="#">Portfolio</a></li>
+                    <li><a href="#">Contact</a></li>*@
+        </ul>
+    </nav>}
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EventName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaxStaff)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MinStaff)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FundCenter)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EnteredBy)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EventName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaxStaff)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MinStaff)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FundCenter)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EnteredBy)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.EventID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.EventID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.EventID })
+        </td>
+    </tr>
+}
+
+</table>

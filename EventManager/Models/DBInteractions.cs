@@ -174,6 +174,22 @@ namespace EventManager.Models
             }
             return result;
         }
+        public Boolean DeleteEvent(int eventID)
+        {
+            var result = false;
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+                var v = _db.Events.Where(a => a.EventID == eventID).FirstOrDefault();
+                if (v != null)
+                {
+                    _db.Events.Remove(v);
+                    _db.SaveChanges();
+                    result = true;
+                }
+
+            }
+            return result;
+        }
         //User Interactions
         public Boolean AddNewUser(User u)
         {
@@ -224,7 +240,6 @@ namespace EventManager.Models
             }
             return result;
         }
-
         public Boolean Register(int eventID, int userID)
         {
             bool result = false;
@@ -250,7 +265,6 @@ namespace EventManager.Models
             }
             return result;
         }
-
         public void PushUserToCache()
         {
             string nameWithoutDomain = HttpContext.Current.User.Identity.Name.Substring(HttpContext.Current.User.Identity.Name.LastIndexOf(@"\") + 1);
@@ -266,6 +280,30 @@ namespace EventManager.Models
                     }
                 }
             }
+        }
+        //Registration Interactions
+        public Boolean DeleteRegistration(int registrationID)
+        {
+            bool result = false;
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    Registration r = _db.Registrations.Where(a => a.RegistrationID == registrationID).FirstOrDefault();
+                    if (r != null)
+                    {
+                        r.Status = RegistrationStats.Deleted;
+                        //_db.Registrations.Remove(r);
+                        _db.SaveChanges();
+                        result = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.InnerException.Message);
+                }
+            }
+            return result;
         }
 
     }

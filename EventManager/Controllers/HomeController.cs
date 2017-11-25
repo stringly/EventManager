@@ -46,7 +46,7 @@ namespace EventManager.Controllers
                 e.MaxStaff = Convert.ToInt32(fr.MaxStaff);
                 e.MinStaff = Convert.ToInt32(fr.MinStaff);
                 e.FundCenter = fr.FundCenter;
-                e.EnteredBy = fr.EnteredBy;
+                e.EnteredBy = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
 
             EventRepeater r = new EventRepeater();
                 r.repeatType = Convert.ToInt32(fr.repeatType);
@@ -79,18 +79,8 @@ namespace EventManager.Controllers
         public JsonResult DeleteEvent(int eventID)
         {
             var status = false;
-            using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())
-            {
-                var v = dc.Events.Where(a => a.EventID == eventID).FirstOrDefault();
-                if (v != null)
-                {
-                    dc.Events.Remove(v);
-                    dc.SaveChanges();
-                    status = true;
-                }
-
-            }
-
+            DBInteractions db = new DBInteractions();
+            status = db.DeleteEvent(eventID);
             return new JsonResult { Data = new { status = status } };
         }
     }

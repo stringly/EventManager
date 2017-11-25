@@ -14,16 +14,20 @@
     <!-- Sidebar Links -->
     <ul class="list-unstyled components">
         <li class="active" id="AvailableSideBarButton"><a href="#" onclick="SideBarClick(1)">Available Events</a></li>
-        <li class="" id="UserRegistrationSideBarButton"><a href="#" onclick="SideBarClick(2)">My Registrations</a></li>
-        <li>
+        @*<li class="" id="UserRegistrationSideBarButton"><a href="#" onclick="SideBarClick(2)">My Registrations</a></li>*@
+        <li id="UserRegistrationSideBarButton">
             <!-- Link with dropdown items -->
-            @*<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
-                <li><a href="#">Page</a></li>
+            <a href="#registrationsSubMenu"  data-toggle="collapse" aria-expanded="false"onclick="SideBarClick(2)">My Registrations</a>
+            <ul class="collapse  list-unstyled" id="registrationsSubMenu">
+                <li id="registrationsSideBarAll"><a href="#" onclick="RegistrationFilter(0)">Show All</a></li>
+                <li id="registrationsSideBarConfirmed"><a href="#" id="registrationsSideBarConfirmed" onclick="RegistrationFilter(1)">Confirmed</a></li>
+                <li id="registrationsSideBarPending" ><a href="#" id="registrationsSideBarPending" onclick="RegistrationFilter(2)">Pending</a></liid="registrationsSideBarPending">
+                <li id="registrationsSideBarStandby"><a href="#"  onclick="RegistrationFilter(3)">Standby</a></li>
+                <li id="registrationsSideBarDeclined"><a href="#"  onclick="RegistrationFilter(4)">Declined</a></li>
+                <li id="registrationsSideBarDeleted"><a href="#"  onclick="RegistrationFilter(5)">Deleted</a></li>
+                
             </ul>
-        <li><a href="#">Portfolio</a></li>
+        @*<li><a href="#">Portfolio</a></li>
         <li><a href="#">Contact</a></li>*@
     </ul>
 </nav>}
@@ -61,9 +65,9 @@
             </div>
             <div class="modal-footer">
                 <button id="btnOK" class="btn btn-success btn-lg pull-left" data-dismiss="modal" style="margin-right:5px;">
-                    <span class="glyphicon glyphicon-ok-circle"></span> Ok
+                    <span class="glyphicon glyphicon-ok-circle"></span> Done
                 </button>
-                <button id="btnCancel" class="btn btn-danger btn-lg pull-right" >
+                <button id="btnRegistrationCancel" class="btn btn-danger btn-lg pull-right" >
                     <span class="glyphicon glyphicon-remove-circle"></span> Cancel Registration
                 </button>
 
@@ -146,14 +150,20 @@
 <div class="container-fluid" id="UserRegistrations" style="display:none">
         <div class="col-xs-10 col-sm-10 pull-left">
             @*<div class="well" style="padding:5px;background-color:#333333; color:#fff">*@
-                <h4 style="margin-top:5px">Current Registrations:</h4>
+                <h4 id="registrationHeader"style="margin-top:5px"></h4>
                     <table class="table">
                         <tr style="background-color:#333333; color:#fff; border-top:none">
                             <th>
                                 Event Name
                             </th>
                             <th>
-                                Event Date
+                                Event Start
+                            </th>
+                            <th>
+                                Event End
+                            </th>
+                            <th>
+                                Hours
                             </th>
                             <th>
                                 Registration Date
@@ -162,31 +172,28 @@
                                 Status
                             </th>
                         </tr>
-                @foreach (var group in Model.ViewUserRegistrations.GroupBy(date => date.EventStartTime.ToShortDateString()))
-                {
-                    var t = Convert.ToString(group.Key);
-                    DateTime dt2 = Convert.ToDateTime(t);
 
-
-                    <tr>
-                        <th colspan="7" style="background-color:#808080; color:#fff; font-weight:normal">@dt2.ToLongDateString()</th>
-                    </tr>
-
-                        foreach (var r in group)
+                        @foreach (var r in Model.ViewUserRegistrations)
                         {
-                            var date = r.EventStartTime.ToShortDateString();
-                            <tr>
+                            var hours = (r.EventEndTime - r.EventStartTime).TotalHours;
+                            <tr class="@r.Status">
                                 <td style="vertical-align: middle">
                                     @Html.DisplayFor(modelItem => r.EventName)
                                 </td>
                                 <td style="vertical-align: middle">
-                                    @date
+                                    @r.EventStartTime
+                                </td>
+                                <td style="vertical-align: middle">
+                                    @r.EventEndTime
+                                </td>
+                                <td style="vertical-align: middle">
+                                    @hours
                                 </td>
                                 <td style="vertical-align: middle">
                                     @r.TimeStamp
                                 </td>
                                 <td style="text-align:center">
-                                    <button class="btn btn-sm" id="@r.RegistrationID" onclick="RegistrationClick(this.id)">
+                                    <button class="btn btn-lg" id="@r.RegistrationID" onclick="RegistrationClick(this.id)">
                                         @{
                                             switch (r.Status)
                                             {
@@ -214,8 +221,8 @@
                                                     break;
                                                 case RegistrationStats.Standby:
                                                     <text>
-                                                        <span class="glyphicon glyphicon-ok"
-                                                              style="color:green; text-align:center"
+                                                        <span class="glyphicon glyphicon-exclamation-sign"
+                                                              style="color:yellow; text-align:center"
                                                               data-toggle="popover"
                                                               data-trigger="hover"
                                                               data-placement="bottom"
@@ -223,16 +230,37 @@
                                                         </span>
                                                     </text>
                                                     break;
-                                            }
-                                        }
+                                                case RegistrationStats.Declined:
+                                                    <text>
+                                                        <span class="glyphicon glyphicon-remove-circle"
+                                                              style="color:red; text-align:center"
+                                                              data-toggle="popover"
+                                                              data-trigger="hover"
+                                                              data-placement="bottom"
+                                                              data-content="You were not selected to work this event.">
+                                                        </span>
+                                                    </text>
+                                                    break;
+                                                case RegistrationStats.Deleted:
+                                                    <text>
+                                                        <span class="glyphicon glyphicon-remove-sign"
+                                                              style="color:red; text-align:center"
+                                                              data-toggle="popover"
+                                                              data-trigger="hover"
+                                                              data-placement="bottom"
+                                                              data-content="You canceled the registration for this event.">
+                                                        </span>
+                                                    </text>
+                                                    break;
+                                            }//switch r.Status
+}
                                     </button>
                                 </td>
                             </tr>
-                                            }
-                                }
+                            }
                     </table>
-        </div>
-    </div>
+                </div>
+</div>
 
 
 
@@ -246,19 +274,32 @@
     </script>
     <script>
         var selectedEvent = null;
+        var selectedRegistration = null;
         $(document).ready(function () {
-            $('[data-toggle="popover"]').popover(); 
-            
-            
-            
-            
+            $('[data-toggle="popover"]').popover();           
             $('#btnConfirm').click(function (){
                 console.log("Click!");
                 RegisterForEvent();
-
-
             })
-        
+            $('#btnRegistrationCancel').click(function(){
+                //Cancel Registration
+                CancelRegistration();
+            })
+            function CancelRegistration(){
+                $.ajax({
+                    type: "POST",
+                    url: "/UserEventRegistration/CancelRegistration",
+                    data: selectedRegistration,
+                    success: function(){
+                        alert("Registration canceled successfully")
+                        location.reload();
+                    },
+                    error: function(){
+                        alert('Unable to cancel Registration')
+                    }
+                })
+            }
+
         function RegisterForEvent() {
             console.log("Current EventID is:" + selectedEvent.EventID)
             $.ajax({
@@ -266,14 +307,10 @@
                 url: "/UserEventRegistration/RegisterForEvent",
                 data: selectedEvent,
                 //contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    //alert("Registration Added")
+                success: function () {
+                    alert('You have been registered');
+                    location.reload();
                     //$('#myModal').modal('hide');
-                    if (data.status == true) {
-                        alert("Registration Added")
-                        //Need to refresh the viewmodel here
-                        $('#myModal').modal('hide');
-                    }
                 },
                 error: function () {
                     alert('Could not register for the event.');
@@ -296,6 +333,52 @@
                     $("#UserRegistrations").show();
                     $('#AvailableSideBarButton').removeClass("active");
                     $('#UserRegistrationSideBarButton').addClass("active");
+                    RegistrationFilter(0);
+                    break;
+            }
+        }
+        function RegistrationFilter(option){
+            switch (option){
+                case 1:
+                    $("#registrationHeader").text("Confirmed Registrations:");
+                    $('#registrationsSideBarConfirmed').addClass("active");
+                    $('#registrationsSideBarPending, #registrationsSideBarStandby, #registrationsSideBarDeclined, #registrationsSideBarDeleted, #registrationsSideBarAll').removeClass("active");
+                    $(".Pending, .Standby, .Declined, .Deleted").hide();
+                    $(".Confirmed").show();
+                    break;
+                case 2:
+                    $("#registrationHeader").text("Pending Registrations:");
+                    $('#registrationsSideBarPending').addClass("active");
+                    $('#registrationsSideBarConfirmed, #registrationsSideBarStandby, #registrationsSideBarDeclined, #registrationsSideBarDeleted, #registrationsSideBarAll').removeClass("active");
+                    $(".Confirmed, .Standby, .Declined, .Deleted").hide();
+                    $(".Pending").show();
+                    break;
+                case 3:
+                    $("#registrationHeader").text("Standby Registrations:");
+                    $('#registrationsSideBarStandby').addClass("active");
+                    $('#registrationsSideBarConfirmed, #registrationsSideBarPending, #registrationsSideBarDeclined, #registrationsSideBarDeleted, #registrationsSideBarAll').removeClass("active");
+                    $(".Confirmed, .Pending, .Declined, .Deleted").hide();
+                    $(".Standby").show();
+                    break;
+                case 4:
+                    $("#registrationHeader").text("Declined Registrations:");
+                    $('#registrationsSideBarDeclined').addClass("active");
+                    $('#registrationsSideBarConfirmed, #registrationsSideBarPending, #registrationsSideBarStandby, #registrationsSideBarDeleted, #registrationsSideBarAll').removeClass("active");
+                    $(".Confirmed, .Pending, .Standby, .Deleted").hide();
+                    $(".Declined").show();
+                    break;
+                case 5:
+                    $("#registrationHeader").text("Deleted Registrations:");
+                    $('#registrationsSideBarDeleted').addClass("active");
+                    $('#registrationsSideBarConfirmed, #registrationsSideBarPending, #registrationsSideBarStandby, #registrationsSideBarDeclined, #registrationsSideBarAll').removeClass("active");
+                    $(".Confirmed, .Pending, .Standby, .Declined").hide();
+                    $(".Deleted").show();
+                    break;
+                case 0:
+                    $("#registrationHeader").text("All Registrations:");
+                    $('#registrationsSideBarAll').addClass("active");
+                    $('#registrationsSideBarConfirmed, #registrationsSideBarPending, #registrationsSideBarStandby, #registrationsSideBarDeclined, #registrationsSideBarDeleted').removeClass("active");
+                    $(".Confirmed, .Pending, .Standby, .Declined, .Deleted").show();
                     break;
             }
         }
@@ -322,9 +405,9 @@
             if (registrations == null){
                 return;
             }
-            var Registration = registrations.find(item => item.RegistrationID == id);
+            selectedRegistration = registrations.find(item => item.RegistrationID == id);
 
-            switch (Registration.Status){
+            switch (selectedRegistration.Status){
                 case 1:
                     var Status = "Pending"
                     break;
@@ -334,14 +417,23 @@
                 case 3:
                     var Status = "Standby"
                     break;
+                case 4:
+                    var Status = "Declined"
+                    break;
+                case 5:
+                    var Status = "Deleted"
+                    break;
+                case 6:
+                    var Status = "FTA"
+                    break;
             }
             $('#modalEventTitle').text(Event.EventName);
             var $description = $('<div/>');
-            $description.append($('<p/>').html('<h5><b>' + Registration.EventName + '</b></h5>'));
-            $description.append($('<p/>').html('<b>Starts: </b>' + moment(Registration.EventStartTime).format("MM/DD/YY HHmm")));
-            $description.append($('<p/>').html('<b>Ends: </b>' + moment(Registration.EventEndTime).format("MM/DD/YY HHmm")));
-            $description.append($('<p/>').html('<b>Description: </b>' + Registration.EventDescription));
-            $description.append($('<p/>').html('<b>Date Registered: </b>' + moment(Registration.TimeStamp).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<h5><b>' + selectedRegistration.EventName + '</b></h5>'));
+            $description.append($('<p/>').html('<b>Starts: </b>' + moment(selectedRegistration.EventStartTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Ends: </b>' + moment(selectedRegistration.EventEndTime).format("MM/DD/YY HHmm")));
+            $description.append($('<p/>').html('<b>Description: </b>' + selectedRegistration.EventDescription));
+            $description.append($('<p/>').html('<b>Date Registered: </b>' + moment(selectedRegistration.TimeStamp).format("MM/DD/YY HHmm")));
             $description.append($('<p/>').html('<b>Status: </b>' + Status));
             $('#myRegistrationModalpDetails').empty().html($description);
             $('#myRegistrationModal').modal();

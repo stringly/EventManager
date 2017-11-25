@@ -291,7 +291,9 @@
                 }
                 $('#btnEdit').click(function () {
                     //Open modal dialog for editing an event
-                    openAddEditForm();
+                    //openAddEditForm();
+                    var url = "/Events/Edit?id=" + selectedEvent.eventID;
+                    window.location.href = url;
                 });
                 $('#btnDelete').click(function () {
                     if (selectedEvent != null && confirm('Delete this event?')) {
@@ -533,7 +535,7 @@
                             MinStaff: $('#txtminStaff').val(),
                             MaxStaff: $('#txtmaxStaff').val(),
                             FundCenter: $('#txtFundCenter').val(),
-                            EnteredBy: 1,
+                            EnteredBy: 0,
                             repeatType: $('#cboRepeat').val(),
                             startDate: $('#txtRepeatStartDate').val(),
                             endDate: $('#txtRepeatEndDate').val(),
@@ -554,7 +556,7 @@
                             MinStaff: $('#txtminStaff').val(),
                             MaxStaff: $('#txtmaxStaff').val(),
                             FundCenter: $('#txtFundCenter').val(),
-                            EnteredBy: 1,
+                            EnteredBy: 0,
                         }
                     }
 
