@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>View/Edit Events</h2>
 @section SideBar{
     <nav id="sidebar" data-spy="affix" style="background-color:#151827">
         <!-- Sidebar Links -->
@@ -27,7 +27,7 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
-    <tr>
+    <tr style="background-color:#333333; color:#fff;">
         <th>
             @Html.DisplayNameFor(model => model.EventName)
         </th>
@@ -57,34 +57,44 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.EventName)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.StartTime)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.EndTime)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.MaxStaff)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.MinStaff)
         </td>
-        <td>
+        <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.FundCenter)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EnteredBy)
+        <td style="vertical-align:middle">
+            @Html.DisplayFor(modelItem => item.User.LDAPName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EventID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EventID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EventID })
+            @if (item.EnteredBy == @ViewBag.CurrentUser)
+            {
+                <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-success btn-sm"})
+                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
+                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
+                </div>
+            }
+            else
+            {
+                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
+            }
+
         </td>
     </tr>
 }

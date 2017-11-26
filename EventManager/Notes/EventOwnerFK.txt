@@ -1,0 +1,1 @@
+﻿CONSTRAINT [FK_Event_OwnerID] FOREIGN KEY ([EnteredBy]) REFERENCES [dbo].[Users] ([UserId]),

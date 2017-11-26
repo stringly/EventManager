@@ -133,6 +133,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Notes\ELMAH DBScript.txt" />
+    <Content Include="Notes\EventOwnerFK.txt" />
     <Content Include="Resources\Images\blue.jpg" />
     <Content Include="Resources\Images\Caution.png" />
     <Content Include="Resources\Images\Documentation.png" />

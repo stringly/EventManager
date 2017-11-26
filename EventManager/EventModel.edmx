@@ -59,6 +59,18 @@
           <Property Name="RegisteredDate" Type="smalldatetime" Nullable="false" />
           <Property Name="LDAPName" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Event_OwnerID">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Events" Type="Self.Events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Events">
+              <PropertyRef Name="EnteredBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_EventID">
           <End Role="Events" Type="Self.Events" Multiplicity="1" />
           <End Role="Registrations" Type="Self.Registrations" Multiplicity="*" />
@@ -117,6 +129,10 @@
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Event_OwnerID" Association="Self.FK_Event_OwnerID">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Events" EntitySet="Events" />
+          </AssociationSet>
           <AssociationSet Name="FK_EventID" Association="Self.FK_EventID">
             <End Role="Events" EntitySet="Events" />
             <End Role="Registrations" EntitySet="Registrations" />
@@ -155,6 +171,10 @@
             <End Role="Role" EntitySet="Roles" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_Event_OwnerID" Association="EVENTS_MGR_TESTINGModel.FK_Event_OwnerID">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Registration">
           <Key>
@@ -184,6 +204,7 @@
           <NavigationProperty Name="Registrations" Relationship="EVENTS_MGR_TESTINGModel.FK_UserID" FromRole="User" ToRole="Registration" />
           <Property Name="LDAPName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="EVENTS_MGR_TESTINGModel.UserRole" FromRole="User" ToRole="Role" />
+          <NavigationProperty Name="Events" Relationship="EVENTS_MGR_TESTINGModel.FK_Event_OwnerID" FromRole="User" ToRole="Event" />
         </EntityType>
         <Association Name="FK_UserID">
           <End Type="EVENTS_MGR_TESTINGModel.User" Role="User" Multiplicity="1" />
@@ -211,6 +232,7 @@
           <Property Name="FundCenter" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="EnteredBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Registrations" Relationship="EVENTS_MGR_TESTINGModel.FK_EventID" FromRole="Event" ToRole="Registration" />
+          <NavigationProperty Name="User" Relationship="EVENTS_MGR_TESTINGModel.FK_Event_OwnerID" FromRole="Event" ToRole="User" />
         </EntityType>
         <Association Name="FK_EventID">
           <End Type="EVENTS_MGR_TESTINGModel.Event" Role="Event" Multiplicity="1" />
@@ -244,6 +266,18 @@
           <Member Name="Deleted" Value="5" />
           <Member Name="NoShow" Value="6" />
         </EnumType>
+        <Association Name="FK_Event_OwnerID">
+          <End Type="EVENTS_MGR_TESTINGModel.User" Role="User" Multiplicity="1" />
+          <End Type="EVENTS_MGR_TESTINGModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="EnteredBy" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

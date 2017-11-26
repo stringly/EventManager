@@ -17,6 +17,7 @@ namespace EventManager.Controllers
         // GET: Events
         public ActionResult Index()
         {
+            ViewBag.CurrentUser = System.Web.HttpContext.Current.Cache["userID"];
             return View(db.Events.ToList());
         }
 
