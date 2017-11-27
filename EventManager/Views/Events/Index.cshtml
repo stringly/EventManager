@@ -2,26 +2,28 @@
 
 @{
     ViewBag.Title = "Index";
+    
 }
 
 <h2>View/Edit Events</h2>
-@section SideBar{
-    <nav id="sidebar" data-spy="affix" style="background-color:#151827">
-        <!-- Sidebar Links -->
-        <ul class="list-unstyled components">
-            <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
-            <li>
-                <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
-                <ul class="list-unstyled" id="eventManagementSubMenu">
-                    <li id="eventSideBarAll"  class="active"><a href="/Events/Index">Show All</a></li>
-                    <li id="eventSideBarOwnedByUser"><a href="/Events/UserEvents">My Events</a></li>
-                    <li id="registrationsSideBarPending"><a href="#">Find</a></li>
-                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
-                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
-                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
-                </ul>
-        </ul>
-    </nav>}
+<p>
+@section Sidebar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
+    <!-- Sidebar Links -->
+    <ul class="list-unstyled components">
+        <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
+        <li>
+            <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+            <ul class="list-unstyled" id="eventManagementSubMenu">
+                <li id="eventSideBarAll" class="active"><a href="/Events/Index">Show All</a></li>
+                <li id="eventSideBarOwnedByUser"><a href="/Events/UserEvents">My Events</a></li>
+                <li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
+            </ul>
+    </ul>
+</nav>}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>

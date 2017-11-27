@@ -2,11 +2,12 @@
 
 @{
     ViewBag.Title = "UserEvents";
+
 }
 
 <h2>My Events</h2>
-@section SideBar{
-    <nav id="sidebar" data-spy="affix" style="background-color:#151827">
+@section Sidebar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
         <!-- Sidebar Links -->
         <ul class="list-unstyled components">
             <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
@@ -14,7 +15,7 @@
                 <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
                 <ul class="list-unstyled" id="eventManagementSubMenu">
                     <li id="eventSideBarAll"><a href="/Events/Index">Show All</a></li>
-                    <li id="eventSideBarOwnedByUser" class="active"><a href="/Events/GetUserEvents">My Events</a></li>
+                    <li id="eventSideBarOwnedByUser" class="active"><a href="/Events/UserEvents">My Events</a></li>
                     <li id="registrationsSideBarPending"><a href="#">Find</a></li>
                     <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
                     <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
