@@ -13,12 +13,24 @@ namespace EventManager.Controllers
     public class EventsController : Controller
     {
         private EVENTS_MGR_TESTING_Entities db = new EVENTS_MGR_TESTING_Entities();
-
+        private int userID = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"]);
         // GET: Events
         public ActionResult Index()
         {
-            ViewBag.CurrentUser = System.Web.HttpContext.Current.Cache["userID"];
-            return View(db.Events.ToList());
+            ViewBag.CurrentUser = userID;
+            //return View(db.Events.ToList());
+            if (User.IsInRole("Development")){
+                 return View(db.EVENTS_LAST_6_MONTHS1().ToList());
+            }
+            else
+            {
+                return View(db.Events.ToList());
+            }
+            
+        }
+        public ActionResult UserEvents()
+        {
+            return View(db.USER_OWNED_EVENTS1(userID).ToList());
         }
 
         // GET: Events/Details/5

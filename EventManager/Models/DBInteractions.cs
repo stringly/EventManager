@@ -190,6 +190,23 @@ namespace EventManager.Models
             }
             return result;
         }
+        public IEnumerable<Event> GetEventListForUser()
+        {
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                DateTime dateDiff = DateTime.Today.AddMonths(-6);
+                return _dc.Events.Where(x => x.StartTime > dateDiff).ToList();
+            }
+
+        }
+        public IEnumerable<Event> GetEventListAll()
+        {
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {                
+                return _dc.Events.ToList();
+            }
+        }
+
         //User Interactions
         public Boolean AddNewUser(User u)
         {

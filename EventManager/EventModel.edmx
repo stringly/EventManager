@@ -123,6 +123,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="EVENTS_LAST_10_DAYS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="EVENTS_LAST_6_MONTHS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="USER_OWNED_EVENTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="User" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="EVENTS_MGR_TESTINGModelStoreContainer">
           <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Registrations" EntityType="Self.Registrations" Schema="dbo" store:Type="Tables" />
@@ -175,6 +180,16 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Event" EntitySet="Events" />
           </AssociationSet>
+          <FunctionImport Name="EVENTS_LAST_10_DAYS" ReturnType="Collection(EVENTS_MGR_TESTINGModel.EVENTS_LAST_10_DAYS_Result)" />
+          <FunctionImport Name="EVENTS_LAST_6_MONTHS" ReturnType="Collection(EVENTS_MGR_TESTINGModel.EVENTS_LAST_6_MONTHS_Result)" />
+          <FunctionImport Name="EVENTS_LAST_10_DAYS1" EntitySet="Events" ReturnType="Collection(EVENTS_MGR_TESTINGModel.Event)" />
+          <FunctionImport Name="EVENTS_LAST_6_MONTHS1" EntitySet="Events" ReturnType="Collection(EVENTS_MGR_TESTINGModel.Event)" />
+          <FunctionImport Name="USER_OWNED_EVENTS" ReturnType="Collection(EVENTS_MGR_TESTINGModel.USER_OWNED_EVENTS_Result)">
+            <Parameter Name="User" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="USER_OWNED_EVENTS1" EntitySet="Events" ReturnType="Collection(EVENTS_MGR_TESTINGModel.Event)">
+            <Parameter Name="User" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Registration">
           <Key>
@@ -278,6 +293,39 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="EVENTS_LAST_10_DAYS_Result">
+          <Property Type="Int32" Name="EventID" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="16" />
+          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="16" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="MaxStaff" Nullable="false" />
+          <Property Type="Int32" Name="MinStaff" Nullable="false" />
+          <Property Type="String" Name="FundCenter" Nullable="false" MaxLength="25" />
+          <Property Type="Int32" Name="EnteredBy" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="EVENTS_LAST_6_MONTHS_Result">
+          <Property Type="Int32" Name="EventID" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="16" />
+          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="16" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="MaxStaff" Nullable="false" />
+          <Property Type="Int32" Name="MinStaff" Nullable="false" />
+          <Property Type="String" Name="FundCenter" Nullable="false" MaxLength="25" />
+          <Property Type="Int32" Name="EnteredBy" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="USER_OWNED_EVENTS_Result">
+          <Property Type="Int32" Name="EventID" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="16" />
+          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="16" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="MaxStaff" Nullable="false" />
+          <Property Type="Int32" Name="MinStaff" Nullable="false" />
+          <Property Type="String" Name="FundCenter" Nullable="false" MaxLength="25" />
+          <Property Type="Int32" Name="EnteredBy" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -342,6 +390,54 @@
               <ScalarProperty Name="RoleId" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="EVENTS_LAST_10_DAYS" FunctionName="EVENTS_MGR_TESTINGModel.Store.EVENTS_LAST_10_DAYS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EVENTS_MGR_TESTINGModel.EVENTS_LAST_10_DAYS_Result">
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MaxStaff" ColumnName="MaxStaff" />
+                <ScalarProperty Name="MinStaff" ColumnName="MinStaff" />
+                <ScalarProperty Name="FundCenter" ColumnName="FundCenter" />
+                <ScalarProperty Name="EnteredBy" ColumnName="EnteredBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EVENTS_LAST_6_MONTHS" FunctionName="EVENTS_MGR_TESTINGModel.Store.EVENTS_LAST_6_MONTHS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EVENTS_MGR_TESTINGModel.EVENTS_LAST_6_MONTHS_Result">
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MaxStaff" ColumnName="MaxStaff" />
+                <ScalarProperty Name="MinStaff" ColumnName="MinStaff" />
+                <ScalarProperty Name="FundCenter" ColumnName="FundCenter" />
+                <ScalarProperty Name="EnteredBy" ColumnName="EnteredBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EVENTS_LAST_10_DAYS1" FunctionName="EVENTS_MGR_TESTINGModel.Store.EVENTS_LAST_10_DAYS" />
+          <FunctionImportMapping FunctionImportName="EVENTS_LAST_6_MONTHS1" FunctionName="EVENTS_MGR_TESTINGModel.Store.EVENTS_LAST_6_MONTHS" />
+          <FunctionImportMapping FunctionImportName="USER_OWNED_EVENTS" FunctionName="EVENTS_MGR_TESTINGModel.Store.USER_OWNED_EVENTS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EVENTS_MGR_TESTINGModel.USER_OWNED_EVENTS_Result">
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MaxStaff" ColumnName="MaxStaff" />
+                <ScalarProperty Name="MinStaff" ColumnName="MinStaff" />
+                <ScalarProperty Name="FundCenter" ColumnName="FundCenter" />
+                <ScalarProperty Name="EnteredBy" ColumnName="EnteredBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="USER_OWNED_EVENTS1" FunctionName="EVENTS_MGR_TESTINGModel.Store.USER_OWNED_EVENTS" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

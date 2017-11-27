@@ -9,18 +9,17 @@
     <nav id="sidebar" data-spy="affix" style="background-color:#151827">
         <!-- Sidebar Links -->
         <ul class="list-unstyled components">
-            <li class="active" id="AllEventsSideBarButton"><a href="#" onclick="SideBarClick(1)">All Events</a></li>
-            <li class="" id="UserOwnedEventsSideBarButton"><a href="#" onclick="SideBarClick(2)">My Events</a></li>
+            <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
             <li>
-                <!-- Link with dropdown items -->
-                @*<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-                            <li><a href="#">Page</a></li>
-                            <li><a href="#">Page</a></li>
-                            <li><a href="#">Page</a></li>
-                        </ul>
-                    <li><a href="#">Portfolio</a></li>
-                    <li><a href="#">Contact</a></li>*@
+                <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"  class="active"><a href="/Events/Index">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser"><a href="/Events/UserEvents">My Events</a></li>
+                    <li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
+                </ul>
         </ul>
     </nav>}
 <p>
@@ -40,10 +39,10 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
+        <th style="text-align:center">
             @Html.DisplayNameFor(model => model.MaxStaff)
         </th>
-        <th>
+        <th style="text-align:center">
             @Html.DisplayNameFor(model => model.MinStaff)
         </th>
         <th>
@@ -69,10 +68,10 @@
         <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.Description)
         </td>
-        <td style="vertical-align:middle">
+        <td style="vertical-align:middle; text-align:center">
             @Html.DisplayFor(modelItem => item.MaxStaff)
         </td>
-        <td style="vertical-align:middle">
+        <td style="vertical-align:middle; text-align:center">
             @Html.DisplayFor(modelItem => item.MinStaff)
         </td>
         <td style="vertical-align:middle">
@@ -81,14 +80,22 @@
         <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.User.LDAPName)
         </td>
-        <td>
+        <td style="text-align:center">
             @if (item.EnteredBy == @ViewBag.CurrentUser)
             {
-                <div class="btn-group">
-                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-success btn-sm"})
-                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
-                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
-                </div>
+
+                    <div class="btn-group-sm">
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-sm btn-warning" })
+                        </div>
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-sm btn-danger" })
+                        </div>
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-sm btn-success" })
+                        </div>
+                    </div>
+
             }
             else
             {
@@ -100,3 +107,11 @@
 }
 
 </table>
+@section scripts{
+    <script>
+        $(document).ready(function () { 
+
+
+        })
+
+    </script>}

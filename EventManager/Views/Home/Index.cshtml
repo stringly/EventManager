@@ -8,18 +8,17 @@
     <nav id="sidebar" data-spy="affix" style="background-color:#151827">
         <!-- Sidebar Links -->
         <ul class="list-unstyled components">
-            <li class="active" id="AllEventsSideBarButton"><a href="#" onclick="SideBarClick(1)">All Events</a></li>
-            <li class="" id="UserOwnedEventsSideBarButton"><a href="#" onclick="SideBarClick(2)">My Events</a></li>
+            <li id="calendarSideBarButton" class="active"><a href="/home/Index" onclick="">Calendar View</a></li>
             <li>
-                <!-- Link with dropdown items -->
-                @*<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-                            <li><a href="#">Page</a></li>
-                            <li><a href="#">Page</a></li>
-                            <li><a href="#">Page</a></li>
-                        </ul>
-                    <li><a href="#">Portfolio</a></li>
-                    <li><a href="#">Contact</a></li>*@
+                <a aria-expanded="false" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"><a href="/Events/Index">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser"><a href="@Url.Action("UserEvents", "Events")">My Events</a></li>
+                    <li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
+                </ul>
         </ul>
     </nav>}
     <div class="container-fluid pull-left" id="calendar"style="background-color:#eeeeee; padding:10px; box-shadow:0 5px 10px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"></div>

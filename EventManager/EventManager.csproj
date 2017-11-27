@@ -134,6 +134,7 @@
     <Content Include="Global.asax" />
     <Content Include="Notes\ELMAH DBScript.txt" />
     <Content Include="Notes\EventOwnerFK.txt" />
+    <Content Include="Notes\SQL_SPs.txt" />
     <Content Include="Resources\Images\blue.jpg" />
     <Content Include="Resources\Images\Caution.png" />
     <Content Include="Resources\Images\Documentation.png" />
@@ -180,6 +181,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EventModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EVENTS_LAST_10_DAYS_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EVENTS_LAST_6_MONTHS_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -198,6 +205,9 @@
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="USER_OWNED_EVENTS_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\EventRegistrationViewModel.cs" />
@@ -229,6 +239,7 @@
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
+    <Content Include="Views\Events\UserEvents.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,156 @@
+﻿@model IEnumerable<EventManager.Event>
+
+@{
+    ViewBag.Title = "UserEvents";
+}
+
+<h2>My Events</h2>
+@section SideBar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
+            <li>
+                <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"><a href="/Events/Index">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser" class="active"><a href="/Events/GetUserEvents">My Events</a></li>
+                    <li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
+                </ul>
+        </ul>
+    </nav>}
+<p>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr style="background-color:#333333; color:#fff;">
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxStaff)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinStaff)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FundCenter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnteredBy)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxStaff)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinStaff)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FundCenter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.LDAPName)
+                </td>
+                <td>
+                    <div class="btn-group-sm">
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-sm btn-warning" })
+                        </div>
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-sm btn-danger" })
+                        </div>
+                        <div class="btn-group" role="group">
+                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-sm btn-success" })
+                        </div>
+                    </div>
+
+                </td>
+
+            </tr>
+            if (item.Registrations.Count > 0)
+            {
+                <tr>
+                    <td colspan="9" class="accordion-body" style="background-color:#9ed0e4">
+                        <table class="table table-condensed table-bordered" style="margin-bottom:0px">
+                            <thead>
+                                <tr>
+                                    <th>Current Registrations:</th>
+                                </tr>                                
+                            </thead>
+                            <tbody>
+                                @foreach (var r in item.Registrations)
+                                {
+                                var email = r.User.LDAPName + "@co.pg.md.us";
+                                var user = r.User.LastName + ", " + r.User.FirstName;
+                                <tr>
+                                    <td>
+                                        @r.User.Rank
+                                    </td>
+                                    <td>
+                                        @user
+                                    </td>
+                                    <td>
+                                        @email
+                                    </td>
+                                    <td>
+                                        @r.TimeStamp
+                                    </td>
+
+                                    <td>
+                                        @r.Status
+                                    </td>
+
+                                </tr>
+                                }
+
+
+
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                @*<tr style="background-color:#294978; color:#fff">
+                    <td colspan="2" style="background-color:lightgrey"></td>
+                    <td colspan="7">
+                        Current Registrations:
+                    </td>
+                </tr>*@
+
+            }
+        }
+    </tbody>
+</table>
