@@ -27,99 +27,102 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr style="background-color:#333333; color:#fff;">
-        <th>
-            @Html.DisplayNameFor(model => model.EventName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th style="text-align:center">
-            @Html.DisplayNameFor(model => model.MaxStaff)
-        </th>
-        <th style="text-align:center">
-            @Html.DisplayNameFor(model => model.MinStaff)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FundCenter)
-        </th>
-        <th>
-            Entered By
-        </th>
-        <th style="text-align:center">
-            Options
-        </th>
-    </tr>
-    @{
-        var rowCount = 0;
-    }
+<div style="margin-right:50px">
+    <table class="table">
+        <tr style="background-color:#333333; color:#fff;">
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.MaxStaff)
+            </th>
+            <th style="text-align:center">
+                @Html.DisplayNameFor(model => model.MinStaff)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FundCenter)
+            </th>
+            <th>
+                Entered By
+            </th>
+            <th style="text-align:center">
+                Options
+            </th>
+        </tr>
+        @{
+            var rowCount = 0;
+        }
 
-@foreach (var item in Model) {
-    var rowStyle = "";
-    rowCount++;
-    if (rowCount % 2 == 0)
-    {
-        rowStyle = "background-color:#c2bebe";
-    }
-    <tr style="@rowStyle">
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.EventName)
-        </td>
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td style="vertical-align:middle; text-align:center">
-            @Html.DisplayFor(modelItem => item.MaxStaff)
-        </td>
-        <td style="vertical-align:middle; text-align:center">
-            @Html.DisplayFor(modelItem => item.MinStaff)
-        </td>
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.FundCenter)
-        </td>
-        <td style="vertical-align:middle">
-            @Html.DisplayFor(modelItem => item.User.LDAPName)
-        </td>
-        <td style="text-align:center">
-            @if (item.EnteredBy == @ViewBag.CurrentUser)
+        @foreach (var item in Model)
+        {
+            var rowStyle = "";
+            rowCount++;
+            if (rowCount % 2 == 0)
             {
-
-                    <div class="btn-group-sm">
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
-                        </div>
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
-                        </div>
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
-                        </div>
-                    </div>
-
+                rowStyle = "background-color:#c2bebe";
             }
-            else
-            {
-                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
-            }
+            <tr style="@rowStyle">
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.EventName)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.StartTime)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td style="vertical-align:middle; text-align:center">
+                    @Html.DisplayFor(modelItem => item.MaxStaff)
+                </td>
+                <td style="vertical-align:middle; text-align:center">
+                    @Html.DisplayFor(modelItem => item.MinStaff)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.FundCenter)
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.DisplayFor(modelItem => item.User.LDAPName)
+                </td>
+                <td style="text-align:center">
+                    @if (item.EnteredBy == @ViewBag.CurrentUser)
+                    {
 
-        </td>
-    </tr>
-}
+                        <div class="btn-group-sm">
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
+                            </div>
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
+                            </div>
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                            </div>
+                        </div>
 
-</table>
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                    }
+
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
 @section scripts{
     <script>
         $(document).ready(function () { 

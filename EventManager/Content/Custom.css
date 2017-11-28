@@ -76,6 +76,17 @@ a[aria-expanded="true"]::before {
         margin-left: 0;
     }
 }
+@media screen and (min-width: 768px){
+    .modal-dialog {
+        right: auto;
+        left: 50%;
+        width: 900px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+}
+
+
 
 p {
     font-family: 'Roboto', sans-serif;
@@ -176,6 +187,17 @@ h1, h2, h3, h4, h5, h6{
     color: #333;
     text-shadow: none;
     box-shadow: none;
+}
+.fc-view-container{
+    background-color: #fff;
+}
+
+.fc-day-header {
+    color:#fff;
+    background-color: #171f32;
+}
+.fc-center {
+    color:#0c0201;
 }
 /* Buttons
 ------------------------------------------------------------------------*/
@@ -397,4 +419,42 @@ html, body{
     text-shadow: 0 1px 0 #fff;
     opacity: .2;
     filter: alpha(opacity=20);
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: 28px;
+    padding: 3px 6px;
+    padding-top: 6px;
+    padding-right: 12px;
+    padding-bottom: 6px;
+    padding-left: 12px;
+    font-size: 12px; 
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.input-group-addon {
+    padding: 3px 6px;
+    height: 28px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+label {
+    display: inline-block;
+    margin-bottom: 0px;
+    font-weight: bold;
 }
