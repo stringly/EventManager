@@ -54,68 +54,109 @@
             <th>
                 @Html.DisplayNameFor(model => model.EnteredBy)
             </th>
+            <th>
+                Registrations
+            </th>
             <th></th>
+            <th>
+                Options
+            </th>
         </tr>
     </thead>
     <tbody>
+        @{ 
+            var rowCount = 0;
+        }
+        
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EventName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaxStaff)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MinStaff)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FundCenter)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.LDAPName)
-                </td>
-                <td>
-                    <div class="btn-group-sm">
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-sm btn-warning" })
-                        </div>
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-sm btn-danger" })
-                        </div>
-                        <div class="btn-group" role="group">
-                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-sm btn-success" })
-                        </div>
-                    </div>
-
-                </td>
-
-            </tr>
-            if (item.Registrations.Count > 0)
+            var rowStyle = "";
+            rowCount++;
+            if (rowCount % 2 == 0)
             {
-                <tr>
-                    <td colspan="9" class="accordion-body" style="background-color:#9ed0e4">
-                        <table class="table table-condensed table-bordered" style="margin-bottom:0px">
+                rowStyle = "background-color:#c2bebe";
+            }
+                <tr style="@rowStyle">       
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EventName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.MaxStaff)
+                    </td>
+                    <td style="text-align:center">
+                        @Html.DisplayFor(modelItem => item.MinStaff)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FundCenter)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.LDAPName)
+                    </td>
+                    <td style="text-align:center">
+                        @item.Registrations.Count
+                    </td>
+                    <td>
+                        @if (item.Registrations.Count > 0)
+                    {
+                        var buttonID = "showRegistrationButton" + @item.EventID;
+                            <button type="button" id="showRegistrationButton"
+                                    class="btn btn-xs"
+                                    onClick="ShowRegistrations(@item.EventID)"
+                                    data-toggle="popover"
+                                    data-trigger="hover"
+                                    data-placement="bottom"
+                                    data-content="Show/Hide registrations"
+                                    style="padding:0px; color:blue;">
+                                <span class="glyphicon glyphicon-sort"></span>
+                            </button>
+                        }
+
+                    </td>
+                    <td>
+                        <div class="btn-group-sm">
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
+                            </div>
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
+                            </div>
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                            </div>
+                        </div>
+
+                    </td>
+
+                </tr>
+                if (item.Registrations.Count > 0)
+                {
+                    var rowID = "registrationRow" + item.EventID;
+                <tr style="display:none" id="@rowID">
+                    <td colspan="11" class="accordion-body" style="background-color:#9ed0e4; padding-left:20px; padding-right:20px">
+                        <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px;   max-width:100%">
                             <thead>
                                 <tr>
-                                    <th>Current Registrations:</th>
+                                    <th colspan="2">Current Registrations: @item.Registrations.Count</th>
+                                    <th colspan="1">
+
+                                    </th>
+                                    
                                 </tr>                                
                             </thead>
                             <tbody>
                                 @foreach (var r in item.Registrations)
                                 {
-                                var email = r.User.LDAPName + "@co.pg.md.us";
-                                var user = r.User.LastName + ", " + r.User.FirstName;
+                                    var email = r.User.LDAPName + "@co.pg.md.us";
+                                    var user = r.User.LastName + ", " + r.User.FirstName;
                                 <tr>
                                     <td>
                                         @r.User.Rank
@@ -155,3 +196,22 @@
         }
     </tbody>
 </table>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+        })
+
+        function ShowRegistrations(id) {
+            var rowName = "registrationRow" + id;
+            if ($('#' + rowName).is(":visible")){
+                $('#' + rowName).hide();
+            }
+            else {
+                $('#' + rowName).show();
+            }
+                
+        }
+    </script>
+}
+

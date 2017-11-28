@@ -51,13 +51,24 @@
             @Html.DisplayNameFor(model => model.FundCenter)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EnteredBy)
+            Entered By
         </th>
-        <th></th>
+        <th style="text-align:center">
+            Options
+        </th>
     </tr>
+    @{
+        var rowCount = 0;
+    }
 
 @foreach (var item in Model) {
-    <tr>
+    var rowStyle = "";
+    rowCount++;
+    if (rowCount % 2 == 0)
+    {
+        rowStyle = "background-color:#c2bebe";
+    }
+    <tr style="@rowStyle">
         <td style="vertical-align:middle">
             @Html.DisplayFor(modelItem => item.EventName)
         </td>
@@ -88,20 +99,20 @@
 
                     <div class="btn-group-sm">
                         <div class="btn-group" role="group">
-                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @class = "btn-sm btn-warning" })
+                            @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
                         </div>
                         <div class="btn-group" role="group">
-                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @class = "btn-sm btn-danger" })
+                            @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
                         </div>
                         <div class="btn-group" role="group">
-                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-sm btn-success" })
+                            @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
                         </div>
                     </div>
 
             }
             else
             {
-                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @class = "btn-success btn-sm" })
+                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
             }
 
         </td>
