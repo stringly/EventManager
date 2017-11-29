@@ -30,7 +30,7 @@
 <div style="padding-right:50px">
     <table class="table">
         <thead>
-            <tr style="background-color:#151827; color:#fff;">
+            <tr style="background-color:#243e63; color:#fff;">
                 <th>
                     @Html.DisplayNameFor(model => model.EventName)
                 </th>
@@ -43,10 +43,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Description)
                 </th>
-                <th>
+                <th style="text-align:center">
                     @Html.DisplayNameFor(model => model.MaxStaff)
                 </th>
-                <th>
+                <th style="text-align:center">
                     @Html.DisplayNameFor(model => model.MinStaff)
                 </th>
                 <th>
@@ -55,11 +55,11 @@
                 <th>
                     @Html.DisplayNameFor(model => model.EnteredBy)
                 </th>
-                <th>
+                <th style="text-align:center">
                     Registrations
                 </th>
                 <th></th>
-                <th>
+                <th style="text-align:center">
                     Options
                 </th>
             </tr>
@@ -71,11 +71,11 @@
 
             @foreach (var item in Model)
             {
-                var rowStyle = "";
+                var rowStyle = "vertical-align:middle";
                 rowCount++;
                 if (rowCount % 2 == 0)
                 {
-                    rowStyle = "background-color:#c2bebe";
+                    rowStyle = rowStyle + "; background-color:#c2bebe";
                 }
                 <tr style="@rowStyle">
                     <td>
@@ -123,7 +123,7 @@
 
                     </td>
                     <td>
-                        <div class="btn-group-sm">
+                        <div class="btn-group-sm" style="text-align:center">
                             <div class="btn-group" role="group">
                                 @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
                             </div>
@@ -142,10 +142,10 @@
                 {
                     var rowID = "registrationRow" + item.EventID;
                     <tr style="display:none" id="@rowID">
-                        <td colspan="11" class="accordion-body" style="background-color:#d1e0f5; padding-left:20px; padding-right:20px">
-                            <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px; max-width:100%">
+                        <td colspan="11" class="accordion-body" style="background-color:#d1e0f5; padding-left:20px; padding-right:5px;">
+                            <table class="table table-condensed table-responsive" style="margin-bottom:1px; max-width:100%">
                                 <thead>
-                                    <tr style="background-color:#284773; color: #fff">
+                                    <tr style="background-color:#d1e0f5; color: #111018">
                                         <th>Timestamp</th>
                                         <th>Registrant Name</th>
                                         <th>Contact Number</th>
