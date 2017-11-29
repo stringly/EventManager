@@ -31,6 +31,7 @@ namespace EventManager
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<LTRank> LTRanks { get; set; }
     
         public virtual ObjectResult<EVENTS_LAST_10_DAYS_Result> EVENTS_LAST_10_DAYS()
         {

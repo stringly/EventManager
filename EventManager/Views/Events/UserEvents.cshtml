@@ -30,7 +30,7 @@
 <div style="padding-right:50px">
     <table class="table">
         <thead>
-            <tr style="background-color:#333333; color:#fff;">
+            <tr style="background-color:#151827; color:#fff;">
                 <th>
                     @Html.DisplayNameFor(model => model.EventName)
                 </th>
@@ -75,7 +75,7 @@
                 rowCount++;
                 if (rowCount % 2 == 0)
                 {
-                    rowStyle = "background-color:#f5f5f5";
+                    rowStyle = "background-color:#c2bebe";
                 }
                 <tr style="@rowStyle">
                     <td>
@@ -142,35 +142,36 @@
                 {
                     var rowID = "registrationRow" + item.EventID;
                     <tr style="display:none" id="@rowID">
-                        <td colspan="11" class="accordion-body" style="background-color:#f5f5f5; padding-left:20px; padding-right:20px">
-                            <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px;   max-width:100%">
+                        <td colspan="11" class="accordion-body" style="background-color:#d1e0f5; padding-left:20px; padding-right:20px">
+                            <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px; max-width:100%">
                                 <thead>
-                                    <tr>
-                                        <th colspan="2">Current Registrations: @item.Registrations.Count</th>
-                                        <th colspan="1">
-
-                                        </th>
-
+                                    <tr style="background-color:#284773; color: #fff">
+                                        <th>Timestamp</th>
+                                        <th>Registrant Name</th>
+                                        <th>Contact Number</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var r in item.Registrations)
                                     {
                                         var email = r.User.LDAPName + "@co.pg.md.us";
-                                        var user = r.User.LastName + ", " + r.User.FirstName;
+                                        var user = r.User.LTRank.RankShort + " " + r.User.FirstName + " " + r.User.LastName + " #" + r.User.IDNumber;
                                         <tr>
                                             <td>
-                                                @r.User.Rank
+                                                @r.TimeStamp.ToString("MM/dd/yy HH:mm:ss")
                                             </td>
                                             <td>
                                                 @user
                                             </td>
                                             <td>
-                                                @email
+                                                @r.User.ContactNumber
                                             </td>
                                             <td>
-                                                @r.TimeStamp
+                                                @email
                                             </td>
+
 
                                             <td>
                                                 @r.Status

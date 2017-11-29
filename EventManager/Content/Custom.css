@@ -458,3 +458,6 @@ label {
     margin-bottom: 0px;
     font-weight: bold;
 }
+th{
+    font-weight:normal;
+}

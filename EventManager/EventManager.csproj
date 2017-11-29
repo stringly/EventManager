@@ -190,6 +190,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="LTRank.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DBInteractions.cs" />
     <Compile Include="Helpers\EventRepeater.cs" />
     <Compile Include="Models\EventFormResult.cs" />

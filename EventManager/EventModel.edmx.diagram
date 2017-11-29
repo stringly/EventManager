@@ -13,6 +13,8 @@
         <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.Role" Width="1.5" PointX="0.75" PointY="1.625" />
         <AssociationConnector Association="EVENTS_MGR_TESTINGModel.UserRole" />
         <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_Event_OwnerID" />
+        <EntityTypeShape EntityType="EVENTS_MGR_TESTINGModel.LTRank" Width="1.5" PointX="3.375" PointY="4.875" />
+        <AssociationConnector Association="EVENTS_MGR_TESTINGModel.FK_RankID" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

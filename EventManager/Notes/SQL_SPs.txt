@@ -24,3 +24,13 @@ SELECT *
 FROM [dbo].[Events]
 WHERE EnteredBy = @User
 ORDER BY StartTime DESC
+
+//
+
+CREATE TABLE [dbo].[LTRanks]
+(
+	[RankId] INT NOT NULL PRIMARY KEY, 
+    [RankFullName] NCHAR(30) NOT NULL,
+	[RankShort] NCHAR(10) NOT NULL,
+	[PayGrade] NCHAR(5) NULL	
+)
