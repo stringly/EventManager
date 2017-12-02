@@ -110,7 +110,7 @@ namespace EventManager.Controllers
             try
             {
                 DBInteractions db = new DBInteractions();
-                status = db.DeleteRegistration(r.RegistrationID);
+                status = db.EditRegistration(r.RegistrationID, RegistrationStats.Deleted);
             }
             catch (Exception ex)
             {

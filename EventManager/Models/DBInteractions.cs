@@ -299,7 +299,7 @@ namespace EventManager.Models
             }
         }
         //Registration Interactions
-        public Boolean DeleteRegistration(int registrationID)
+        public Boolean EditRegistration(int registrationID, RegistrationStats status)
         {
             bool result = false;
             using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
@@ -309,7 +309,7 @@ namespace EventManager.Models
                     Registration r = _db.Registrations.Where(a => a.RegistrationID == registrationID).FirstOrDefault();
                     if (r != null)
                     {
-                        r.Status = RegistrationStats.Deleted;
+                        r.Status = status;
                         //_db.Registrations.Remove(r);
                         _db.SaveChanges();
                         result = true;
@@ -317,11 +317,13 @@ namespace EventManager.Models
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.InnerException.Message);
+                    Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(new Elmah.Error(ex));
                 }
             }
             return result;
         }
+
+
 
     }
 }

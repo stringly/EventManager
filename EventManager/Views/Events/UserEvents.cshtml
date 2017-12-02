@@ -32,34 +32,31 @@
         <thead>
             <tr style="background-color:#151827; color:#fff;">
                 <th>
-                    @Html.DisplayNameFor(model => model.EventName)
+                    Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.StartTime)
+                    Start Time
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.EndTime)
+                    End Time
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                <th style="text-align:center">
+                    Hours
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MaxStaff)
+                <th style="text-align:center">
+                    Max
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MinStaff)
+                <th style="text-align:center">
+                    Min
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FundCenter)
+                <th style="text-align:center">
+                    Confirmed
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EnteredBy)
-                </th>
-                <th>
+                <th style="text-align:center">
                     Registrations
                 </th>
                 <th></th>
-                <th>
+                <th style="text-align:center">
                     Options
                 </th>
             </tr>
@@ -77,6 +74,8 @@
                 {
                     rowStyle = "background-color:#c2bebe";
                 }
+                var hours = (item.EndTime - item.StartTime).TotalHours;
+                var confirmedRegs = 0;
                 <tr style="@rowStyle">
                     <td>
                         @Html.DisplayFor(modelItem => item.EventName)
@@ -87,22 +86,39 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.EndTime)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
+                    <td style="text-align:center"
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Total Hours for Event">
+                        @hours
                     </td>
-                    <td style="text-align:center">
+                    <td style="text-align:center"                        
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Maximum Staffing for Event">
                         @Html.DisplayFor(modelItem => item.MaxStaff)
                     </td>
-                    <td style="text-align:center">
+                    <td style="text-align:center"                        
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Minimum Staffing for Event">
                         @Html.DisplayFor(modelItem => item.MinStaff)
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FundCenter)
+                    <td style="text-align:center"                        
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Total Confirmed Registrations">
+                        @confirmedRegs
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.User.LDAPName)
-                    </td>
-                    <td style="text-align:center">
+                    <td style="text-align:center"                        
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Total Registrations">
                         @item.Registrations.Count
                     </td>
                     <td>
@@ -122,7 +138,7 @@
                         }
 
                     </td>
-                    <td>
+                    <td style="text-align:center">
                         <div class="btn-group-sm">
                             <div class="btn-group" role="group">
                                 @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
@@ -140,6 +156,7 @@
                 </tr>
                 if (item.Registrations.Count > 0)
                 {
+                    
                     var rowID = "registrationRow" + item.EventID;
                     <tr style="display:none" id="@rowID">
                         <td colspan="11" class="accordion-body" style="background-color:#d1e0f5; padding-left:20px; padding-right:20px">
@@ -150,7 +167,11 @@
                                         <th>Registrant Name</th>
                                         <th>Contact Number</th>
                                         <th>Email</th>
-                                        <th>Status</th>
+                                        <th style="text-align:center">Hours/This Month</th>
+                                        <th style="text-align:center">Last 30 Days</th>
+                                        <th style="text-align:center">Last 90 Days</th>
+                                        <th style="text-align:center">Status</th>
+                                        <th style="text-align:center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -158,6 +179,36 @@
                                     {
                                         var email = r.User.LDAPName + "@co.pg.md.us";
                                         var user = r.User.LTRank.RankShort + " " + r.User.FirstName + " " + r.User.LastName + " #" + r.User.IDNumber;
+                                        var hoursThisMonth = 0.0;
+                                        var hoursLast30Days = 0.0;
+                                        var hoursLast90Days = 0.0;
+                                        if (r.Status == RegistrationStats.Confirmed)
+                                        {
+                                            confirmedRegs++;
+                                        }
+                                        foreach (var u in r.User.Registrations)
+                                        {
+                                            if (u.Status == RegistrationStats.Confirmed)
+                                            {
+                                                if (u.Event.StartTime.Month == DateTime.Now.Month && u.Event.StartTime.Year == DateTime.Now.Year)
+                                                {
+                                                    //add hours to "This month" user total
+                                                    hoursThisMonth = hoursThisMonth + (u.Event.EndTime - u.Event.StartTime).TotalHours;
+                                                }
+                                                if (u.Event.StartTime >= DateTime.Now.AddDays(-30))
+                                                {
+                                                    //add hours to "Last 30 days" total
+                                                    hoursLast30Days = hoursLast30Days + (u.Event.EndTime - u.Event.StartTime).TotalHours;
+                                                }
+                                                if (u.Event.StartTime >= DateTime.Now.AddDays(-90))
+                                                {
+                                                    //add hours to "Last 90 Days" total
+                                                    hoursLast90Days = hoursLast90Days + (u.Event.EndTime - u.Event.StartTime).TotalHours;
+                                                }
+                                            }
+
+
+                                        }
                                         <tr>
                                             <td>
                                                 @r.TimeStamp.ToString("MM/dd/yy HH:mm:ss")
@@ -171,29 +222,71 @@
                                             <td>
                                                 @email
                                             </td>
-
-
-                                            <td>
+                                            <td style="text-align:center"                        
+                                                data-toggle="popover"
+                                                data-trigger="hover"
+                                                data-placement="bottom"
+                                                data-content="Total hours that this user has been awarded this month">
+                                                @hoursThisMonth
+                                            </td>
+                                            <td style="text-align:center"                        
+                                                data-toggle="popover"
+                                                data-trigger="hover"
+                                                data-placement="bottom"
+                                                data-content="Total hours that this user has been awarded in the last 30 days">
+                                                @hoursLast30Days
+                                            </td>
+                                            <td style="text-align:center"                        
+                                                data-toggle="popover"
+                                                data-trigger="hover"
+                                                data-placement="bottom"
+                                                data-content="Total hours that this user has been awarded in the last 90 days">
+                                                @hoursLast90Days
+                                            </td>
+                                            <td style="text-align:center">
                                                 @r.Status
                                             </td>
+                                            <td style="text-align:center">
+                                                <div class="btn-group-sm">
+                                                    <div class="btn-group" role="group">
+                                                        <a class="btn-xs" href="@("/Events/ConfirmRegistration/" + r.RegistrationID)"
+                                                            style="text-align:center"                        
+                                                            data-toggle="popover"
+                                                            data-trigger="hover"
+                                                            data-placement="bottom"
+                                                            data-content="Confirm this registration">
+                                                            <span class="glyphicon glyphicon-ok" style="color:green"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group" role="group">
+                                                        <a class="btn-xs" href="@("/Events/DeclineRegistration/" + r.RegistrationID)"
+                                                            style="text-align:center"                        
+                                                            data-toggle="popover"
+                                                            data-trigger="hover"
+                                                            data-placement="bottom"
+                                                            data-content="Decline this registration">
+                                                            <span class="glyphicon glyphicon-remove" style="color:red"></span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="btn-group" role="group">
+                                                        <a class="btn-xs" href="@("/Events/StandbyRegistration/" + r.RegistrationID)"
+                                                            style="text-align:center"                        
+                                                            data-toggle="popover"
+                                                            data-trigger="hover"
+                                                            data-placement="bottom"
+                                                            data-content="Place this user on standby for this event">
+                                                            <span class="glyphicon glyphicon-earphone" style="color:blue"></span>
+                                                        </a>
+                                                    </div>
+                                                </div>
 
+                                            </td>
                                         </tr>
                                     }
-
-
-
-
                                 </tbody>
                             </table>
                         </td>
                     </tr>
-                    @*<tr style="background-color:#294978; color:#fff">
-                            <td colspan="2" style="background-color:lightgrey"></td>
-                            <td colspan="7">
-                                Current Registrations:
-                            </td>
-                        </tr>*@
-
                 }
             }
         </tbody>
@@ -203,7 +296,9 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            $('[data-toggle="popover"]').popover();
+            $('[data-toggle="popover"]').popover({
+                container: 'body'
+            });
         })
 
         function ShowRegistrations(id) {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using EventManager;
+using EventManager.Models;
 
 namespace EventManager.Controllers
 {
@@ -135,6 +135,43 @@ namespace EventManager.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult ConfirmRegistration(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DBInteractions db = new DBInteractions();
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Confirmed);
+
+            return RedirectToAction("UserEvents");
+            
+        }
+        public ActionResult DeclineRegistration(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DBInteractions db = new DBInteractions();
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Declined);
+
+            return RedirectToAction("UserEvents");
+
+        }
+        public ActionResult StandbyRegistration(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            DBInteractions db = new DBInteractions();
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Standby);
+
+            return RedirectToAction("UserEvents");
+
         }
     }
 }
