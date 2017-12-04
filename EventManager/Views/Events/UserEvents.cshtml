@@ -160,7 +160,7 @@
                     var rowID = "registrationRow" + item.EventID;
                     <tr style="display:none" id="@rowID">
                         <td colspan="11" class="accordion-body" style="background-color:#d1e0f5; padding-left:20px; padding-right:20px">
-                            <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px; max-width:100%">
+                            <table class="table table-condensed table-bordered table-responsive" id="@("regTable" + item.EventID)" style="margin-bottom:0px; max-width:100%">
                                 <thead>
                                     <tr style="background-color:#284773; color: #fff">
                                         <th>Timestamp</th>
@@ -171,7 +171,31 @@
                                         <th style="text-align:center">Last 30 Days</th>
                                         <th style="text-align:center">Last 90 Days</th>
                                         <th style="text-align:center">Status</th>
-                                        <th style="text-align:center">Actions</th>
+                                        <th style="text-align:center; 
+                                                   border-top-width:3px; 
+                                                   border-top-color:black; 
+                                                   border-left-width:3px; 
+                                                   border-left-color:black;
+                                                   background-color:#3a75bf;
+                                                   color:white">
+                                                   Confirm
+                                        </th>
+                                        <th style="text-align:center; 
+                                                   border-top-width:3px; 
+                                                   border-top-color:black;
+                                                   background-color:#3a75bf;
+                                                   color:white">
+                                                   Standby
+                                        </th>
+                                        <th style="text-align:center; 
+                                                   border-top-width:3px; 
+                                                   border-top-color:black; 
+                                                   border-right-width:3px; 
+                                                   border-right-color:black;
+                                                   background-color:#3a75bf;
+                                                   color:white">
+                                                   Decline
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -209,7 +233,7 @@
 
 
                                         }
-                                        <tr>
+                                        <tr id="@r.RegistrationID">
                                             <td>
                                                 @r.TimeStamp.ToString("MM/dd/yy HH:mm:ss")
                                             </td>
@@ -222,69 +246,121 @@
                                             <td>
                                                 @email
                                             </td>
-                                            <td style="text-align:center"                        
+                                            <td style="text-align:center"
+                                                id="@("MonthlyHours" + @r.RegistrationID)"                        
                                                 data-toggle="popover"
                                                 data-trigger="hover"
                                                 data-placement="bottom"
                                                 data-content="Total hours that this user has been awarded this month">
                                                 @hoursThisMonth
                                             </td>
-                                            <td style="text-align:center"                        
+                                            <td style="text-align:center"
+                                                id="@("Last30DayHours" + @r.RegistrationID)"                        
                                                 data-toggle="popover"
                                                 data-trigger="hover"
                                                 data-placement="bottom"
                                                 data-content="Total hours that this user has been awarded in the last 30 days">
                                                 @hoursLast30Days
                                             </td>
-                                            <td style="text-align:center"                        
+                                            <td style="text-align:center"
+                                                id="@("Last90DayHours" + @r.RegistrationID)"                        
                                                 data-toggle="popover"
                                                 data-trigger="hover"
                                                 data-placement="bottom"
                                                 data-content="Total hours that this user has been awarded in the last 90 days">
                                                 @hoursLast90Days
                                             </td>
-                                            <td style="text-align:center">
-                                                @r.Status
-                                            </td>
-                                            <td style="text-align:center">
-                                                <div class="btn-group-sm">
-                                                    <div class="btn-group" role="group">
-                                                        <a class="btn-xs" href="@("/Events/ConfirmRegistration/" + r.RegistrationID)"
-                                                            style="text-align:center"                        
-                                                            data-toggle="popover"
-                                                            data-trigger="hover"
-                                                            data-placement="bottom"
-                                                            data-content="Confirm this registration">
-                                                            <span class="glyphicon glyphicon-ok" style="color:green"></span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="btn-group" role="group">
-                                                        <a class="btn-xs" href="@("/Events/DeclineRegistration/" + r.RegistrationID)"
-                                                            style="text-align:center"                        
-                                                            data-toggle="popover"
-                                                            data-trigger="hover"
-                                                            data-placement="bottom"
-                                                            data-content="Decline this registration">
-                                                            <span class="glyphicon glyphicon-remove" style="color:red"></span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="btn-group" role="group">
-                                                        <a class="btn-xs" href="@("/Events/StandbyRegistration/" + r.RegistrationID)"
-                                                            style="text-align:center"                        
-                                                            data-toggle="popover"
-                                                            data-trigger="hover"
-                                                            data-placement="bottom"
-                                                            data-content="Place this user on standby for this event">
-                                                            <span class="glyphicon glyphicon-earphone" style="color:blue"></span>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                            @{ 
+                                                var statusStyle = "text-align:center; font-weight:bold; ";
+                                                switch (r.Status)
+                                                {
+                                                    case RegistrationStats.Confirmed:
+                                                        statusStyle = statusStyle + "color:green";
+                                                        break;
+                                                    case RegistrationStats.Declined:
+                                                        statusStyle = statusStyle + "color:red";
+                                                        break;
+                                                    case RegistrationStats.Standby:
+                                                        statusStyle = statusStyle + "color:orange";
+                                                        break;
+                                                }
+                                            }
+                                            <td style="@statusStyle"
+                                                class="statusrow"
+                                                id="@("Status" + @r.RegistrationID)">@r.Status</td>                                               
+                                            
+                                            @switch (r.Status)
+                                            {
+                                                
+                                                case RegistrationStats.Confirmed:
 
-                                            </td>
+                                                    <td style="text-align:center; border-left-width:3px; border-left-color:black;">
+                                                        <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)" checked />
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <input type="checkbox" id="@("chkStandby" + r.RegistrationID)" OnClick="StandbyChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    <td style="text-align:center; border-right-width:3px; border-right-color:black;">
+                                                        <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    break;
+                                                case RegistrationStats.Standby:
+                                                    <td style="text-align:center; border-left-width:3px; border-left-color:black;">
+                                                        <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <input type="checkbox" id="@("chkStandby" + r.RegistrationID)" OnClick="StandbyChecked(@r.RegistrationID, @r.EventID)"checked/>
+                                                    </td>
+                                                    <td style="text-align:center; border-right-width:3px; border-right-color:black;">
+                                                        <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    break;
+                                                case RegistrationStats.Declined:
+                                                    <td style="text-align:center; border-left-width:3px; border-left-color:black;">
+                                                        <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <input type="checkbox" id="@("chkStandby" + r.RegistrationID)" OnClick="StandbyChecked(@r.RegistrationID, @r.EventID)"/>
+                                                    </td>
+                                                    <td style="text-align:center; border-right-width:3px; border-right-color:black;">
+                                                        <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)"checked/>
+                                                    </td>
+                                                    break;
+                                                default:
+                                                    <td style="text-align:center; ; border-left-width:3px; border-left-color:black;">
+                                                        <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)" />
+                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <input type="checkbox" id="@("chkStandby" + r.RegistrationID)" OnClick="StandbyChecked(@r.RegistrationID, @r.EventID)" />
+                                                    </td>
+                                                    <td style="text-align:center; border-right-width:3px; border-right-color:black;">
+                                                        <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)" />
+                                                    </td>
+                                                    break;
+                                            }
+
                                         </tr>
-                                    }
+                                    }    
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="8" style="background-color:#d1e0f5"></td>
+                                        <td colspan="3" style="text-align:center; 
+                                                        border-right-width:3px; 
+                                                        border-right-color:black; 
+                                                        border-left-width:3px; 
+                                                        border-left-color:black;; 
+                                                        border-bottom-width:3px; 
+                                                        border-bottom-color:black;"
+                                                        >
+                                            <button type="button" id="@("submitButton" + item.EventID)" onclick="SubmitClick(@item.EventID)" class="btn-xs btn-success" style="width:100%; display:none">
+                                                Submit Changes
+                                            </button>
+                                        </td>                                                                            
+                                    </tr>
+                                </tfoot>
                             </table>
+                            
                         </td>
                     </tr>
                 }
@@ -300,6 +376,65 @@
                 container: 'body'
             });
         })
+        function ConfirmChecked(regID, eventID){
+            var confirmName = "chkConfirm" + regID;
+            var standbyName = "chkStandby" + regID;
+            var declinedName = "chkDecline" + regID;
+            var statusBoxName = "Status" + regID;
+            var buttonName = "submitButton" + eventID;
+            $('#' + buttonName).show();
+            if ($('#' + confirmName).is(':checked')){
+                $('#' + standbyName).prop('checked', false);
+                $('#' + declinedName).prop('checked', false);
+                $('#' + statusBoxName).text('Confirmed');
+                $('#' + statusBoxName).css({'color':'green','font-weight':'bold'});
+                
+            }
+        }
+        function StandbyChecked(regID, eventID){
+            var confirmName = "chkConfirm" + regID;
+            var standbyName = "chkStandby" + regID;
+            var declinedName = "chkDecline" + regID;
+            var statusBoxName = "Status" + regID;
+            var buttonName = "submitButton" + eventID;
+            $('#' + buttonName).show();
+            if ($('#' + standbyName).is(':checked')){
+                $('#' + confirmName).prop('checked', false);
+                $('#' + declinedName).prop('checked', false);
+                $('#' + statusBoxName).text('Standby');
+                $('#' + statusBoxName).css({ 'color': 'Orange', 'font-weight': 'bold' });
+            }
+        }
+        function DeclineChecked(regID, eventID){
+            var confirmName = "chkConfirm" + regID;
+            var standbyName = "chkStandby" + regID;
+            var declinedName = "chkDecline" + regID;
+            var statusBoxName = "Status" + regID;
+            var buttonName = "submitButton" + eventID;
+            $('#' + buttonName).show();
+            if ($('#' + declinedName).is(':checked')){
+                $('#' + standbyName).prop('checked', false);
+                $('#' + confirmName).prop('checked', false);
+                $('#' + statusBoxName).text('Declined');
+                $('#' + statusBoxName).css({ 'color': 'red', 'font-weight': 'bold' });
+            }
+        }
+        function SubmitClick(id){
+            var results = [];
+            var targetTableName = "regTable" + id;
+            $('#' + targetTableName + " tr").not(':first').not(':last').each(function(){
+                var registration = {};
+                var regID = $(this).attr('id');
+                var status = $(this).find('.statusrow').text();
+                registration["id"] = regID;
+                registration["status"] = status;
+                results.push(registration);
+            })
+            if (results.length > 0){
+                console.log(results);
+                //call Ajax post here
+            }
+        }
 
         function ShowRegistrations(id) {
             var rowName = "registrationRow" + id;
