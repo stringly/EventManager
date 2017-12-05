@@ -136,6 +136,16 @@ namespace EventManager.Controllers
             }
             base.Dispose(disposing);
         }
+        [HttpPost]
+        public JsonResult UpdateRegistrations(List<RegistrationUpdateListItem> regList)
+
+        {
+            var result = false;
+            DBInteractions db = new DBInteractions();
+            result = db.UpdateRegistrationsByList(regList);
+
+            return new JsonResult { Data = result, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
         public ActionResult ConfirmRegistration(int? id)
         {

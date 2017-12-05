@@ -27,6 +27,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <div style="padding-right:50px">
     <table class="table">
         <thead>
@@ -327,7 +328,7 @@
                                                     </td>
                                                     break;
                                                 default:
-                                                    <td style="text-align:center; ; border-left-width:3px; border-left-color:black;">
+                                                    <td style="text-align:center; border-left-width:3px; border-left-color:black;">
                                                         <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)" />
                                                     </td>
                                                     <td style="text-align:center">
@@ -349,7 +350,7 @@
                                                         border-right-width:3px; 
                                                         border-right-color:black; 
                                                         border-left-width:3px; 
-                                                        border-left-color:black;; 
+                                                        border-left-color:black; 
                                                         border-bottom-width:3px; 
                                                         border-bottom-color:black;"
                                                         >
@@ -371,6 +372,8 @@
 
 @section Scripts{
     <script>
+        var buttonFlag = false;
+
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover({
                 container: 'body'
@@ -383,6 +386,7 @@
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
             $('#' + buttonName).show();
+            buttonFlag = true;
             if ($('#' + confirmName).is(':checked')){
                 $('#' + standbyName).prop('checked', false);
                 $('#' + declinedName).prop('checked', false);
@@ -398,6 +402,7 @@
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
             $('#' + buttonName).show();
+            buttonFlag = true;
             if ($('#' + standbyName).is(':checked')){
                 $('#' + confirmName).prop('checked', false);
                 $('#' + declinedName).prop('checked', false);
@@ -412,6 +417,7 @@
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
             $('#' + buttonName).show();
+            buttonFlag = true;
             if ($('#' + declinedName).is(':checked')){
                 $('#' + standbyName).prop('checked', false);
                 $('#' + confirmName).prop('checked', false);
@@ -422,19 +428,49 @@
         function SubmitClick(id){
             var results = [];
             var targetTableName = "regTable" + id;
+            var buttonName = "submitButton" + id;
             $('#' + targetTableName + " tr").not(':first').not(':last').each(function(){
-                var registration = {};
                 var regID = $(this).attr('id');
-                var status = $(this).find('.statusrow').text();
-                registration["id"] = regID;
-                registration["status"] = status;
+                var stat = $(this).find('.statusrow').text();
+                var registration = {
+                    id: parseInt(regID),
+                    status: stat};
+
                 results.push(registration);
             })
             if (results.length > 0){
+                
+                registrationsList = JSON.stringify({ 'regList': results});
                 console.log(results);
                 //call Ajax post here
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    type: "POST",
+                    dataType: 'json',
+                    url: "/Events/UpdateRegistrations",
+                    data: registrationsList,
+                    success: function (data) {
+                        if (data) {
+                            //Rerender view
+                            alert('Registrations updated successfully');
+                            $('#' + buttonName).hide();
+                            buttonFlag = false;
+                        }
+                    },
+                    error: function () {
+                        alert('Registrations failed');
+                    }
+                })
             }
         }
+        $(window).on("beforeunload", function() {
+            if (buttonFlag == true){
+                var modalResult = false;
+
+                return "stuff";
+            }
+            
+        });
 
         function ShowRegistrations(id) {
             var rowName = "registrationRow" + id;

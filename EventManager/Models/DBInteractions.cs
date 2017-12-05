@@ -322,7 +322,39 @@ namespace EventManager.Models
             }
             return result;
         }
+        public Boolean UpdateRegistrationsByList(List<RegistrationUpdateListItem> list)
+        {
+            var result = false;
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    foreach (RegistrationUpdateListItem u in list)
+                    {
+                        Registration r = _dc.Registrations.Where(a => a.RegistrationID == u.id).FirstOrDefault();
+                        if (r != null)
+                        {
+                            r.Status = u.status;
+                        }
+                        else
+                        {
+                            throw new NullReferenceException("Null reference to registration object");
+                        }
+                    }
+                    _dc.SaveChanges();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    //TODO: Add ELMAH explicit catch here
+                    Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(new Elmah.Error(ex));
+                }
+            }
 
+
+
+            return result;
+        }
 
 
     }

@@ -197,6 +197,7 @@
     <Compile Include="Helpers\EventRepeater.cs" />
     <Compile Include="Models\EventFormResult.cs" />
     <Compile Include="Models\EventManagerRoleProvider.cs" />
+    <Compile Include="Models\RegistrationUpdateListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
