@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,57 +27,57 @@
                         <li>@Html.ActionLink("Home", "Index", "Landing")</li>
                         <li>@Html.ActionLink("Manage Events", "Index", "Home")</li>
                         <li>@Html.ActionLink("Registrations", "Index", "UserEventRegistration")</li>
-                        
+
                         @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                     </ul>
                 </div>
                 <div class="col-sm-3 text-right pull-right" style="color: #fff; display:inline-block; height:50px; line-height:50px">
-                        <span style="padding-right:20px">@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") + 1), "Index", "UserInfo")</span>
-                                            
-                    
-                        <img src="@Url.Content("~/Resources/Images/Seal.png")" width="30" height="40" style="vertical-align:middle" />
-                        <img src="@Url.Content("~/Resources/Images/SOD.png")" width="40" height="40" style="vertical-align:middle" />
+                    <span style="padding-right:20px">@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") + 1), "Index", "UserInfo")</span>
+
+
+                    <img src="@Url.Content("~/Resources/Images/Seal.png")" width="30" height="40" style="vertical-align:middle" />
+                    <img src="@Url.Content("~/Resources/Images/SOD.png")" width="40" height="40" style="vertical-align:middle" />
 
                 </div>
                 @*<div class="pull-right">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") +1), "Index", "UserInfo")</li>
-                    </ul>
-                </div>*@
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") +1), "Index", "UserInfo")</li>
+                        </ul>
+                    </div>*@
             </div>
         </div>
     </div>
 
-    
+
     <div class="container-fluid" style="height:100%">
         <div class="row row-offcanvas row-offcanvas-left" style="height:100%">
             <div class="col-xs-2" style="height:100%">
-                @RenderSection("SideBar", required:false)
+                @RenderSection("SideBar", required: false)
                 @*<nav id="sidebar" data-spy="affix">
-                    <!-- Sidebar Links -->
-                    <ul class="list-unstyled components">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li>
-                            <!-- Link with dropdown items -->
-                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
-                            <ul class="collapse list-unstyled" id="homeSubmenu">
-                                <li><a href="#">Page</a></li>
-                                <li><a href="#">Page</a></li>
-                                <li><a href="#">Page</a></li>
-                            </ul>
-                        <li><a href="#">Portfolio</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </nav>*@
+                        <!-- Sidebar Links -->
+                        <ul class="list-unstyled components">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#">About</a></li>
+                            <li>
+                                <!-- Link with dropdown items -->
+                                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Pages</a>
+                                <ul class="collapse list-unstyled" id="homeSubmenu">
+                                    <li><a href="#">Page</a></li>
+                                    <li><a href="#">Page</a></li>
+                                    <li><a href="#">Page</a></li>
+                                </ul>
+                            <li><a href="#">Portfolio</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>*@
             </div>
 
-                <div class="container body-content col-xs-10" style="max-width:100%">
-                    @RenderBody()
-                </div>
+            <div class="container body-content col-xs-10" style="max-width:100%">
+                @RenderBody()
+            </div>
 
         </div>
-    </div> 
+    </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
