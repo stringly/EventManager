@@ -47,6 +47,24 @@ namespace EventManager.Controllers
             }
             return View(@event);
         }
+        public JsonResult GetEventDetails(int id)
+        {
+
+            //Event e = db.Events.Find(id);
+            var e = db.Events.Where(u => u.EventID == id)
+                            .Select(u => new {
+                                EventID = u.EventID,
+                                EventName = u.EventName,
+                                StartTime = u.StartTime,
+                                EndTime = u.EndTime,
+                                Description = u.Description,
+                                MaxStaff = u.MaxStaff,
+                                MinStaff = u.MinStaff,
+                                FundCenter = u.FundCenter,                                
+                            }).Single();
+            
+                return new JsonResult { Data = e, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        }
 
         // GET: Events/Create
         public ActionResult Create()

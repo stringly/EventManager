@@ -17,11 +17,11 @@
         @*<li class="" id="UserRegistrationSideBarButton"><a href="#" onclick="SideBarClick(2)">My Registrations</a></li>*@
         <li id="UserRegistrationSideBarButton">
             <!-- Link with dropdown items -->
-            <a href="#registrationsSubMenu"  data-toggle="collapse" aria-expanded="false"onclick="SideBarClick(2)">My Registrations</a>
+            <a href="#registrationsSubMenu"  data-toggle="collapse" aria-expanded="false" onclick="SideBarClick(2)">My Registrations</a>
             <ul class="collapse list-unstyled" id="registrationsSubMenu">
                 <li id="registrationsSideBarAll"><a href="#" onclick="RegistrationFilter(0)">Show All</a></li>
                 <li id="registrationsSideBarConfirmed"><a href="#" id="registrationsSideBarConfirmed" onclick="RegistrationFilter(1)">Confirmed</a></li>
-                <li id="registrationsSideBarPending" ><a href="#" id="registrationsSideBarPending" onclick="RegistrationFilter(2)">Pending</a></liid="registrationsSideBarPending">
+                <li id="registrationsSideBarPending" ><a href="#" id="registrationsSideBarPending" onclick="RegistrationFilter(2)">Pending</a></li>
                 <li id="registrationsSideBarStandby"><a href="#"  onclick="RegistrationFilter(3)">Standby</a></li>
                 <li id="registrationsSideBarDeclined"><a href="#"  onclick="RegistrationFilter(4)">Declined</a></li>
                 <li id="registrationsSideBarDeleted"><a href="#"  onclick="RegistrationFilter(5)">Deleted</a></li>
@@ -150,7 +150,7 @@
 <div class="container-fluid" id="UserRegistrations" style="display:none">
         <div class="col-xs-10 col-sm-10 pull-left">
             @*<div class="well" style="padding:5px;background-color:#333333; color:#fff">*@
-                <h4 id="registrationHeader"style="margin-top:5px"></h4>
+                <h4 id="registrationHeader" style="margin-top:5px"></h4>
                     <table class="table">
                         <tr style="background-color:#333333; color:#fff; border-top:none">
                             <th>
@@ -385,12 +385,17 @@
          
 
         function RegisterClick(id) {
-            console.log(id);
+            console.log("RegisterClick was called with id: " + id);
             if (events == null){
                 return;
             }
-            selectedEvent = events.find(item => item.EventID == id);
+            //selectedEvent = events.find(item => item.EventID == id);
+            var e = $.grep(events, function(x){return x.EventID == id;});
+            console.log(e)
+            selectedEvent = e[0];
+
             console.log('Event Name is:' + selectedEvent.EventName);
+            console.log('Event id is: ' +selectedEvent.EventID);
             $('#modalEventTitle').text(selectedEvent.EventName);
             var $description = $('<div/>');
             $description.append($('<p/>').html('<h5><b>' + selectedEvent.EventName + '</b></h5>'));
@@ -401,11 +406,15 @@
             $('#myModal').modal();
         }
         function RegistrationClick(id){
-            console.log("You clicked registration number:" +id)
+            console.log("You clicked registration number:" + id)
             if (registrations == null){
                 return;
             }
-            selectedRegistration = registrations.find(item => item.RegistrationID == id);
+            //selectedRegistration = registrations.find(item => item.RegistrationID == id);
+            var r = $.grep(registrations, function(x){return x.RegistrationID == id;});
+            
+            selectedRegistration = r[0];
+            console.log("Located registration number: " + selectedRegistration.RegistrationID);
 
             switch (selectedRegistration.Status){
                 case 1:

@@ -33,7 +33,7 @@ namespace EventManager.Controllers
         {
             List<AvailableEvents> availableEventsForUser = new List<AvailableEvents>();
             var eventList = _dc.Events.Where(e =>
-                                !_dc.Registrations.Any(r => r.UserID == user.UserId && r.EventID == e.EventID)
+                                !_dc.Registrations.Any(r => r.UserID == user.UserId && r.EventID == e.EventID && r.Status != RegistrationStats.Deleted)
                                 && e.StartTime >= DateTime.Now)
                     .OrderBy(e => e.StartTime)
                     .ToList();
