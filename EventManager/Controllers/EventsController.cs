@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EventManager.Models;
+using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
@@ -28,6 +29,7 @@ namespace EventManager.Controllers
             }
             
         }
+        
         public ActionResult UserEvents()
         {
             return View(db.USER_OWNED_EVENTS1(userID).ToList());
@@ -201,5 +203,6 @@ namespace EventManager.Controllers
             return RedirectToAction("UserEvents");
 
         }
+
     }
 }

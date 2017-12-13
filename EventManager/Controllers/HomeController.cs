@@ -20,6 +20,7 @@ namespace EventManager.Controllers
         }
 
         //TODO: Move code in DB Context into DBInteractions class?
+        //TODO: Make this a Stored Procedure to limit data returned?
         public JsonResult GetEvents()
         {
             using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())

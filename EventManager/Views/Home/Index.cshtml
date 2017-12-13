@@ -1,6 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "CalendarView";
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
     <h3></h3>
@@ -49,161 +50,7 @@
         </div>
     </div>
 
-    <div id="myModalSave" class="modal fade" role="dialog" style="max-height:100%">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header" style="color:#fff;border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add/Edit Event</h4>
-                </div>
-                <div class="modal-body">
-                        <form >
-                            <input type="hidden" id="hdEventID" value="0" />
-                            <input type="hidden" id="hdEnteredBy" value="1" />
-                            <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                                <div class="form-group col-xs-6">
-                                    <label>Event Name</label>
-                                    <input type="text" id="txtEventName" class="form-control" style="max-width:100%" />
-                                </div>
-                                <div class="form-group col-xs-3">
-                                    <label>Start Time:</label>
-                                    <div class="input-group date" id="dtp1">
-                                        <input type="text" id="txtStart" class="form-control" style="max-width:250px" />
-                                        <span class="input-group-addon" style="width:auto">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xs-3">
-                                    <label>End Time:</label>
-                                    <div class="input-group date" id="dtp2">
-                                        <input type="text" id="txtEnd" class="form-control" style="max-width:250px" />
-                                        <span class="input-group-addon" style="width:auto">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                                <div class="form-group col-xs-12">
-                                    <label>Description</label>
-                                    <textarea id="txtDescription" rows="3" class="form-control" style="max-width:100%"></textarea>
-                                </div>
-                            </div>
-                            <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                                <div class="form-group col-xs-2">
-                                    <label>Minimum Staffing</label>
-                                    <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
-                                </div>
-                                <div class="form-group col-xs-2">
-                                    <label>Maximum Staffing</label>
-                                    <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
-                                </div>
-                                <div class="form-group col-xs-4">
-                                    <label>Fund Center:</label>
-                                    <input type="text" id="txtFundCenter" class="form-control" />
-                                </div>
-                            </div>
-                        </form>
-                    <div class="form-group">
-                        <label><input type="checkbox" value="" id="chkRepeat"> Repeat this event</label>
-                    </div>
-                         <div id="repeatMenu" class="well row form-inline col-xs-12" style="display: none; border:solid; width:100%; margin-left:0px">
-                            <div class="form-group col-xs-4">
-                                <label>Repeats:</label>
-                                <select class="form-control" id="cboRepeat">
-                                    <option value="1">Daily</option>
-                                    <option value="2">Every weekday (Monday to Friday)</option>
-                                    <option value="3">Weekly</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-xs-3" id="dayRepeat">
-                                <label>Repeat for how many days?</label>
-                                <select class="form-control" id="repeatDayInterval" style="max-width:70px">
-                                    <option value="1" selected="selected">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="11">11</option>
-                                    <option value="12">12</option>
-                                    <option value="13">13</option>
-                                    <option value="14">14</option>
-                                    <option value="15">15</option>
-                                    <option value="16">16</option>
-                                    <option value="17">17</option>
-                                    <option value="18">18</option>
-                                    <option value="19">19</option>
-                                    <option value="20">20</option>
-                                    <option value="21">21</option>
-                                    <option value="22">22</option>
-                                    <option value="23">23</option>
-                                    <option value="24">24</option>
-                                    <option value="25">25</option>
-                                    <option value="26">26</option>
-                                    <option value="27">27</option>
-                                    <option value="28">28</option>
-                                    <option value="29">29</option>
-                                    <option value="30">30</option>
-                                </select>
-                                <label> days</label>
-                            </div>
-                            <div id="weekRepeat" class="form-horizontal" style="display: none">
-                                <div class="form-group col-xs-3">
-                                    <label>Repeat for how many weeks?</label>
-                                    <select id="repeatWeekInterval" class="form-control" style="max-width:70px">
-                                        <option value="1" selected="selected">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                    </select>
-                                    <label> weeks</label>
-                                </div>
-                                <div class="form-group col-xs-5">
-                                    <label>Select Days:</label>
-                                    <div class="form-inline">
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkSun" value="1">S</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkMon" value="2">M</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkTue" value="3">T</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkWed" value="4">W</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkThu" value="5">T</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkFri" value="6">F</label>
-                                        <label class="checkbox-inline"><input type="checkbox" id="chkSat" value="7">S</label>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="form-group" id="startsOnDate">
-                                <label>Starts On:</label>
-                                <input type="date" class="form-control" id="txtRepeatStartDate" />
-                            </div>
-                            <div class="form-group" id="endsOnDate" style="display: none">
-                                <label>Ends On:</label>
-                                <input type="date" class="form-control" id="txtRepeatEndDate" />
-                            </div>
-                        </div>
-                 
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="btnSave" class="btn-success btn">Save</button>
-                    <button type="button" class="btn-danger btn" data-dismiss="modal">Close</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css" rel="stylesheet" media="print" />
@@ -216,41 +63,45 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
         <script>
-            $(document).ready(function () {                
+            function FetchEventAndRenderCalendar() {
+                events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/home/GetEvents",
+                    cache: false,
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                eventID: v.EventID,
+                                title: v.EventName,
+                                description: v.Description,
+                                start: moment(v.StartTime),
+                                end: v.EndTime != null ? moment(v.EndTime) : null,
+                                maxStaff: v.MaxStaff,
+                                minStaff: v.MinStaff,
+                                fundCenter: v.FundCenter,
+                                enteredBy: v.EnteredBy
+
+                            });
+                        })
+
+                        GenerateCalendar(events);
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+            }
+            
+            $(document).ready(function () {
+                FetchEventAndRenderCalendar();
+            })
                 var events = [];
                 var selectedEvent = null;
                 $('[data-toggle=offcanvas]').click(function () {
                     $('.row-offcanvas').toggleClass('active');
                 });
-                FetchEventAndRenderCalendar();
-                function FetchEventAndRenderCalendar() {
-                    events = [];
-                    $.ajax({
-                        type: "GET",
-                        url: "/home/GetEvents",
-                        success: function (data) {
-                            $.each(data, function (i, v) {
-                                events.push({
-                                    eventID: v.EventID,
-                                    title: v.EventName,
-                                    description: v.Description,
-                                    start: moment(v.StartTime),
-                                    end: v.EndTime != null ? moment(v.EndTime) : null,
-                                    maxStaff: v.MaxStaff,
-                                    minStaff: v.MinStaff,
-                                    fundCenter: v.FundCenter,
-                                    enteredBy: v.EnteredBy
-
-                                });
-                            })
-
-                            GenerateCalendar(events);
-                        },
-                        error: function (error) {
-                            alert('failed');
-                        }
-                    })
-                }
+                
                 function GenerateCalendar(events) {
                     $('#calendar').fullCalendar('destroy');
                     $('#calendar').fullCalendar({
@@ -303,65 +154,6 @@
                     //var url = "/Events/Edit?id=" + selectedEvent.eventID;
                     //window.location.href = url;
                 });
-                $('#btnDelete').click(function () {
-                    if (selectedEvent != null && confirm('Delete this event?')) {
-                        $.ajax({
-                            type: "POST",
-                            url: "/home/DeleteEvent",
-                            data: { 'eventID': selectedEvent.eventID },
-                            success: function (data) {
-                                if (data.status) {
-                                    //Refresh the calendar
-                                    FetchEventAndRenderCalendar();
-                                    $('#myModal').modal('hide');
-                                }
-                            },
-                            error: function () {
-                                alert('Could not delete the selected event.');
-                            }
-                        })
-                    }
-                });
-                $('#dtp1, #dtp2').datetimepicker({
-                    format: 'MM/DD/YYYY HH:mm',
-                    sideBySide: true,
-                    showClose: true
-
-                });
-                $('#chkRepeat').change(function () {
-                    if (this.checked) {
-                        $('#repeatMenu').show();
-                    }
-                    else {
-                        $('#repeatMenu').hide();
-                    }
-                })
-                $('#cboRepeat').on('change', function () {
-                    switch (this.value) {
-                        case '1':
-                            $('#dayRepeat').show();
-                            $('#startsOnDate').show();
-                            $('#weekdayRepeat').hide();
-                            $('#weekRepeat').hide();
-                            $('#endsOnDate').hide();
-                            break;
-                        case '2':
-                            $('#dayRepeat').hide();
-                            $('#startsOnDate').show();
-                            $('#weekdayRepeat').show();
-                            $('#weekRepeat').hide();
-                            $('#endsOnDate').show();
-                            break;
-                        case '3':
-                            $('#dayRepeat').hide();
-                            $('#startsOnDate').hide();
-                            $('#weekdayRepeat').hide();
-                            $('#weekRepeat').show();
-                            $('#endsOnDate').hide();
-                            break;
-                    }
-                })
-
                 function openAddEditForm() {
                     $('#chkRepeat').attr('checked', false);
                     //$('#repeatMenu').find('input:text').val('');
@@ -409,198 +201,182 @@
                         $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
                     }
                     $('#myModal').modal('hide');
-                    $('#myModalSave').modal();
+                    $('#eventModal').modal();
 
                 }
-                $('#btnSave').click(function () {
-                    // TODO: Re-Enable and finalize client form validation
-                    //Validation
-                    ////Blank Checks
-                    //if ($('#txtEventName').val().trim() == "") {
-                    //    alert('An event name is required');
-                    //    return;
-                    //}
-                    //if ($('#txtStart').val().trim() == "") {
-                    //    alert('A start date/time is required');
-                    //    return;
-                    //}
-                    //if ($('#txtEnd').val().trim() == "") {
-                    //    alert('An end date/time is required');
-                    //    return;
-                    //}
-                    //if ($('#txtminStaff').val().trim() == "") {
-                    //    alert('Minimum staffing is required');
-                    //    return;
-                    //}
-                    //if ($('#txtmaxStaff').val().trim() == "") {
-                    //    alert('Maximum staffing is required');
-                    //    return;
-                    //}
-                    //if ($('#txtFundCenter').val().trim() == "") {
-                    //    alert('Fund Center is Required');
-                    //    return;
-                    //}
-                    //if ($('#chkRepeat').prop('checked')) {
-                    //    switch ($('#cboRepeat').val()) {
-                    //        case "1":
-                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                    //                alert('To repeat this event daily, you must provide a start date.');
-                    //                return;
+                $('#btnDelete').click(function () {
+                    DeleteEvent(selectedEvent.EventID);
+                    //if (selectedEvent != null && confirm('Delete this event?')) {
 
+                    //    $.ajax({
+                    //        type: "POST",
+                    //        url: "/home/DeleteEvent",
+                    //        data: { 'eventID': selectedEvent.eventID },
+                    //        success: function (data) {
+                    //            if (data.status) {
+                    //                //Refresh the calendar
+                    //                FetchEventAndRenderCalendar();
+                    //                $('#myModal').modal('hide');
                     //            }
-                    //            break;
-                    //        case "2":
-                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                    //                alert('To repeat this event every weekday, you must provide a start date.');
-                    //                return;
-
-                    //            }
-                    //            if ($('#txtRepeatEndDate').val().trim() == "") {
-                    //                alert('To repeat this event every weekday, you must provide an end date.');
-                    //                return;
-
-                    //            }
-                    //            break;
-                    //        case "3":
-                    //            if ($('#txtRepeatStartDate').val().trim() == "") {
-                    //                alert('To repeat this event weekly, you must provide a start date.');
-                    //                return;
-                    //                break;
-                    //            }
-                    //            if ($('#txtRepeatEndDate').val().trim() == "") {
-                    //                alert('To repeat this event weekly, you must provide an end date.');
-                    //                return;
-                    //            }
-                    //            if ($('#chkSun').prop('checked') == false &&
-                    //                $('#chkMon').prop('checked') == false &&
-                    //                $('#chkTue').prop('checked') == false &&
-                    //                $('#chkWed').prop('checked') == false &&
-                    //                $('#chkThu').prop('checked') == false &&
-                    //                $('#chkFri').prop('checked') == false &&
-                    //                $('#chkSat').prop('checked') == false) {
-
-                    //                alert("To repeat this event weekly, you must select at least one day of the week");
-                    //                return;
-                    //            }
-                    //    }//end switch $('#cboRepeat').val()
+                    //        },
+                    //        error: function () {
+                    //            alert('Could not delete the selected event.');
+                    //        }
+                    //    })
                     //}
-                    //else {
-                    //    var startDate = moment($('#txtStart').val(), "MMMM DD, YYYY HH:mm A").toDate();
-                    //    var endDate = moment($('#txtEnd').val(), "MMMM DD, YYYY HH:mm A").toDate();
-                    //    if (startDate > endDate) {
-                    //        alert('Invalid end date/time');
-                    //        return;
-                    //    }
-                    //}
-
-
-
-
-
-                    //Begin repeat selection data
-                    var daysOfWeek = [];
-                    var repeatNumber;
-                    if ($('#chkRepeat').is(':checked')) {
-                        switch ($('#cboRepeat').val()) {
-                            case '1':
-                                repeatNumber = $('#repeatDayInterval').val();
-                                break;
-                            case '2':
-
-                                break;
-                            case '3':
-                                repeatNumber = $('#repeatWeekInterval').val();
-                                if ($('#chkSun').prop('checked') == true) {
-                                    daysOfWeek.push(1);
-                                }
-                                if ($('#chkMon').prop('checked') == true) {
-                                    daysOfWeek.push(2);
-                                }
-                                if ($('#chkTue').prop('checked') == true) {
-                                    daysOfWeek.push(3);
-                                }
-                                if ($('#chkWed').prop('checked') == true) {
-                                    daysOfWeek.push(4);
-                                }
-                                if ($('#chkThu').prop('checked') == true) {
-                                    daysOfWeek.push(5);
-                                }
-                                if ($('#chkFri').prop('checked') == true) {
-                                    daysOfWeek.push(6);
-                                }
-                                if ($('#chkSat').prop('checked') == true) {
-                                    daysOfWeek.push(7);
-                                }
-                                break;
-                        }
-                        console.log("Creating Repeater eventData");
-                        var eventData = {
-                            EventID: $('#hdEventID').val(),
-                            EventName: $('#txtEventName').val(),
-                            StartTime: $('#txtStart').val(),
-                            EndTime: $('#txtEnd').val(),
-                            Description: $('#txtDescription').val(),
-                            MinStaff: $('#txtminStaff').val(),
-                            MaxStaff: $('#txtmaxStaff').val(),
-                            FundCenter: $('#txtFundCenter').val(),
-                            EnteredBy: 0,
-                            repeatType: $('#cboRepeat').val(),
-                            startDate: $('#txtRepeatStartDate').val(),
-                            endDate: $('#txtRepeatEndDate').val(),
-                            dow: daysOfWeek,
-                            repeatCount: repeatNumber
-                        }
-                        console.log(eventData);
-                    }
-                    else {
-
-
-                        var eventData = {
-                            EventID: $('#hdEventID').val(),
-                            EventName: $('#txtEventName').val(),
-                            StartTime: $('#txtStart').val(),
-                            EndTime: $('#txtEnd').val(),
-                            Description: $('#txtDescription').val(),
-                            MinStaff: $('#txtminStaff').val(),
-                            MaxStaff: $('#txtmaxStaff').val(),
-                            FundCenter: $('#txtFundCenter').val(),
-                            EnteredBy: 0,
-                        }
-                    }
-
-                    SaveEvent(eventData);
-
-                })
-                function SaveEvent(formData) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/home/SaveEvent",
-                        data: formData,
-                        //contentType: 'application/json; charset=utf-8',
-                        success: function (data) {
-                            if (data.status && data.repeat) {
-                                alert("Event and repeats added")
-                                //Refresh the calendar
-                                FetchEventAndRenderCalendar();
-                                $('#myModalSave').modal('hide');
-                            }
-                            if (data.status && !data.repeat) {
-                                alert("Event added, no repeats added")
-                                FetchEventAndRenderCalendar();
-                                $('#myModalSave').modal('hide');
-                            }
-                        },
-                        error: function () {
-                            alert('Could not add the event.');
-                        }
-                    })
-                }
-
-                $('#myModalSave').on('hidden.bs.modal', function () {
-                    $(this).find('form')[0].reset();
                 });
 
-            })
+
+
+
+
+
+                //$('#dtp1, #dtp2').datetimepicker({
+                //    format: 'MM/DD/YYYY HH:mm',
+                //    sideBySide: true,
+                //    showClose: true
+
+                //});
+                //$('#chkRepeat').change(function () {
+                //    if (this.checked) {
+                //        $('#repeatMenu').show();
+                //    }
+                //    else {
+                //        $('#repeatMenu').hide();
+                //    }
+                //})
+                //$('#cboRepeat').on('change', function () {
+                //    switch (this.value) {
+                //        case '1':
+                //            $('#dayRepeat').show();
+                //            $('#startsOnDate').show();
+                //            $('#weekdayRepeat').hide();
+                //            $('#weekRepeat').hide();
+                //            $('#endsOnDate').hide();
+                //            break;
+                //        case '2':
+                //            $('#dayRepeat').hide();
+                //            $('#startsOnDate').show();
+                //            $('#weekdayRepeat').show();
+                //            $('#weekRepeat').hide();
+                //            $('#endsOnDate').show();
+                //            break;
+                //        case '3':
+                //            $('#dayRepeat').hide();
+                //            $('#startsOnDate').hide();
+                //            $('#weekdayRepeat').hide();
+                //            $('#weekRepeat').show();
+                //            $('#endsOnDate').hide();
+                //            break;
+                //    }
+                //})
+
+
+                //$('#btnSave').click(function () {
+
+                //    //Begin repeat selection data
+                //    var daysOfWeek = [];
+                //    var repeatNumber;
+                //    if ($('#chkRepeat').is(':checked')) {
+                //        switch ($('#cboRepeat').val()) {
+                //            case '1':
+                //                repeatNumber = $('#repeatDayInterval').val();
+                //                break;
+                //            case '2':
+
+                //                break;
+                //            case '3':
+                //                repeatNumber = $('#repeatWeekInterval').val();
+                //                if ($('#chkSun').prop('checked') == true) {
+                //                    daysOfWeek.push(1);
+                //                }
+                //                if ($('#chkMon').prop('checked') == true) {
+                //                    daysOfWeek.push(2);
+                //                }
+                //                if ($('#chkTue').prop('checked') == true) {
+                //                    daysOfWeek.push(3);
+                //                }
+                //                if ($('#chkWed').prop('checked') == true) {
+                //                    daysOfWeek.push(4);
+                //                }
+                //                if ($('#chkThu').prop('checked') == true) {
+                //                    daysOfWeek.push(5);
+                //                }
+                //                if ($('#chkFri').prop('checked') == true) {
+                //                    daysOfWeek.push(6);
+                //                }
+                //                if ($('#chkSat').prop('checked') == true) {
+                //                    daysOfWeek.push(7);
+                //                }
+                //                break;
+                //        }
+                //        console.log("Creating Repeater eventData");
+                //        var eventData = {
+                //            EventID: $('#hdEventID').val(),
+                //            EventName: $('#txtEventName').val(),
+                //            StartTime: $('#txtStart').val(),
+                //            EndTime: $('#txtEnd').val(),
+                //            Description: $('#txtDescription').val(),
+                //            MinStaff: $('#txtminStaff').val(),
+                //            MaxStaff: $('#txtmaxStaff').val(),
+                //            FundCenter: $('#txtFundCenter').val(),
+                //            EnteredBy: 0,
+                //            repeatType: $('#cboRepeat').val(),
+                //            startDate: $('#txtRepeatStartDate').val(),
+                //            endDate: $('#txtRepeatEndDate').val(),
+                //            dow: daysOfWeek,
+                //            repeatCount: repeatNumber
+                //        }
+                //        console.log(eventData);
+                //    }
+                //    else {
+
+
+                //        var eventData = {
+                //            EventID: $('#hdEventID').val(),
+                //            EventName: $('#txtEventName').val(),
+                //            StartTime: $('#txtStart').val(),
+                //            EndTime: $('#txtEnd').val(),
+                //            Description: $('#txtDescription').val(),
+                //            MinStaff: $('#txtminStaff').val(),
+                //            MaxStaff: $('#txtmaxStaff').val(),
+                //            FundCenter: $('#txtFundCenter').val(),
+                //            EnteredBy: 0,
+                //        }
+                //    }
+
+                //    SaveEvent(eventData);
+
+                //})
+                //function SaveEvent(formData) {
+                //    $.ajax({
+                //        type: "POST",
+                //        url: "/home/SaveEvent",
+                //        data: formData,
+                //        //contentType: 'application/json; charset=utf-8',
+                //        success: function (data) {
+                //            if (data.status && data.repeat) {
+                //                alert("Event and repeats added")
+                //                //Refresh the calendar
+                //                FetchEventAndRenderCalendar();
+                //                $('#eventModal').modal('hide');
+                //            }
+                //            if (data.status && !data.repeat) {
+                //                alert("Event added, no repeats added")
+                //                FetchEventAndRenderCalendar();
+                //                $('#eventModal').modal('hide');
+                //            }
+                //        },
+                //        error: function () {
+                //            alert('Could not add the event.');
+                //        }
+                //    })
+                //}
+                //$('#myModalSave').on('hidden.bs.modal', function () {
+                //    $(this).find('form')[0].reset();
+                //});
+
+
         </script>
 
     }

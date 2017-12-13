@@ -2,7 +2,8 @@
 
 @{
     ViewBag.Title = "Index";
-    
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
+
 }
 
 <h2>View/Edit Events</h2>
@@ -25,7 +26,7 @@
     </ul>
 </nav>}
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenAddEventForm()">Create New Event</a>
 </p>
 <div style="margin-right:50px">
     <table class="table">
@@ -101,20 +102,17 @@
 
                         <div class="btn-group-sm">
                             <div class="btn-group" role="group">
-                                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
+                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenEditForm(@item.EventID)">View/Edit</a> |
                             </div>
                             <div class="btn-group" role="group">
-                                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
-                            </div>
-                            <div class="btn-group" role="group">
-                                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="DeleteEvent(@item.EventID)">Delete</a>
                             </div>
                         </div>
 
                     }
                     else
                     {
-                        @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                        <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenViewForm(@item.EventID)">Details</a>
                     }
 
                 </td>
@@ -125,9 +123,38 @@
 </div>
 @section scripts{
     <script>
-        $(document).ready(function () { 
+        function OpenViewForm(id) {
+            var eventDetails = [];
+            console.log("open form called with id: " + id);
+            $.ajax({
+                type: "GET",
+                url: "/events/GetEventDetails",
+                cache: false,
+                data: { 'id': id },
+                success: function (data) {
+                    $('#hdEventID').val(data.EventID);
+                    $('#hdEnteredBy').val(data.EnteredBy);
+                    $('#txtEventName').val(data.EventName);
+                    $('#txtStart').val(moment(data.StartTime).format("MM/DD/YYYY HH:mm"));
+                    $('#txtEnd').val(moment(data.EndTime).format("MM/DD/YYYY HH:mm"));
+                    $('#txtDescription').val(data.Description);
+                    $('#txtminStaff').val(data.MinStaff);
+                    $('#txtmaxStaff').val(data.MaxStaff);
+                    $('#txtFundCenter').val(data.FundCenter);
+                    console.log(data);
+                    $('#eventModal').modal();
+                    $('#checkboxgroup').hide();
+                    $('#repeatMenu').hide();
+                    $('#eventModal :input').prop("disabled", true);
+                    $('#btnSave').hide();
+                    $('#btnClose').prop("disabled", false);
 
 
-        })
+                },
+                error: function (error) {
+                    alert('Failed to find event');
+                }
+            })
 
+        }
     </script>}

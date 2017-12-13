@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<EventManager.Event>
 
 @{
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
     ViewBag.Title = "UserEvents";
 
 }
@@ -26,8 +27,9 @@
     </nav>}
 <p>
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenAddEventForm()">Create New Event</a>
 </p>
+
 
 <div style="padding-right:50px">
     <table class="table">
@@ -143,14 +145,11 @@
                     <td style="text-align:center">
                         <div class="btn-group-sm">
                             <div class="btn-group" role="group">
-                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenEditForm(@item.EventID)">Edit</a> |
+                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenEditForm(@item.EventID)">View/Edit</a> |
                                 @*@Html.ActionLink("Edit", "Edit", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |*@
                             </div>
                             <div class="btn-group" role="group">
-                                @Html.ActionLink("Delete", "Delete", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" }) |
-                            </div>
-                            <div class="btn-group" role="group">
-                                @Html.ActionLink("Details", "Details", new { id = item.EventID }, new { @style = "color:blue; text-decoration:underline" })
+                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="DeleteEvent(@item.EventID)">Delete</a>
                             </div>
                         </div>
 
@@ -371,119 +370,58 @@
         </tbody>
     </table>
     
-    <div id="myModalSave" class="modal fade" role="dialog" style="max-height:100%">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header" style="color:#fff;border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add/Edit Event</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <input type="hidden" id="hdEventID" value="0" />
-                        <input type="hidden" id="hdEnteredBy" value="1" />
-                        <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                            <div class="form-group col-xs-6">
-                                <label>Event Name</label>
-                                <input type="text" id="txtEventName" class="form-control" style="max-width:100%" />
-                            </div>
-                            <div class="form-group col-xs-3">
-                                <label>Start Time:</label>
-                                <div class="input-group date" id="dtp1">
-                                    <input type="text" id="txtStart" class="form-control" style="max-width:250px" />
-                                    <span class="input-group-addon" style="width:auto">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-3">
-                                <label>End Time:</label>
-                                <div class="input-group date" id="dtp2">
-                                    <input type="text" id="txtEnd" class="form-control" style="max-width:250px" />
-                                    <span class="input-group-addon" style="width:auto">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                            <div class="form-group col-xs-12">
-                                <label>Description</label>
-                                <textarea id="txtDescription" rows="3" class="form-control" style="max-width:100%"></textarea>
-                            </div>
-                        </div>
-                        <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                            <div class="form-group col-xs-2">
-                                <label>Minimum Staffing</label>
-                                <input type="number" id="txtminStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
-                            </div>
-                            <div class="form-group col-xs-2">
-                                <label>Maximum Staffing</label>
-                                <input type="number" id="txtmaxStaff" value="1" min="1" max="50" class="form-control" style="max-width:100px" required />
-                            </div>
-                            <div class="form-group col-xs-4">
-                                <label>Fund Center:</label>
-                                <input type="text" id="txtFundCenter" class="form-control" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="btnSave" class="btn-success btn">Save</button>
-                    <button type="button" class="btn-danger btn" data-dismiss="modal">Close</button>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </div>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-
 @section Scripts{
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    <script>
-        var buttonFlag = false;
+<script>
+        
 
         $(document).ready(function () {
             $('[data-toggle="popover"]').popover({
                 container: 'body'
             });
-            
+
         })
-        function OpenEditForm(id){
-            var eventDetails = [];
-            console.log("open form called with id: " + id);
-            $.ajax({
-                type: "GET",
-                url: "/events/GetEventDetails",
-                data: { 'id': id },
-                success: function (data) {
-                    $('#hdEventID').val(data.EventID);
-                    $('#hdEnteredBy').val(data.EnteredBy);
-                    $('#txtEventName').val(data.EventName);
-                    $('#txtStart').val(moment(data.StartTime).format("MM/DD/YYYY HH:mm"));
-                    $('#txtEnd').val(moment(data.EndTime).format("MM/DD/YYYY HH:mm"));
-                    $('#txtDescription').val(data.Description);
-                    $('#txtminStaff').val(data.MinStaff);
-                    $('#txtmaxStaff').val(data.MaxStaff);
-                    $('#txtFundCenter').val(data.FundCenter);
-                    console.log(data);
-                    $('#myModalSave').modal();
-                    
-                },
-                error: function (error) {
-                    alert('Failed to find event');
-                }
+        function SubmitClick(id) {
+            var results = [];
+            var targetTableName = "regTable" + id;
+            var buttonName = "submitButton" + id;
+            $('#' + targetTableName + " tr").not(':first').not(':last').each(function () {
+                var regID = $(this).attr('id');
+                var stat = $(this).find('.statusrow').text();
+                var registration = {
+                    id: parseInt(regID),
+                    status: stat
+                };
+
+                results.push(registration);
             })
-            
+            if (results.length > 0) {
+
+                registrationsList = JSON.stringify({ 'regList': results });
+                console.log(results);
+                //call Ajax post here
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    type: "POST",
+                    dataType: 'json',
+                    url: "/Events/UpdateRegistrations",
+                    data: registrationsList,
+                    success: function (data) {
+                        if (data) {
+                            //Rerender view
+                            alert('Registrations updated successfully');
+                            $('#' + buttonName).hide();
+                            buttonFlag = false;
+                        }
+                    },
+                    error: function () {
+                        alert('Registrations failed');
+                    }
+                })
+            }
         }
-
-
-
-
-
-
         function ConfirmChecked(regID, eventID){
             var confirmName = "chkConfirm" + regID;
             var standbyName = "chkStandby" + regID;
@@ -497,7 +435,7 @@
                 $('#' + declinedName).prop('checked', false);
                 $('#' + statusBoxName).text('Confirmed');
                 $('#' + statusBoxName).css({'color':'green','font-weight':'bold'});
-                
+
             }
         }
         function StandbyChecked(regID, eventID){
@@ -530,52 +468,9 @@
                 $('#' + statusBoxName).css({ 'color': 'red', 'font-weight': 'bold' });
             }
         }
-        function SubmitClick(id){
-            var results = [];
-            var targetTableName = "regTable" + id;
-            var buttonName = "submitButton" + id;
-            $('#' + targetTableName + " tr").not(':first').not(':last').each(function(){
-                var regID = $(this).attr('id');
-                var stat = $(this).find('.statusrow').text();
-                var registration = {
-                    id: parseInt(regID),
-                    status: stat};
 
-                results.push(registration);
-            })
-            if (results.length > 0){
-                
-                registrationsList = JSON.stringify({ 'regList': results});
-                console.log(results);
-                //call Ajax post here
-                $.ajax({
-                    contentType: 'application/json; charset=utf-8',
-                    type: "POST",
-                    dataType: 'json',
-                    url: "/Events/UpdateRegistrations",
-                    data: registrationsList,
-                    success: function (data) {
-                        if (data) {
-                            //Rerender view
-                            alert('Registrations updated successfully');
-                            $('#' + buttonName).hide();
-                            buttonFlag = false;
-                        }
-                    },
-                    error: function () {
-                        alert('Registrations failed');
-                    }
-                })
-            }
-        }
-        $(window).on("beforeunload", function() {
-            if (buttonFlag == true){
-                var modalResult = false;
 
-                return "stuff";
-            }
-            
-        });
+
 
         function ShowRegistrations(id) {
             var rowName = "registrationRow" + id;
@@ -585,8 +480,8 @@
             else {
                 $('#' + rowName).show();
             }
-                
+
         }
-    </script>
+</script>
 }
 
