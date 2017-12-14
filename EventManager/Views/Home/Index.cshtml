@@ -80,7 +80,8 @@
                                 maxStaff: v.MaxStaff,
                                 minStaff: v.MinStaff,
                                 fundCenter: v.FundCenter,
-                                enteredBy: v.EnteredBy
+                                enteredBy: v.EnteredBy,
+                                color: v.DisplayColor
 
                             });
                         })
@@ -95,6 +96,7 @@
             
             $(document).ready(function () {
                 FetchEventAndRenderCalendar();
+               
             })
                 var events = [];
                 var selectedEvent = null;
@@ -114,7 +116,7 @@
                             right: 'month,basicWeek,basicDay,agenda'
                         },
                         eventLimit: true,
-                        eventColor: '#546e7a',
+                        //eventColor: '#546e7a',
                         events: events,
                         eventClick: function (calEvent, jsEvent, view) {
                             selectedEvent = calEvent;
@@ -193,6 +195,7 @@
                         $('#txtminStaff').val(selectedEvent.minStaff);
                         $('#txtmaxStaff').val(selectedEvent.maxStaff);
                         $('#txtFundCenter').val(selectedEvent.fundCenter);
+                        $('#innerColorDiv').css('background-color', selectedEvent.color);
                     }
                     else {
                         $('#txtminStaff').val(1);

@@ -7,6 +7,7 @@
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/Custom.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/tinycolorpicker.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -43,7 +44,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="container-fluid" style="height:100%">
         <div class="row row-offcanvas row-offcanvas-left" style="height:100%">
@@ -104,6 +104,15 @@
                                         <div class="form-group col-xs-4">
                                             <label>Fund Center:</label>
                                             <input type="text" id="txtFundCenter" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-xs-4">
+                                            <label>Display Color:</label>
+                                            <div id="colorPicker" style="text-align:center">
+                                                <a class="color"><div class="colorInner" id="innerColorDiv"></div></a>
+                                                <div class="track"></div>
+                                                <ul class="dropdown"><li></li></ul>
+                                                <input type="hidden" class="colorInput" id="eventColor">
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -214,8 +223,16 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.tinycolorpicker.min.js"></script>
     @RenderSection("Scripts", false)
     <script>
+        var $box = $("#colorPicker");
+        $box.tinycolorpicker();
+        var box = $box.data("plugin_tinycolorpicker");
+        $box.bind("change", function () {
+            $('#eventColor').val(box.colorHex);
+        });
+
         var pageName = '@ViewBag.Title'        
         function OpenEditForm(id) {
             var eventDetails = [];
@@ -236,6 +253,7 @@
                     $('#txtminStaff').val(data.MinStaff);
                     $('#txtmaxStaff').val(data.MaxStaff);
                     $('#txtFundCenter').val(data.FundCenter);
+                    $('#innerColorDiv').css('background-color', data.color);
                     console.log(data);
                     $('#eventModal').modal();
                     $('#checkboxgroup').hide();
@@ -308,7 +326,9 @@
 
         $('#eventModal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
+            $('#innerColorDiv').css('background-color', '#ffffff');
         });
+
         $('#chkRepeat').change(function () {
             if (this.checked) {
                 $('#repeatMenu').show();
@@ -395,6 +415,7 @@
                     MaxStaff: $('#txtmaxStaff').val(),
                     FundCenter: $('#txtFundCenter').val(),
                     EnteredBy: 0,
+                    DisplayColor: $('#eventColor').val(),
                     repeatType: $('#cboRepeat').val(),
                     startDate: $('#txtRepeatStartDate').val(),
                     endDate: $('#txtRepeatEndDate').val(),
@@ -416,6 +437,7 @@
                     MaxStaff: $('#txtmaxStaff').val(),
                     FundCenter: $('#txtFundCenter').val(),
                     EnteredBy: 0,
+                    DisplayColor: $('#eventColor').val(),
                 }
             }
 

@@ -120,6 +120,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Custom.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\tinycolorpicker.css" />
     <Content Include="EventModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EventModel.edmx</DependentUpon>
@@ -142,6 +143,7 @@
     <Content Include="Resources\Images\LightsWide.jpg" />
     <Content Include="Resources\Images\Seal.png" />
     <Content Include="Resources\Images\SOD.png" />
+    <Content Include="Resources\Images\text-color.png" />
     <Content Include="Resources\Images\Working-Schedule.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -149,6 +151,8 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.tinycolorpicker.js" />
+    <Content Include="Scripts\jquery.tinycolorpicker.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

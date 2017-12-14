@@ -11,13 +11,14 @@
           </Key>
           <Property Name="EventID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EventName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="StartTime" Type="smalldatetime" Nullable="false" />
-          <Property Name="EndTime" Type="smalldatetime" Nullable="false" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="300" />
           <Property Name="MaxStaff" Type="int" Nullable="false" />
           <Property Name="MinStaff" Type="int" Nullable="false" />
           <Property Name="FundCenter" Type="nvarchar" MaxLength="25" Nullable="false" />
           <Property Name="EnteredBy" Type="int" Nullable="false" />
+          <Property Name="DisplayColor" Type="nvarchar" MaxLength="7" Nullable="false" />
         </EntityType>
         <EntityType Name="LTRanks">
           <Key>
@@ -35,7 +36,7 @@
           <Property Name="RegistrationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="EventID" Type="int" Nullable="false" />
-          <Property Name="TimeStamp" Type="smalldatetime" Nullable="false" />
+          <Property Name="TimeStamp" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Role">
@@ -47,11 +48,11 @@
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
-            <PropertyRef Name="UserId" />
             <PropertyRef Name="RoleId" />
+            <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="RoleId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -65,7 +66,7 @@
           <Property Name="PayRollID" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="320" Nullable="false" />
           <Property Name="ContactNumber" Type="nvarchar" MaxLength="10" Nullable="false" />
-          <Property Name="RegisteredDate" Type="smalldatetime" Nullable="false" />
+          <Property Name="RegisteredDate" Type="datetime" Nullable="false" />
           <Property Name="LDAPName" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <Association Name="FK_Event_OwnerID">
@@ -81,7 +82,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_EventID">
-          <End Role="Events" Type="Self.Events" Multiplicity="1" />
+          <End Role="Events" Type="Self.Events" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Registrations" Type="Self.Registrations" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Events">
@@ -92,7 +95,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RankID">
+        <Association Name="FK_Rank">
           <End Role="LTRanks" Type="Self.LTRanks" Multiplicity="1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
@@ -116,10 +119,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserRole_Role_Id">
-          <End Role="Role" Type="Self.Role" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_UserRole_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
           <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
@@ -130,10 +131,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserRole_User_Id">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
+        <Association Name="FK_UserRole_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
@@ -164,7 +163,7 @@
             <End Role="Events" EntitySet="Events" />
             <End Role="Registrations" EntitySet="Registrations" />
           </AssociationSet>
-          <AssociationSet Name="FK_RankID" Association="Self.FK_RankID">
+          <AssociationSet Name="FK_Rank" Association="Self.FK_Rank">
             <End Role="LTRanks" EntitySet="LTRanks" />
             <End Role="Users" EntitySet="Users" />
           </AssociationSet>
@@ -172,11 +171,11 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="Registrations" EntitySet="Registrations" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserRole_Role_Id" Association="Self.FK_UserRole_Role_Id">
+          <AssociationSet Name="FK_UserRole_Role" Association="Self.FK_UserRole_Role">
             <End Role="Role" EntitySet="Role" />
             <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserRole_User_Id" Association="Self.FK_UserRole_User_Id">
+          <AssociationSet Name="FK_UserRole_User" Association="Self.FK_UserRole_User">
             <End Role="Users" EntitySet="Users" />
             <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
@@ -229,7 +228,7 @@
           <Property Name="RegistrationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="EventID" Type="Int32" Nullable="false" />
-          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="EVENTS_MGR_TESTINGModel.RegistrationStats" Nullable="false" />
           <NavigationProperty Name="User" Relationship="EVENTS_MGR_TESTINGModel.FK_UserID" FromRole="Registration" ToRole="User" />
           <NavigationProperty Name="Event" Relationship="EVENTS_MGR_TESTINGModel.FK_EventID" FromRole="Registration" ToRole="Event" />
@@ -246,7 +245,7 @@
           <Property Name="PayRollID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="320" FixedLength="false" Unicode="true" />
           <Property Name="ContactNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="RegisteredDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="RegisteredDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Registrations" Relationship="EVENTS_MGR_TESTINGModel.FK_UserID" FromRole="User" ToRole="Registration" />
           <Property Name="LDAPName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="EVENTS_MGR_TESTINGModel.UserRole" FromRole="User" ToRole="Role" />
@@ -271,8 +270,8 @@
           </Key>
           <Property Name="EventID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EventName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="MaxStaff" Type="Int32" Nullable="false" />
           <Property Name="MinStaff" Type="Int32" Nullable="false" />
@@ -280,6 +279,7 @@
           <Property Name="EnteredBy" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Registrations" Relationship="EVENTS_MGR_TESTINGModel.FK_EventID" FromRole="Event" ToRole="Registration" />
           <NavigationProperty Name="User" Relationship="EVENTS_MGR_TESTINGModel.FK_Event_OwnerID" FromRole="Event" ToRole="User" />
+          <Property Name="DisplayColor" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_EventID">
           <End Type="EVENTS_MGR_TESTINGModel.Event" Role="Event" Multiplicity="1" />
@@ -416,6 +416,7 @@
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="EVENTS_MGR_TESTINGModel.Event">
               <MappingFragment StoreEntitySet="Events">
+                <ScalarProperty Name="DisplayColor" ColumnName="DisplayColor" />
                 <ScalarProperty Name="EnteredBy" ColumnName="EnteredBy" />
                 <ScalarProperty Name="FundCenter" ColumnName="FundCenter" />
                 <ScalarProperty Name="MinStaff" ColumnName="MinStaff" />

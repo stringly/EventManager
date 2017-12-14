@@ -48,6 +48,7 @@ namespace EventManager.Controllers
                 e.MinStaff = Convert.ToInt32(fr.MinStaff);
                 e.FundCenter = fr.FundCenter;
                 e.EnteredBy = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+                e.DisplayColor = fr.DisplayColor;
 
             EventRepeater r = new EventRepeater();
                 r.repeatType = Convert.ToInt32(fr.repeatType);

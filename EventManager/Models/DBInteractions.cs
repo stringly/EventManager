@@ -71,6 +71,7 @@ namespace EventManager.Models
                     v.MinStaff = e.MinStaff;
                     v.FundCenter = e.FundCenter;
                     v.EnteredBy = e.EnteredBy;
+                    v.DisplayColor = e.DisplayColor;
                     _db.SaveChanges();
                     result = true;
                 }
@@ -116,6 +117,7 @@ namespace EventManager.Models
                             n.MinStaff = e.MinStaff;
                             n.FundCenter = e.FundCenter;
                             n.EnteredBy = e.EnteredBy;
+                            n.DisplayColor = e.DisplayColor;
                             events.Add(n);                        
                         }
                         _db.Events.AddRange(events);
@@ -137,6 +139,7 @@ namespace EventManager.Models
                             n.MinStaff = e.MinStaff;
                             n.FundCenter = e.FundCenter;
                             n.EnteredBy = e.EnteredBy;
+                            n.DisplayColor = e.DisplayColor;
                             events.Add(n);
                         }
                         _db.Events.AddRange(events);
@@ -158,6 +161,7 @@ namespace EventManager.Models
                                 n.MinStaff = e.MinStaff;
                                 n.FundCenter = e.FundCenter;
                                 n.EnteredBy = e.EnteredBy;
+                                n.DisplayColor = e.DisplayColor;
                                 events.Add(n);
                             }
                         }

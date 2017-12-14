@@ -321,6 +321,10 @@ h1, h2, h3, h4, h5, h6{
 .fc-event-title{
    text-shadow: none;
 }
+
+.fc-event{
+    cursor: pointer;
+}
 .fc-unthemed td.fc-today {
     background: #fff59d;
 }

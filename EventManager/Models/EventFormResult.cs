@@ -17,6 +17,7 @@ namespace EventManager.Models
         public string MaxStaff { get; set; }
         public string FundCenter { get; set; }
         public int EnteredBy { get; set; }
+        public string DisplayColor { get; set; }
         public string repeatType { get; set; }
         public string startDate { get; set; }
         public string endDate { get; set; }

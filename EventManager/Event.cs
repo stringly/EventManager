@@ -29,6 +29,7 @@ namespace EventManager
         public int MinStaff { get; set; }
         public string FundCenter { get; set; }
         public int EnteredBy { get; set; }
+        public string DisplayColor { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Registration> Registrations { get; set; }
