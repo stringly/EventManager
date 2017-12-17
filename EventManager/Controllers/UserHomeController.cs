@@ -4,9 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EventManager.Models;
+using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+    [SessionTimeout]
     public class UserHomeController : Controller
     {
         private EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities();

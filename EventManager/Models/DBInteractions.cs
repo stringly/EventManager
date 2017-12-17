@@ -350,7 +350,6 @@ namespace EventManager.Models
                 }
                 catch (Exception ex)
                 {
-                    //TODO: Add ELMAH explicit catch here
                     Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(new Elmah.Error(ex));
                 }
             }

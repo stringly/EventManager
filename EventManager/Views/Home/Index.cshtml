@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "CalendarView";
+    ViewBag.Title = "Calendar View";
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 }
 
@@ -63,6 +63,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
         <script>
+            var pageUser = @HttpContext.Current.Cache["userID"];
             function FetchEventAndRenderCalendar() {
                 events = [];
                 $.ajax({
@@ -116,8 +117,23 @@
                             right: 'month,basicWeek,basicDay,agenda'
                         },
                         eventLimit: true,
-                        //eventColor: '#546e7a',
                         events: events,
+                        eventRender: function(event, element, view) {                   
+                            var ntoday = new Date().getTime();
+                            var eventEnd = moment( event.end ).valueOf();
+                            var eventStart = moment( event.start ).valueOf();
+                            if (!event.end){
+                                if (eventStart < ntoday){
+                                    element.addClass("past-event");
+                                    element.children().addClass("past-event");
+                                }
+                            } else {
+                                if (eventEnd < ntoday){
+                                    element.addClass("past-event");
+                                    element.children().addClass("past-event");
+                                }
+                            }
+                        },
                         eventClick: function (calEvent, jsEvent, view) {
                             selectedEvent = calEvent;
                             $('#myModal #eventTitle').text(calEvent.title);
@@ -126,7 +142,14 @@
                             $description.append($('<p/>').html('<b>Ends: </b>' + calEvent.end.format("MMMM DD, YYYY HH:mm a")));
                             $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
                             $('#myModal #pDetails').empty().html($description);
-
+                            if(pageUser != calEvent.enteredBy){
+                                $('#btnEdit').hide();
+                                $('#btnDelete').hide();
+                            }
+                            else{
+                                $('#btnEdit').show();
+                                $('#btnDelete').show();
+                            }
                             $('#myModal').modal();
                         },
                         selectable: true,
@@ -158,9 +181,6 @@
                 });
                 function openAddEditForm() {
                     $('#chkRepeat').attr('checked', false);
-                    //$('#repeatMenu').find('input:text').val('');
-                    //$('#repeatMenu').find('input:checkbox').attr('checked, false');
-                    //$('#repeatMenu').find('input:select').val(1);
                     $('#repeatMenu').find(':input').each(function () {
                         switch (this.type) {
                             case 'button':
@@ -196,6 +216,7 @@
                         $('#txtmaxStaff').val(selectedEvent.maxStaff);
                         $('#txtFundCenter').val(selectedEvent.fundCenter);
                         $('#innerColorDiv').css('background-color', selectedEvent.color);
+                        $('#eventColor').val(selectedEvent.color);
                     }
                     else {
                         $('#txtminStaff').val(1);

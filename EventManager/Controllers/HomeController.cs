@@ -8,8 +8,8 @@ using EventManager.Models;
 
 namespace EventManager.Controllers
 {
-    //[Authorize(Roles = "Administrator")]
-    //TODO: VIEW ADD NEW EVENT MODAL REMEMBERS DATA
+    //TODO: [Authorize(Roles = "Administrator")]
+    [SessionTimeout]
     public class HomeController : Controller
     {
         // GET: Home
@@ -26,7 +26,7 @@ namespace EventManager.Controllers
             using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())
             {
                 dc.Configuration.LazyLoadingEnabled = false;
-                //TODO: Limit the returned list of events to exclude full/past events
+                //TODO: CREATE STORED PROC Limit the returned list of events to exclude full/past events
                 var events = dc.Events.ToList();
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }

@@ -11,6 +11,7 @@ using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+    [SessionTimeout]
     public class EventsController : Controller
     {
         private EVENTS_MGR_TESTING_Entities db = new EVENTS_MGR_TESTING_Entities();
@@ -62,7 +63,8 @@ namespace EventManager.Controllers
                                 Description = u.Description,
                                 MaxStaff = u.MaxStaff,
                                 MinStaff = u.MinStaff,
-                                FundCenter = u.FundCenter,                                
+                                FundCenter = u.FundCenter,
+                                DisplayColor = u.DisplayColor                                
                             }).Single();
             
                 return new JsonResult { Data = e, JsonRequestBehavior = JsonRequestBehavior.AllowGet };

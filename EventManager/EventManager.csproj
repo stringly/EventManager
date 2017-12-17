@@ -138,6 +138,7 @@
     <Content Include="Notes\SQL_SPs.txt" />
     <Content Include="Resources\Images\blue.jpg" />
     <Content Include="Resources\Images\Caution.png" />
+    <Content Include="Resources\Images\color_wheel.png" />
     <Content Include="Resources\Images\Documentation.png" />
     <Content Include="Resources\Images\employee-profile-icon_398760.png" />
     <Content Include="Resources\Images\LightsWide.jpg" />
@@ -148,11 +149,14 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Notes\DBTables.xlsx" />
+    <None Include="bundleconfig.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.tinycolorpicker.js" />
-    <Content Include="Scripts\jquery.tinycolorpicker.min.js" />
+    <Content Include="Scripts\jquery.tinycolorpicker.min.js">
+      <DependentUpon>jquery.tinycolorpicker.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -164,6 +168,7 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LandingController.cs" />
+    <Compile Include="Controllers\SessionTimeOutController.cs" />
     <Compile Include="Controllers\UserEventRegistrationController.cs" />
     <Compile Include="Controllers\UserHomeController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
@@ -194,6 +199,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\SessionTimeAttribute.cs" />
     <Compile Include="LTRank.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
@@ -249,6 +255,7 @@
     <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Views\Events\UserEvents.cshtml" />
     <Content Include="Views\Shared\_EventLayout.cshtml" />
+    <Content Include="Views\SessionTimeOut\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

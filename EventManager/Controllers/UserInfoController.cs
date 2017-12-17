@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using EventManager.Models;
 using System.Diagnostics;
-
+using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+    [SessionTimeout]
     public class UserInfoController : Controller
     {
         // GET: UserInfo

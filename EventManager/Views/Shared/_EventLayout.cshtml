@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Events</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/Custom.css" rel="stylesheet" type="text/css" />
@@ -23,7 +23,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Event Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Event Manager", "Index", "Landing", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <div class="pull-left">
@@ -253,7 +253,8 @@
                     $('#txtminStaff').val(data.MinStaff);
                     $('#txtmaxStaff').val(data.MaxStaff);
                     $('#txtFundCenter').val(data.FundCenter);
-                    $('#innerColorDiv').css('background-color', data.color);
+                    $('#innerColorDiv').css('background-color', data.DisplayColor);
+                    $('#eventColor').val(data.DisplayColor);
                     console.log(data);
                     $('#eventModal').modal();
                     $('#checkboxgroup').hide();

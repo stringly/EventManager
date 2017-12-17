@@ -14,10 +14,9 @@ namespace EventManager.Controllers
         // GET: Landing
         public ActionResult Index()
         {
-            
-            DBInteractions db = new DBInteractions();
-            db.PushUserToCache();
-            return View();
-        }
+                    DBInteractions db = new DBInteractions();
+                    db.PushUserToCache();
+                    return View();
+        }        
     }
 }

@@ -9,6 +9,7 @@ using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+    [SessionTimeout]
     public class UserEventRegistrationController : Controller
     {
         private EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities();

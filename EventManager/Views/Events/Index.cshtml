@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EventManager.Event>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Show All";
     Layout = "~/Views/Shared/_EventLayout.cshtml";
 
 }
@@ -145,6 +145,8 @@
                     $('#txtminStaff').val(data.MinStaff);
                     $('#txtmaxStaff').val(data.MaxStaff);
                     $('#txtFundCenter').val(data.FundCenter);
+                    $('#innerColorDiv').css('background-color', data.DisplayColor);
+                    $('#eventColor').val(data.DisplayColor);
                     console.log(data);
                     $('#eventModal').modal();
                     $('#checkboxgroup').hide();
