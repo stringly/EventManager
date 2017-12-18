@@ -78,7 +78,7 @@
                 {
                     rowStyle = "background-color:#c2bebe";
                 }
-                var hours = (item.EndTime - item.StartTime).TotalHours;
+                var hours = Math.Round(Convert.ToDecimal((item.EndTime - item.StartTime).TotalHours), 2);
                 var confirmedRegs = 0;
                 <tr style="@rowStyle">
                     <td>

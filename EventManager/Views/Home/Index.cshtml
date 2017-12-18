@@ -64,6 +64,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
         <script>
             var pageUser = @HttpContext.Current.Cache["userID"];
+            var calendarDisplayDate;
             function FetchEventAndRenderCalendar() {
                 events = [];
                 $.ajax({
@@ -101,15 +102,23 @@
             })
                 var events = [];
                 var selectedEvent = null;
+                
                 $('[data-toggle=offcanvas]').click(function () {
                     $('.row-offcanvas').toggleClass('active');
                 });
                 
                 function GenerateCalendar(events) {
+                    if (calendarDisplayDate != null){
+                        calendarDisplayDate = $('#calendar').fullCalendar('getDate');
+                        console.log (calendarDisplayDate);
+                    }
+                    else{
+                        calendarDisplayDate = new Date();
+                    }
                     $('#calendar').fullCalendar('destroy');
                     $('#calendar').fullCalendar({
                         contentHeight: 800,
-                        defaultDate: new Date(),
+                        defaultDate: calendarDisplayDate,
                         timeFormat: 'h(:mm)a',
                         header: {
                             left: 'prev,next today',
@@ -164,7 +173,8 @@
                                 end: end,
                                 minstaff: 1,
                                 maxStaff: 1,
-                                fundCenter: ''
+                                fundCenter: '',
+                                color: '#e0e0e0'
 
                             };
                             console.log(selectedEvent);
@@ -202,6 +212,7 @@
                                 break;
                         }
                     });
+                    $('#checkboxgroup').show();
                     $('#repeatMenu').hide();
 
                     if (selectedEvent.eventID != 0) {
@@ -217,19 +228,25 @@
                         $('#txtFundCenter').val(selectedEvent.fundCenter);
                         $('#innerColorDiv').css('background-color', selectedEvent.color);
                         $('#eventColor').val(selectedEvent.color);
+                        $('#txtHoursCalculated').val(GetDuration(selectedEvent.start, selectedEvent.end));
+                        
                     }
                     else {
                         $('#txtminStaff').val(1);
                         $('#txtmaxStaff').val(1);
                         $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
                         $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                        $('#innerColorDiv').css('background-color', '#e0e0e0');
+                        $('#eventColor').val('#e0e0e0');
                     }
                     $('#myModal').modal('hide');
                     $('#eventModal').modal();
 
                 }
                 $('#btnDelete').click(function () {
-                    DeleteEvent(selectedEvent.EventID);
+                    console.log("delete clicked, EventID: " + selectedEvent.eventID);
+                    DeleteEvent(selectedEvent.eventID);
+                    $('#myModal').modal('hide');
                     //if (selectedEvent != null && confirm('Delete this event?')) {
 
                     //    $.ajax({

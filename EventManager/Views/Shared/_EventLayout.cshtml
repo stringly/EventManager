@@ -63,7 +63,7 @@
                                     <input type="hidden" id="hdEventID" value="0" />
                                     <input type="hidden" id="hdEnteredBy" value="1" />
                                     <div class="row form-inline" style="width:100%; margin-bottom:10px">
-                                        <div class="form-group col-xs-6">
+                                        <div class="form-group col-xs-4">
                                             <label>Event Name</label>
                                             <input type="text" id="txtEventName" class="form-control" style="max-width:100%" />
                                         </div>
@@ -83,6 +83,13 @@
                                                 <span class="input-group-addon" style="width:auto">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-xs-2">
+                                            <label>Hours:</label>
+                                            <div class="input-group date">
+                                                <input type="text" id="txtHoursCalculated" class="form-control" style="max-width:200px; text-align:center" />
+
                                             </div>
                                         </div>
                                     </div>
@@ -244,6 +251,9 @@
                 cache: false,
                 data: { 'id': id },
                 success: function (data) {
+                    var start = moment(data.StartTime);
+                    var end = moment(data.EndTime);
+                    var duration = moment.duration(end.diff(start)); 
                     $('#hdEventID').val(data.EventID);
                     $('#hdEnteredBy').val(data.EnteredBy);
                     $('#txtEventName').val(data.EventName);
@@ -255,6 +265,7 @@
                     $('#txtFundCenter').val(data.FundCenter);
                     $('#innerColorDiv').css('background-color', data.DisplayColor);
                     $('#eventColor').val(data.DisplayColor);
+                    $('#txtHoursCalculated').val(GetDuration(data.StartTime, data.EndTime));
                     console.log(data);
                     $('#eventModal').modal();
                     $('#checkboxgroup').hide();
@@ -271,13 +282,36 @@
             })
 
         }
+        function GetDuration(i, v) {
+            var duration = 0.0;
+            var start = moment(i);
+            var end = moment(v);
+            var minutes = moment.duration(end.diff(start)).asMinutes();
+            duration = (minutes / 60).toFixed(2);
+            return duration;
+        }
+        $('#txtHoursCalculated').change(function () {
+            
+            if (this.value <= 0.0) {
+                $(this).css({ 'background-color': '#ff6666' });
+            }
+            else if (this.value >= 10.0 && this.value < 12.0) {
+                $(this).css({ 'background-color': 'yellow' });
+            }
+            else if (this.value >= 12.0) {
+                $(this).css({ 'background-color': 'orange' });
+            }
+            else {
+                $(this).css({ 'background-color': '#fff' });
+            }
+        })
         function SaveEvent(eventData) {
             $.ajax({
                 type: "POST",
                 url: "/home/SaveEvent",
                 data: eventData,
                 success: function (data) {
-                    alert("Event Updated")
+                    //alert("Event Updated")
                     //refresh the page
                     //window.location.href = "/Events/UserEvents";
                     //window.location.reload();
@@ -295,7 +329,7 @@
                     url: "/home/DeleteEvent",
                     data: { 'eventID': id },
                     success: function (data) {
-                        alert("Event Deleted")
+                        //alert("Event Deleted")
                         //refresh the page
                         //window.location.href = "/Events/UserEvents";
 
@@ -310,7 +344,7 @@
         }
         function Reloader() {
             switch (pageName) {
-                case "CalendarView":
+                case "Calendar View":
                     $('#eventModal').modal('hide');
                     FetchEventAndRenderCalendar();
                     break;
@@ -318,6 +352,7 @@
                     window.location.reload();
             }
         }
+        
         function OpenAddEventForm() {
             $('#eventModal').modal();
             $('#eventModal :input').prop("disabled", false);
@@ -325,9 +360,22 @@
             $('#checkboxgroup').show();
         }
 
+        function RecalculateDuration() {
+            var start = $('#txtStart').val().trim();
+            var end = $('#txtEnd').val().trim();
+            console.log("Recalculate Duration reports: Start: " + start + ", End: " + end);
+
+            if (start != "" && end != "") {
+                
+                $('#txtHoursCalculated').val(GetDuration(start, end));
+                $('#txtHoursCalculated').trigger('change');
+            }
+        }
+
         $('#eventModal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
             $('#innerColorDiv').css('background-color', '#ffffff');
+            $('#txtHoursCalculated').css('background-color', '#fff')
         });
 
         $('#chkRepeat').change(function () {
@@ -493,15 +541,15 @@
                         }
                         break;
                     case "3":
-                        if ($('#txtRepeatStartDate').val().trim() == "") {
-                            alert('To repeat this event weekly, you must provide a start date.');
-                            return false;
-                            break;
-                        }
-                        if ($('#txtRepeatEndDate').val().trim() == "") {
-                            alert('To repeat this event weekly, you must provide an end date.');
-                            return false;
-                        }
+                        //if ($('#txtRepeatStartDate').val().trim() == "") {
+                        //    alert('To repeat this event weekly, you must provide a start date.');
+                        //    return false;
+                        //    break;
+                        //}
+                        //if ($('#txtRepeatEndDate').val().trim() == "") {
+                        //    alert('To repeat this event weekly, you must provide an end date.');
+                        //    return false;
+                        //}
                         if ($('#chkSun').prop('checked') == false &&
                             $('#chkMon').prop('checked') == false &&
                             $('#chkTue').prop('checked') == false &&
@@ -534,7 +582,8 @@
             format: 'MM/DD/YYYY HH:mm',
             sideBySide: true,
             showClose: true
-
+        }).on('dp.change', function (e) {
+            RecalculateDuration();
         });
     </script>
     

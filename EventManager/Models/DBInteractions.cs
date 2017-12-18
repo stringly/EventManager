@@ -147,6 +147,7 @@ namespace EventManager.Models
                         result = true;
                         break;
                     case 3: //Week Repeater
+                        //TODO: Week repeater behaves oddly with 1 week selected
                         DateTime stopDate = e.StartTime.AddDays(7 * r.repeatCount);
                         for (DateTime i = e.StartTime.AddDays(1); i.Date < stopDate.Date; i = i.AddDays(1))
                         {

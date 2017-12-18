@@ -136,6 +136,7 @@
     <Content Include="Notes\ELMAH DBScript.txt" />
     <Content Include="Notes\EventOwnerFK.txt" />
     <Content Include="Notes\SQL_SPs.txt" />
+    <Content Include="Notes\TextFile1.txt" />
     <Content Include="Resources\Images\blue.jpg" />
     <Content Include="Resources\Images\Caution.png" />
     <Content Include="Resources\Images\color_wheel.png" />
