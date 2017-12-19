@@ -147,6 +147,7 @@
     <Content Include="Resources\Images\SOD.png" />
     <Content Include="Resources\Images\text-color.png" />
     <Content Include="Resources\Images\Working-Schedule.png" />
+    <Content Include="Resources\RegistrationEmailTemplate.txt" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Notes\DBTables.xlsx" />
@@ -200,6 +201,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\SessionTimeAttribute.cs" />
     <Compile Include="LTRank.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
@@ -208,6 +210,7 @@
     <Compile Include="Helpers\EventRepeater.cs" />
     <Compile Include="Models\EventFormResult.cs" />
     <Compile Include="Models\EventManagerRoleProvider.cs" />
+    <Compile Include="Models\Registration.cs" />
     <Compile Include="Models\RegistrationUpdateListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs">

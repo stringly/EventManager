@@ -179,14 +179,22 @@
                                                    border-left-width:3px; 
                                                    border-left-color:black;
                                                    background-color:#3a75bf;
-                                                   color:white">
+                                                   color:white; cursor:default"
+                                                   data-toggle="popover"
+                                                   data-trigger="hover"
+                                                   data-placement="bottom"
+                                                   data-content="Check the box in this column to Confirm this registration.">
                                                    Confirm
                                         </th>
                                         <th style="text-align:center; 
                                                    border-top-width:3px; 
                                                    border-top-color:black;
                                                    background-color:#3a75bf;
-                                                   color:white">
+                                                   color:white; cursor:default"
+                                                   data-toggle="popover"
+                                                   data-trigger="hover"
+                                                   data-placement="bottom"
+                                                   data-content="Check the box in this column to place this registration in Standby.">
                                                    Standby
                                         </th>
                                         <th style="text-align:center; 
@@ -195,8 +203,25 @@
                                                    border-right-width:3px; 
                                                    border-right-color:black;
                                                    background-color:#3a75bf;
-                                                   color:white">
+                                                   color:white; cursor:default"
+                                                   data-toggle="popover"
+                                                   data-trigger="hover"
+                                                   data-placement="bottom"
+                                                   data-content="Check the box in this column to Decline this registration.">
                                                    Decline
+                                        </th>
+                                        <th style="text-align:center;
+                                                   border-top-width:3px;
+                                                   border-right-width:3px;
+                                                   border-top-color:black;
+                                                   border-right-color:black;
+                                                   background-color:#3a75bf;
+                                                   color:white; cursor:default"
+                                                   data-toggle="popover"
+                                                   data-trigger="hover"
+                                                   data-placement="bottom"
+                                                   data-content="Check the box in this column to automatically notify the registrant when you click submit.">
+                                            Notify
                                         </th>
                                     </tr>
                                 </thead>
@@ -340,6 +365,13 @@
                                                     </td>
                                                     break;
                                             }
+                                            <td style="text-align:center; border-right-width:3px; border-right-color:black; background-color:#f7fb98">
+                                                <input type="checkbox" id="@("chkNotify" + r.RegistrationID)" class="notifycheck"
+                                                    data-toggle="popover"
+                                                    data-trigger="hover"
+                                                    data-placement="bottom"
+                                                    data-content="Registrant will be notified via email upon submit. Uncheck if you do not wish to send this email." disabled/>
+                                            </td>
 
                                         </tr>
                                     }    
@@ -347,9 +379,11 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="8" style="background-color:#d1e0f5"></td>
-                                        <td colspan="3" style="text-align:center; 
+                                        <td colspan="4" style="text-align:center; 
                                                         border-right-width:3px; 
-                                                        border-right-color:black; 
+                                                        border-right-color:black;
+                                                        border-top-color:black;
+                                                        border-top-width:1px; 
                                                         border-left-width:3px; 
                                                         border-left-color:black; 
                                                         border-bottom-width:3px; 
@@ -358,7 +392,8 @@
                                             <button type="button" id="@("submitButton" + item.EventID)" onclick="SubmitClick(@item.EventID)" class="btn-xs btn-success" style="width:100%; display:none">
                                                 Submit Changes
                                             </button>
-                                        </td>                                                                            
+                                        </td>
+                                                                         
                                     </tr>
                                 </tfoot>
                             </table>
@@ -391,9 +426,18 @@
             $('#' + targetTableName + " tr").not(':first').not(':last').each(function () {
                 var regID = $(this).attr('id');
                 var stat = $(this).find('.statusrow').text();
+                var notify;
+                if($('#chkNotify' + regID).is(':checked')){
+                    notify = true;
+                }
+                else{
+                    notify = false;
+                }
+                console.log("Notify is set to: " + notify);
                 var registration = {
                     id: parseInt(regID),
-                    status: stat
+                    status: stat,
+                    notify: notify
                 };
 
                 results.push(registration);
@@ -414,6 +458,7 @@
                             //Rerender view
                             alert('Registrations updated successfully');
                             $('#' + buttonName).hide();
+                            $('.notifycheck').prop('checked', false);
                             buttonFlag = false;
                         }
                     },
@@ -429,7 +474,9 @@
             var declinedName = "chkDecline" + regID;
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
+            var notifyChkName = "chkNotify" + regID;
             $('#' + buttonName).show();
+            $('#' +notifyChkName).prop('disabled', false);
             buttonFlag = true;
             if ($('#' + confirmName).is(':checked')){
                 $('#' + standbyName).prop('checked', false);
@@ -445,7 +492,9 @@
             var declinedName = "chkDecline" + regID;
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
+            var notifyChkName = "chkNotify" + regID;
             $('#' + buttonName).show();
+            $('#' +notifyChkName).prop('disabled', false);
             buttonFlag = true;
             if ($('#' + standbyName).is(':checked')){
                 $('#' + confirmName).prop('checked', false);
@@ -460,7 +509,9 @@
             var declinedName = "chkDecline" + regID;
             var statusBoxName = "Status" + regID;
             var buttonName = "submitButton" + eventID;
+            var notifyChkName = "chkNotify" + regID;
             $('#' + buttonName).show();
+            $('#' +notifyChkName).prop('disabled', false);
             buttonFlag = true;
             if ($('#' + declinedName).is(':checked')){
                 $('#' + standbyName).prop('checked', false);

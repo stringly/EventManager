@@ -14,6 +14,11 @@
 	-Add field to dbo.Event, update Entity Model and all Event views to show date
 	-Update stored procedure that populates "Available Events" to check this field against current time
 
+-Detailed Event/Registration management screen? 
+	-Callsigns, notification specifications? I dunno...
+
+-Click-thru? Allow links to bring users right to a view but still populate cache?
+
 
 *DONE* -Make fullCalendar remember what month I was on prior to AJAX post (it was doing this, I fucked up by changing the ViewBag.Title and not updating the Reloader Function)
 *DONE* -Add TOTAL HOURS dynamic to Event Entry form

@@ -315,7 +315,6 @@ namespace EventManager.Models
                     if (r != null)
                     {
                         r.Status = status;
-                        //_db.Registrations.Remove(r);
                         _db.SaveChanges();
                         result = true;
                     }
@@ -340,6 +339,11 @@ namespace EventManager.Models
                         if (r != null)
                         {
                             r.Status = u.status;
+                            if (u.notify)
+                            {
+                                r.NotifyRegistrationStatusChange();
+                            }
+                            
                         }
                         else
                         {
