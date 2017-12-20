@@ -276,6 +276,7 @@
         var selectedEvent = null;
         var selectedRegistration = null;
         $(document).ready(function () {
+            updateTime();
             $('[data-toggle="popover"]').popover();           
             $('#btnConfirm').click(function (){
                 console.log("Click!");
@@ -290,7 +291,7 @@
                     type: "POST",
                     url: "/UserEventRegistration/CancelRegistration",
                     data: selectedRegistration,
-                    success: function(){
+                    success: function(data){
                         alert("Registration canceled successfully")
                         location.reload();
                     },

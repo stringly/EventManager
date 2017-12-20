@@ -30,8 +30,6 @@
                         <li>@Html.ActionLink("Home", "Index", "Landing")</li>
                         <li>@Html.ActionLink("Manage Events", "Index", "Home")</li>
                         <li>@Html.ActionLink("Registrations", "Index", "UserEventRegistration")</li>
-
-                        @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                     </ul>
                 </div>
                 <div class="col-sm-3 text-right pull-right" style="color: #fff; display:inline-block; height:50px; line-height:50px">
@@ -40,17 +38,27 @@
 
                     <img src="@Url.Content("~/Resources/Images/Seal.png")" width="30" height="40" style="vertical-align:middle" />
                     <img src="@Url.Content("~/Resources/Images/SOD.png")" width="40" height="40" style="vertical-align:middle" />
-
                 </div>
-                @*<div class="pull-right">
-                        <ul class="nav navbar-nav">
-                            <li>@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") +1), "Index", "UserInfo")</li>
-                        </ul>
-                    </div>*@
             </div>
         </div>
     </div>
+    <div class="navbar navbar-inverse navbar-fixed-bottom" id="footerbar">
+        <div class="container-fluid" style="border-top:solid; border-top-width:1px; border-top-color:#ef6c00">
+            <div class="col-sm-6 text-left pull-left" style="color:#fff; display:inline-block; height:50px; line-height:50px">
+                <span>
+                    <a>Server Message: </a><a id="messageText">Welcome!</a>
+                </span>
+            </div>
+            <div class="navbar-collapse collapse">
+                <div class="col-sm-3 text-right pull-right" style="color:#fff; display:inline-block; height:50px; line-height:50px">
+                    <span>
+                        <a id="currentTime"></a>
+                    </span>
 
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container-fluid" style="height:100%">
         <div class="row row-offcanvas row-offcanvas-left" style="height:100%">
@@ -84,5 +92,12 @@
 
 
     @RenderSection("Scripts", false)
+    <script>
+        function updateTime() {
+            var d = new Date();
+            $('#currentTime').text(moment(d).format("MM/DD/YYYY HH:mm"));
+        }
+        setInterval(updateTime, 60 * 1000);
+    </script>
 </body>
 </html>

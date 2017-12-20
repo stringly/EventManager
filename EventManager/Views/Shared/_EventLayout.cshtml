@@ -44,7 +44,26 @@
             </div>
         </div>
     </div>
+    <div class="navbar navbar-inverse navbar-fixed-bottom" id="footerbar">
+        <div class="container-fluid" style="border-top:solid; border-top-width:1px; border-top-color:#ef6c00">
+                <div class="col-sm-6 text-left pull-left" style="color:#fff; display:inline-block; height:50px; line-height:50px">
+                    <span>
+                        <a>Server Message: </a><a id="messageText">Welcome!</a>
+                    </span>
+                </div>
+            <div class="navbar-collapse collapse">
+                <div class="col-sm-3 text-right pull-left" style="color:#fff; display:inline-block; height:50px; line-height:50px">
 
+                </div>
+                <div class="col-sm-3 text-right pull-right" style="color:#fff; display:inline-block; height:50px; line-height:50px">
+                    <span>
+                        <a id="currentTime"></a>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid" style="height:100%">
         <div class="row row-offcanvas row-offcanvas-left" style="height:100%">
             <div class="col-xs-2" style="height:100%">
@@ -239,7 +258,11 @@
         $box.bind("change", function () {
             $('#eventColor').val(box.colorHex);
         });
-
+        function updateTime() {
+            var d = new Date();
+            $('#currentTime').text(moment(d).format("MM/DD/YYYY HH:mm"));
+        }
+        setInterval(updateTime, 60 * 1000);
         var pageName = '@ViewBag.Title'        
         function OpenEditForm(id) {
             var eventDetails = [];
@@ -266,7 +289,6 @@
                     $('#innerColorDiv').css('background-color', data.DisplayColor);
                     $('#eventColor').val(data.DisplayColor);
                     $('#txtHoursCalculated').val(GetDuration(data.StartTime, data.EndTime));
-                    console.log(data);
                     $('#eventModal').modal();
                     $('#checkboxgroup').hide();
                     $('#repeatMenu').hide();
@@ -315,10 +337,11 @@
                     //refresh the page
                     //window.location.href = "/Events/UserEvents";
                     //window.location.reload();
+                    $('#messageText').text(data.message);
                     Reloader();
                 },
                 error: function () {
-                    alert("Could not edit the event.");
+                    $('#messageText').text("Could not edit the event.");
                 }
             })
         }
@@ -334,6 +357,7 @@
                         //window.location.href = "/Events/UserEvents";
 
                         //window.location.reload();
+                        $('#messageText').text(data.message);
                         Reloader();
                     },
                     error: function () {

@@ -87,7 +87,8 @@
 
                             });
                         })
-
+                        var d = new Date()
+                        $('#messageText').text("Showing Events as of " + moment(d).format("MM/DD/YYYY HH:mm"));
                         GenerateCalendar(events);
                     },
                     error: function (error) {
@@ -98,6 +99,7 @@
             
             $(document).ready(function () {
                 FetchEventAndRenderCalendar();
+                updateTime();
                
             })
                 var events = [];

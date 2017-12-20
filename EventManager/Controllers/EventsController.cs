@@ -11,6 +11,7 @@ using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+    //TODO: MOVE ALL DB Interactions into DB Model, all queries into STORED PROCS
     [SessionTimeout]
     public class EventsController : Controller
     {
@@ -26,6 +27,7 @@ namespace EventManager.Controllers
             }
             else
             {
+                //TODO: Limit this return for users in other roles? STORED PROC
                 return View(db.Events.ToList());
             }
             

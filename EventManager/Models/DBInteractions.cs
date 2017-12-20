@@ -60,23 +60,31 @@ namespace EventManager.Models
             Boolean result = false;
             using(EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
             {
-                var v = _db.Events.Where(a => a.EventID == e.EventID).FirstOrDefault();
-                if (v != null)
+                try
                 {
-                    v.EventName = e.EventName;
-                    v.StartTime = e.StartTime;
-                    v.EndTime = e.EndTime;
-                    v.Description = e.Description;
-                    v.MaxStaff = e.MaxStaff;
-                    v.MinStaff = e.MinStaff;
-                    v.FundCenter = e.FundCenter;
-                    v.EnteredBy = e.EnteredBy;
-                    v.DisplayColor = e.DisplayColor;
-                    _db.SaveChanges();
-                    result = true;
+                    var v = _db.Events.Where(a => a.EventID == e.EventID).FirstOrDefault();
+                    if (v != null)
+                    {
+                        v.EventName = e.EventName;
+                        v.StartTime = e.StartTime;
+                        v.EndTime = e.EndTime;
+                        v.Description = e.Description;
+                        v.MaxStaff = e.MaxStaff;
+                        v.MinStaff = e.MinStaff;
+                        v.FundCenter = e.FundCenter;
+                        v.EnteredBy = e.EnteredBy;
+                        v.DisplayColor = e.DisplayColor;
+                        _db.SaveChanges();
+                        result = true;
+                    }
                 }
-            }
+                catch(Exception ex)
+                {
+                    Elmah.ErrorLog.GetDefault(HttpContext.Current).Log(new Elmah.Error(ex));
+                }
             return result;
+            }
+
         }
         public Boolean AddNewEvent(Event e)
         {
@@ -191,7 +199,6 @@ namespace EventManager.Models
                     _db.SaveChanges();
                     result = true;
                 }
-
             }
             return result;
         }

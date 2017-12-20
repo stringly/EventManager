@@ -23,8 +23,6 @@ namespace EventManager.Helpers
             smtpClient = new SmtpClient();
             smtpClient.Host = ConfigurationManager.AppSettings["smtpHost"]; //Configure as your email provider
             smtpClient.UseDefaultCredentials = false;
-            //smtpClient.EnableSsl = true;//comment if you don't need SSL 
-            //smtpClient.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["userName"], ConfigurationManager.AppSettings["password"]);
             smtpClient.Port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
             Message = new MailMessage();
             FromAddress = new MailAddress("DONOTREPLY@PGPDEvents.co.pg.md.us");

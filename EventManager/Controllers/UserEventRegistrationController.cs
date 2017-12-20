@@ -86,6 +86,7 @@ namespace EventManager.Controllers
 
 
         //TODO:Add validation
+        //TODO: Why am I using async POSTs and Javascript reloads on a page with a viewmodel? Should be Actionresults?
         [HttpPost]
         public JsonResult RegisterForEvent(Event e)
         {
@@ -117,7 +118,9 @@ namespace EventManager.Controllers
             {
                 Console.WriteLine(ex.InnerException.Message);
             }
-            return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            MessageFactory ms = new MessageFactory(status);
+
+            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
 
         }
     }

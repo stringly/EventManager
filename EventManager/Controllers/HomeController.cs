@@ -28,7 +28,9 @@ namespace EventManager.Controllers
                 dc.Configuration.LazyLoadingEnabled = false;
                 //TODO: CREATE STORED PROC Limit the returned list of events to exclude full/past events
                 var events = dc.Events.ToList();
+                MessageFactory ms = new MessageFactory();
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
             }
         }
 
@@ -36,7 +38,7 @@ namespace EventManager.Controllers
         public JsonResult SaveEvent(EventFormResult fr)
         {
             var status = false;
-            var repeatStatus = false;
+            var repeatStatus = false;            
 
             Event e = new EventManager.Event();
                 e.EventID = Convert.ToInt32(fr.EventID);
@@ -66,15 +68,16 @@ namespace EventManager.Controllers
             }
             else
             {
-                status = db.EditExistingEvent(e);
+                    status = db.EditExistingEvent(e);                
             }
 
             if (r != null)
             {
                 repeatStatus = db.RepeatEvent(e, r);
             }
+            MessageFactory ms = new MessageFactory(status);
 
-            return new JsonResult { Data = new { status = status, repeat = repeatStatus } };
+            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
         }
 
         [HttpPost]
@@ -83,7 +86,8 @@ namespace EventManager.Controllers
             var status = false;
             DBInteractions db = new DBInteractions();
             status = db.DeleteEvent(eventID);
-            return new JsonResult { Data = new { status = status } };
+            MessageFactory ms = new MessageFactory(status);
+            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
         }
     }
 }

@@ -23,3 +23,7 @@
 *DONE* -Make fullCalendar remember what month I was on prior to AJAX post (it was doing this, I fucked up by changing the ViewBag.Title and not updating the Reloader Function)
 *DONE* -Add TOTAL HOURS dynamic to Event Entry form
 
+-Message Display Footer? Have JSONResult/MessageBag pass messages back to view?
+
+-Split the UserEventRegistration View into multiple views. Rethink the Async
+-There is no reason why the UserEvents Page calls the ASync JSONResult Method on the CalendarView's controller.  This needs to be a Action result redirecting to the UserEvent's Index().  Using Async is not doing anything considering that the AJAX immediately refreshes the view anyways.  You idiot.
