@@ -53,7 +53,7 @@
                     <input type="hidden" id="hdUserID" />
                     <label class="control-label col-md-3">User Name:</label>
                     <div>
-                        <input readonly type="text" id="hdLDAPName" class="form-control" data-toggle="popover" data-trigger="hover" data-content="You cannot edit this. This is your Windows Logon Name.">
+                        <input readonly type="text" value="@Model.LDAPName" id="hdLDAPName" class="form-control" data-toggle="popover" data-trigger="hover" data-content="You cannot edit this. This is your Windows Logon Name.">
                         <span class="field-validation-valid text-danger" data-valmsg-for="hdLDAPName"></span>
                     </div>
                 </div>
@@ -124,70 +124,71 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
     <script>
         $(document).ready(function () {
-            updateTime();
-            GetUserInfo();
-            function GetUserInfo() {
-                console.log("GetUserInfoEntered");
-                $.ajax({
-                    type: "GET",
-                    url: "/UserInfo/GetUser",
-                    success: function (data) {
-                        $('#Rank').val(data.Rank);
-                        $('#FirstName').val(data.FirstName);
-                        $('#LastName').val(data.LastName);
-                        $('#IDNumber').val(data.IDNumber);
-                        $('#PayRollID').val(data.PayRollID);
-                        $('#Email').val(data.Email);
-                        $('#ContactNumber').val(data.ContactNumber);
-                        $('#hdUserID').val(data.UserId);
-                        $('#hdLDAPName').val(data.LDAPName);
-                        console.log(data);
-
-                    },
-                    error: function (error) {
-                        //alert('failed');
-                    }
-                })
-            }
-
+            updateTime();            
             $('#hdLDAPName').popover();
-            $('#btnSave').click(function () {
-                var userData = {
-                    UserId: parseInt($('#hdUserID').val()),
-                    Rank: parseInt($('#Rank').val()),
-                    FirstName: $('#FirstName').val(),
-                    LastName: $('#LastName').val(),
-                    IDNumber: parseInt($('#IDNumber').val()),
-                    PayRollID: $('#PayRollID').val(),
-                    Email: $('#Email').val(),
-                    ContactNumber: $('#ContactNumber').val(),
-                    LDAPName: $('#hdLDAPName').val(),
-                    RegisteredDate: moment().format("MM/DD/YYYY HH:mm")
-                }
-                console.log(userData);
-                SaveUser(userData);
-            })
+            //GetUserInfo();
+            //function GetUserInfo() {
+            //    console.log("GetUserInfoEntered");
+            //    $.ajax({
+            //        type: "GET",
+            //        url: "/UserInfo/GetUser",
+            //        success: function (data) {
+            //            $('#Rank').val(data.Rank);
+            //            $('#FirstName').val(data.FirstName);
+            //            $('#LastName').val(data.LastName);
+            //            $('#IDNumber').val(data.IDNumber);
+            //            $('#PayRollID').val(data.PayRollID);
+            //            $('#Email').val(data.Email);
+            //            $('#ContactNumber').val(data.ContactNumber);
+            //            $('#hdUserID').val(data.UserId);
+            //            $('#hdLDAPName').val(data.LDAPName);
+            //            console.log(data);
+
+            //        },
+            //        error: function (error) {
+            //            //alert('failed');
+            //        }
+            //    })
+            //}
+
+            
+            //$('#btnSave').click(function () {
+            //    var userData = {
+            //        UserId: parseInt($('#hdUserID').val()),
+            //        Rank: parseInt($('#Rank').val()),
+            //        FirstName: $('#FirstName').val(),
+            //        LastName: $('#LastName').val(),
+            //        IDNumber: parseInt($('#IDNumber').val()),
+            //        PayRollID: $('#PayRollID').val(),
+            //        Email: $('#Email').val(),
+            //        ContactNumber: $('#ContactNumber').val(),
+            //        LDAPName: $('#hdLDAPName').val(),
+            //        RegisteredDate: moment().format("MM/DD/YYYY HH:mm")
+            //    }
+            //    console.log(userData);
+            //    SaveUser(userData);
+            //})
 
 
-            function SaveUser(userData) {
-                $.ajax({
-                    type: "POST",
-                    url: "/UserInfo/SaveUser",
-                    data: userData,
-                    success: function (data) {
-                        if (data.status) {
-                            alert("User Info Updated");
-                            GetUserInfo();
-                        }
-                        else {
-                            alert("POST Success received, but status is false?");
-                        }
-                    },
-                    error: function () {
-                        alert("POST error returned");
-                    }
-                })
-            }
+            //function SaveUser(userData) {
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "/UserInfo/SaveUser",
+            //        data: userData,
+            //        success: function (data) {
+            //            if (data.status) {
+            //                alert("User Info Updated");
+            //                GetUserInfo();
+            //            }
+            //            else {
+            //                alert("POST Success received, but status is false?");
+            //            }
+            //        },
+            //        error: function () {
+            //            alert("POST error returned");
+            //        }
+            //    })
+            //}
         })
     </script>
 }

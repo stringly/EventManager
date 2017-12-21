@@ -27,3 +27,15 @@
 
 -Split the UserEventRegistration View into multiple views. Rethink the Async
 -There is no reason why the UserEvents Page calls the ASync JSONResult Method on the CalendarView's controller.  This needs to be a Action result redirecting to the UserEvent's Index().  Using Async is not doing anything considering that the AJAX immediately refreshes the view anyways.  You idiot.
+
+-EVENTS VIEW: 
+	-EDIT EVENT should not show REPEATER on MOdal, unless you want to add duplicater.
+	-ADD Calendarview Event Filters
+		-My Events? AJAX GET with filter on Controller
+
+
+
+
+-WORKFLOW:
+	Adding an event:
+		-Can an officer without a cruiser work?

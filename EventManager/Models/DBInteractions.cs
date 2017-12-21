@@ -300,6 +300,7 @@ namespace EventManager.Models
             using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
             {
                 User user = new EventManager.User();
+                //TODO: User Lookup STORED PROC
                 user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
                 if (user != null)
                 {
@@ -307,7 +308,18 @@ namespace EventManager.Models
                     {
                         System.Web.HttpContext.Current.Cache["userID"] = user.UserId;
                     }
-                }
+                }                
+            }
+        }
+        public User GetUserByID(int id)
+        {
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                User user = new User();
+                //TODO: STORED PROC?
+                user = _dc.Users.Where(u => u.UserId == id).FirstOrDefault();
+                //TODO: Null check?
+                return user;
             }
         }
         //Registration Interactions

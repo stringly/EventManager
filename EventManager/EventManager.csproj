@@ -261,6 +261,7 @@
     <Content Include="Views\Events\UserEvents.cshtml" />
     <Content Include="Views\Shared\_EventLayout.cshtml" />
     <Content Include="Views\SessionTimeOut\Index.cshtml" />
+    <Content Include="Views\UserInfo\KnownUser.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

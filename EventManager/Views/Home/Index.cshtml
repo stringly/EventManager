@@ -173,7 +173,7 @@
                                 description: '',
                                 start: start,
                                 end: end,
-                                minstaff: 1,
+                                minStaff: 1,
                                 maxStaff: 1,
                                 fundCenter: '',
                                 color: '#e0e0e0'
@@ -217,7 +217,7 @@
                     $('#checkboxgroup').show();
                     $('#repeatMenu').hide();
 
-                    if (selectedEvent.eventID != 0) {
+                    //if (selectedEvent.eventID != 0) {
                         //User is editing an existing event
                         $('#hdEventID').val(selectedEvent.eventID);
                         $('#hdEnteredBy').val(selectedEvent.enteredBy);
@@ -232,15 +232,15 @@
                         $('#eventColor').val(selectedEvent.color);
                         $('#txtHoursCalculated').val(GetDuration(selectedEvent.start, selectedEvent.end));
                         
-                    }
-                    else {
-                        $('#txtminStaff').val(1);
-                        $('#txtmaxStaff').val(1);
-                        $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
-                        $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
-                        $('#innerColorDiv').css('background-color', '#e0e0e0');
-                        $('#eventColor').val('#e0e0e0');
-                    }
+                    //}
+                    //else {
+                    //    $('#txtminStaff').val(1);
+                    //    $('#txtmaxStaff').val(1);
+                    //    $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                    //    $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                    //    $('#innerColorDiv').css('background-color', '#e0e0e0');
+                    //    $('#eventColor').val('#e0e0e0');
+                    //}
                     $('#myModal').modal('hide');
                     $('#eventModal').modal();
 

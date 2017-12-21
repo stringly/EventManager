@@ -9,15 +9,35 @@ using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
-    [SessionTimeout]
+    
     public class UserInfoController : Controller
     {
         // GET: UserInfo
         public ActionResult Index()
-        {            
-            return View();          
+        {
+            if (System.Web.HttpContext.Current.Cache["userID"] == null)
+            {
+                string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
+                User u = new User();
+                u.UserId = 0;
+                u.LDAPName = nameWithoutDomain;
+                u.Rank = 1;
+                u.Email = nameWithoutDomain + "@co.pg.md.us";
+                return View(u); 
+            }
+            else
+            {
+                return RedirectToAction("KnownUser", Convert.ToInt32(System.Web.HttpContext.Current.Cache.Get("userID")));
+            }
+                         
         }
-
+        [SessionTimeout]
+        public ActionResult KnownUser(int id)
+        {
+            DBInteractions _db = new DBInteractions();
+            User u = _db.GetUserByID(id);
+            return View(u);
+        }
         
         public JsonResult GetUser()
         {
@@ -47,6 +67,13 @@ namespace EventManager.Controllers
                 return new JsonResult { Data = new { status = false } };
             }
 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Save([Bind(Include = "EventID,EventName,StartTime,EndTime,Description,MaxStaff,MinStaff,FundCenter,EnteredBy")] User @user)
+        {
+            return View(@user);
         }
 
         [HttpPost]
