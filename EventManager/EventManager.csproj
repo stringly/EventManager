@@ -202,6 +202,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\ErrorLog.cs" />
     <Compile Include="Helpers\MessageFactory.cs" />
     <Compile Include="Helpers\SessionTimeAttribute.cs" />
     <Compile Include="LTRank.cs">
@@ -213,6 +214,7 @@
     <Compile Include="Models\EventManagerRoleProvider.cs" />
     <Compile Include="Models\Registration.cs" />
     <Compile Include="Models\RegistrationUpdateListItem.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
@@ -262,6 +264,10 @@
     <Content Include="Views\Shared\_EventLayout.cshtml" />
     <Content Include="Views\SessionTimeOut\Index.cshtml" />
     <Content Include="Views\UserInfo\KnownUser.cshtml" />
+    <Content Include="Views\Landing\UserHome.cshtml" />
+    <Content Include="Views\Landing\AdminHome.cshtml" />
+    <Content Include="Views\Landing\DevOpsHome.cshtml" />
+    <Content Include="Views\Shared\_LandingLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

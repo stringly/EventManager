@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using EventManager.Helpers;
 using EventManager.Models;
 using System.Diagnostics;
+using System.Data.SqlClient;
 
 namespace EventManager.Models
 {
@@ -202,15 +203,7 @@ namespace EventManager.Models
             }
             return result;
         }
-        public IEnumerable<Event> GetEventListForUser()
-        {
-            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
-            {
-                DateTime dateDiff = DateTime.Today.AddMonths(-6);
-                return _dc.Events.Where(x => x.StartTime > dateDiff).ToList();
-            }
-
-        }
+        
         public IEnumerable<Event> GetEventListAll()
         {
             using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
@@ -322,6 +315,44 @@ namespace EventManager.Models
                 return user;
             }
         }
+        /// <summary>
+        /// Locates and returns a user object with the provided Active Directory Account Name
+        /// </summary>
+        /// <param name="name">The user's Window's Active Directory Name</param>
+        /// <returns>Returns a populated User object if User is found, otherwise will return null object</returns>
+        public User GetUserByLDAP(string name)
+        {
+            var u = new User();
+            using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
+            {
+
+                try
+                {
+                    //TODO: STORED PROC (Find User by LDAPName)
+                    u = _db.Users.Where(x => x.LDAPName == name).FirstOrDefault();
+                }
+                catch (SqlException ex)
+                {
+                    ErrorLog.LogError(ex, "SQL error number: " + ex.Number + " encountered when trying to find user by Name.");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.LogError(ex);
+                }
+            }
+            return u;
+        }
+        public IEnumerable<Event> GetEventListForUser()
+        {
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                DateTime dateDiff = DateTime.Today.AddMonths(-6);
+                return _dc.Events.Where(x => x.StartTime > dateDiff).ToList();
+            }
+
+        }
+
+
         //Registration Interactions
         public Boolean EditRegistration(int registrationID, RegistrationStats status)
         {

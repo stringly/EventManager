@@ -13,23 +13,21 @@ namespace EventManager.Controllers
     public class UserInfoController : Controller
     {
         // GET: UserInfo
+        [AllowAnonymous]
         public ActionResult Index()
         {
-            if (System.Web.HttpContext.Current.Cache["userID"] == null)
-            {
-                string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-                User u = new User();
+            //TODO: store this in cookie?
+            string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
+            User u = new DBInteractions().GetUserByLDAP(nameWithoutDomain);
+            
+            if (u == null) // I think this is causing an error unless I set all of the fields before the view is called
+            { 
                 u.UserId = 0;
                 u.LDAPName = nameWithoutDomain;
                 u.Rank = 1;
-                u.Email = nameWithoutDomain + "@co.pg.md.us";
-                return View(u); 
+                u.Email = nameWithoutDomain + "@co.pg.md.us";                 
             }
-            else
-            {
-                return RedirectToAction("KnownUser", Convert.ToInt32(System.Web.HttpContext.Current.Cache.Get("userID")));
-            }
-                         
+            return View(u);
         }
         [SessionTimeout]
         public ActionResult KnownUser(int id)

@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "~/Views/Shared/_LandingLayout.cshtml";
-    ViewBag.Title = "New User";
+    ViewBag.Title = "Admin View";
 }
 
 <div class="row text-center" style="height:60%">
@@ -13,7 +13,7 @@
                 <p class="card-text">View and Register for Events</p>
             </div>
             <div class="card-footer">
-                <a href="/UserInfo/Index" class="btn btn-block btn-danger btn-lg" style="max-width:200px; font-size:1vw">Login Required!</a>
+                <a href="/UserEventRegistration/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
                 <p class="card-text">Add or Manage Events</p>
             </div>
             <div class="card-footer">
-                <button class="btn btn-block btn-danger btn-lg" style="max-width:200px; cursor:not-allowed; font-size:1vw" disabled>Admin Only</button>
+                <a href="/Home/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
                 <p class="card-text">View or Update User Information</p>
             </div>
             <div class="card-footer">
-                <a href="/UserInfo/Index" class="btn btn-block btn-success btn-lg" style="max-width:200px; font-size:1vw">Login Here!</a>
+                <a href="/UserInfo/Index" class="btn btn-block btn-primary btn-lg" style="max-width:200px; font-size:1vw">Go!</a>
             </div>
         </div>
     </div>
