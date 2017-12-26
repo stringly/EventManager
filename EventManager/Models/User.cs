@@ -23,9 +23,14 @@ namespace EventManager
         /// <returns><c>true</c> if the user is successfully added; otherwise, <c>false</c></returns>
         public Boolean CreateUser()
         {
+            RegisteredDate = DateTime.Now;
+            
+           
             bool result = false;
             using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
             {
+                Role r = _db.Roles.Where(x => x.Name == "User").FirstOrDefault();
+                Roles.Add(r);
                 try
                 {
                     _db.Users.Add(this);

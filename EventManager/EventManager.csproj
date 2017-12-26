@@ -263,7 +263,6 @@
     <Content Include="Views\Events\UserEvents.cshtml" />
     <Content Include="Views\Shared\_EventLayout.cshtml" />
     <Content Include="Views\SessionTimeOut\Index.cshtml" />
-    <Content Include="Views\UserInfo\KnownUser.cshtml" />
     <Content Include="Views\Landing\UserHome.cshtml" />
     <Content Include="Views\Landing\AdminHome.cshtml" />
     <Content Include="Views\Landing\DevOpsHome.cshtml" />

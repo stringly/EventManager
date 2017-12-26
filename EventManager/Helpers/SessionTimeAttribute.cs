@@ -10,8 +10,10 @@ namespace EventManager.Helpers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            //TODO: Change this to check for > 0 Roles in RoleProvider?
+            
             HttpContext ctx = HttpContext.Current;
-            if (ctx.Cache["userID"] == null)
+            if (!ctx.User.Identity.IsAuthenticated)
             {
                 filterContext.Result = new RedirectResult("~/SessionTimeOut/Index");
                 return;

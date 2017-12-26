@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EventManager.Models;
+using EventManager.Helpers;
 using System.Diagnostics;
 
 
 namespace EventManager.Controllers
 {
     [Authorize]
+    [SessionTimeout]
     public class LandingController : Controller
     {
         // GET: Landing
@@ -34,6 +36,7 @@ namespace EventManager.Controllers
             }
                     
         }
+
         [Authorize(Roles = "User")]
         public ActionResult UserHome()
         {

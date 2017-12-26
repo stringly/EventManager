@@ -7,7 +7,7 @@
 
 <h2></h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Save", "UserInfo", FormMethod.Post)) 
 {
     @Html.AntiForgeryToken()
 
@@ -49,12 +49,12 @@
                         Value = "5"
                     });
                 }
-                <div class="form-group">
-                    <input type="hidden" id="hdUserID" />
-                    <label class="control-label col-md-3">User Name:</label>
+                <div class="form-group">                    
+                    @Html.HiddenFor(model => model.UserId, new { id = "hdUserID" })
+                    @Html.LabelFor(model => model.LDAPName, "User Name:", htmlAttributes: new { @class = "control-label col-md-3" })
                     <div>
-                        <input readonly type="text" value="@Model.LDAPName" id="hdLDAPName" class="form-control" data-toggle="popover" data-trigger="hover" data-content="You cannot edit this. This is your Windows Logon Name.">
-                        <span class="field-validation-valid text-danger" data-valmsg-for="hdLDAPName"></span>
+                        @Html.TextBoxFor(model => model.LDAPName, htmlAttributes: new { @class = "form-control", @readonly = "readonly", @data_toggle = "popover", @data_trigger = "hover", @data_content = "You cannot edit this. This is your Windows Logon Name." })
+                        @Html.ValidationMessageFor(model => model.LDAPName, "", new { @class = "text-danger" })                        
                     </div>
                 </div>
                 <div class="form-group">
@@ -112,8 +112,8 @@
                         @Html.ValidationMessageFor(model => model.ContactNumber, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                        <input type="button" id="btnSave" value="Save" class="btn btn-success" />
-                        <input type="button" id="btnCancel" value="Cancel" class="btn btn-danger" />
+                        <input type="submit" id="btnSave" value="Save" class="btn btn-success" />
+                        
             </div>
         </div>
     </div>
@@ -125,70 +125,7 @@
     <script>
         $(document).ready(function () {
             updateTime();            
-            $('#hdLDAPName').popover();
-            //GetUserInfo();
-            //function GetUserInfo() {
-            //    console.log("GetUserInfoEntered");
-            //    $.ajax({
-            //        type: "GET",
-            //        url: "/UserInfo/GetUser",
-            //        success: function (data) {
-            //            $('#Rank').val(data.Rank);
-            //            $('#FirstName').val(data.FirstName);
-            //            $('#LastName').val(data.LastName);
-            //            $('#IDNumber').val(data.IDNumber);
-            //            $('#PayRollID').val(data.PayRollID);
-            //            $('#Email').val(data.Email);
-            //            $('#ContactNumber').val(data.ContactNumber);
-            //            $('#hdUserID').val(data.UserId);
-            //            $('#hdLDAPName').val(data.LDAPName);
-            //            console.log(data);
-
-            //        },
-            //        error: function (error) {
-            //            //alert('failed');
-            //        }
-            //    })
-            //}
-
-            
-            //$('#btnSave').click(function () {
-            //    var userData = {
-            //        UserId: parseInt($('#hdUserID').val()),
-            //        Rank: parseInt($('#Rank').val()),
-            //        FirstName: $('#FirstName').val(),
-            //        LastName: $('#LastName').val(),
-            //        IDNumber: parseInt($('#IDNumber').val()),
-            //        PayRollID: $('#PayRollID').val(),
-            //        Email: $('#Email').val(),
-            //        ContactNumber: $('#ContactNumber').val(),
-            //        LDAPName: $('#hdLDAPName').val(),
-            //        RegisteredDate: moment().format("MM/DD/YYYY HH:mm")
-            //    }
-            //    console.log(userData);
-            //    SaveUser(userData);
-            //})
-
-
-            //function SaveUser(userData) {
-            //    $.ajax({
-            //        type: "POST",
-            //        url: "/UserInfo/SaveUser",
-            //        data: userData,
-            //        success: function (data) {
-            //            if (data.status) {
-            //                alert("User Info Updated");
-            //                GetUserInfo();
-            //            }
-            //            else {
-            //                alert("POST Success received, but status is false?");
-            //            }
-            //        },
-            //        error: function () {
-            //            alert("POST error returned");
-            //        }
-            //    })
-            //}
+            $('#LDAPName').popover();
         })
     </script>
 }

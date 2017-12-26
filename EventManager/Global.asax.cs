@@ -21,5 +21,10 @@ namespace EventManager
             Server.ClearError();
             Response.Redirect("/ErrorPage/ErrorMessage");
         }
+
+        protected void Session_Start(object sender, EventArgs e)
+        {
+            //do stuff
+        }
     }
 }

@@ -7,6 +7,7 @@ using EventManager.Models;
 using System.Diagnostics;
 using EventManager.Helpers;
 
+
 namespace EventManager.Controllers
 {
     
@@ -21,7 +22,8 @@ namespace EventManager.Controllers
             User u = new DBInteractions().GetUserByLDAP(nameWithoutDomain);
             
             if (u == null) // I think this is causing an error unless I set all of the fields before the view is called
-            { 
+            {
+                u = new EventManager.User();
                 u.UserId = 0;
                 u.LDAPName = nameWithoutDomain;
                 u.Rank = 1;
@@ -29,75 +31,30 @@ namespace EventManager.Controllers
             }
             return View(u);
         }
-        [SessionTimeout]
-        public ActionResult KnownUser(int id)
-        {
-            DBInteractions _db = new DBInteractions();
-            User u = _db.GetUserByID(id);
-            return View(u);
-        }
-        
-        public JsonResult GetUser()
-        {
-            try
-            {
-                using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
-                {
-                    _dc.Configuration.LazyLoadingEnabled = false;
-                    string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-                    var u = _dc.Users.Where(a => a.LDAPName == nameWithoutDomain).FirstOrDefault();
 
-                    if (u == null)
-                    {
-                        u = new User();
-                        u.UserId = 0;
-                        u.LDAPName = nameWithoutDomain;
-                        u.Rank = 1;
-                        u.Email = nameWithoutDomain + "@co.pg.md.us";
-                        
-                    } 
-                    return new JsonResult { Data = u, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-                }
-            }
-            catch(Exception x)
-            {
-                Debug.WriteLine(x.Message);
-                return new JsonResult { Data = new { status = false } };
-            }
-
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save([Bind(Include = "EventID,EventName,StartTime,EndTime,Description,MaxStaff,MinStaff,FundCenter,EnteredBy")] User @user)
+        public ActionResult Save([Bind(Include = "UserId,Rank,FirstName,LastName,IDNumber,PayrollID,Email,ContactNumber,LDAPName")] User @user)
         {
-            return View(@user);
-        }
-
-        [HttpPost]
-        public JsonResult SaveUser(User u)
-        {
-            var status = false;
-            DBInteractions db = new DBInteractions();
-            if (u.UserId > 0)
+            if (ModelState.IsValid)
             {
-                //Existing User, call EditUser in DBInteractions
-                status = db.EditUser(u);
-            }
-            else
-            {
-                //New User, call new user in DBInteractions
-
-                status = db.AddNewUser(u);
-                if (status == true)
+                if(@user.UserId != 0) //is known user
                 {
-                    db.PushUserToCache();
+                    @user.EditUser();
+                }
+                else //is new user
+                {
+                    @user.CreateUser();
+                    if (Request.Cookies["roleCookie"] != null) //overwrite the RoleProvider Cookie to refresh the User's Roles
+                    {
+                        HttpCookie newCookie = new HttpCookie("roleCookie");
+                        newCookie.Expires = DateTime.Now.AddDays(-1d);
+                        Response.Cookies.Add(newCookie);
+                    }                    
                 }
             }
-
-            return new JsonResult { Data = new { status = status } };
+            return RedirectToAction("Index");
         }
-
-
     }
 }
