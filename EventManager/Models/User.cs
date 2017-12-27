@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using EventManager.Helpers;
+using System.Data.Entity;
 
 namespace EventManager
 {
@@ -223,6 +224,28 @@ namespace EventManager
                 }
             }
             return result;
+        }
+
+        public IEnumerable<Registration> GetRegistrationsForUser()
+        {
+            IEnumerable<Registration> regList = null;
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    //TODO: Stored Proc
+                    regList = _dc.Registrations.Where(r => r.UserID == UserId).Include(r => r.Event).OrderBy(r => r.Event.StartTime).ToList();
+                }
+                catch (SqlException ex)
+                {
+                    ErrorLog.LogError(ex, "SQL error number: " + ex.Number + " encountered when trying to find registrations for user: " + UserId);
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.LogError(ex);
+                }
+            }
+            return regList;
         }
     }
 }

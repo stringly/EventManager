@@ -16,19 +16,35 @@ namespace EventManager.Controllers
         private User user = new EventManager.User();
 
         // GET: UserEventRegistration
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    //string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
+        //    //user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
+        //    int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+        //    user = _dc.Users.Where(u => u.UserId == id).FirstOrDefault();
+        //    EventRegistrationViewModel ervm = new EventRegistrationViewModel();
+        //    ervm.ViewUserAvailableEvents = GetUserAvailableEvents(); 
+        //    ervm.ViewUserRegistrations = GetUserRegistrations();
+
+
+        //    return View(ervm);
+        //}
+        [Authorize(Roles="User")]
+        public ActionResult AvailableEvents()
         {
-            //string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-            //user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
-            int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
-            user = _dc.Users.Where(u => u.UserId == id).FirstOrDefault();
-            EventRegistrationViewModel ervm = new EventRegistrationViewModel();
-            ervm.ViewUserAvailableEvents = GetUserAvailableEvents();
-            ervm.ViewUserRegistrations = GetUserRegistrations();
-
-
-            return View(ervm);
+            User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            IEnumerable<Event> list = u.GetAvailableEventListForUser();
+            return View(list);
         }
+
+        [Authorize(Roles="User")]
+        public ActionResult UserRegistrations()
+        {
+            User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            //IEnumerable<Registration> list = u.Registrations;
+            return View(u.GetRegistrationsForUser());
+        }
+
 
         public List<AvailableEvents> GetUserAvailableEvents()
         {

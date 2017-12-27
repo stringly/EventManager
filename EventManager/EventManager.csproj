@@ -267,6 +267,8 @@
     <Content Include="Views\Landing\AdminHome.cshtml" />
     <Content Include="Views\Landing\DevOpsHome.cshtml" />
     <Content Include="Views\Shared\_LandingLayout.cshtml" />
+    <Content Include="Views\UserEventRegistration\AvailableEvents.cshtml" />
+    <Content Include="Views\UserEventRegistration\UserRegistrations.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

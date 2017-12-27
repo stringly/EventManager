@@ -10,7 +10,7 @@ namespace EventManager.Helpers
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            //TODO: Change this to check for > 0 Roles in RoleProvider?
+            //TODO: Test behavior if the roleprovider cookie expires
             
             HttpContext ctx = HttpContext.Current;
             if (!ctx.User.Identity.IsAuthenticated)
