@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using EventManager.Models;
 using System.Diagnostics;
 using EventManager.Helpers;
-
+using EventManager.ViewModels;
 
 namespace EventManager.Controllers
 {
@@ -15,46 +15,54 @@ namespace EventManager.Controllers
     {
         // GET: UserInfo
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult UserInfo()
         {
             //TODO: store this in cookie?
             string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-            User u = new DBInteractions().GetUserByLDAP(nameWithoutDomain);
-            
+            UserInfoViewModel u = new DBFetch().GetUserInfoViewModelByLDAP(nameWithoutDomain);
+
             if (u == null) // I think this is causing an error unless I set all of the fields before the view is called
             {
-                u = new EventManager.User();
-                u.UserId = 0;
-                u.LDAPName = nameWithoutDomain;
-                u.Rank = 1;
-                u.Email = nameWithoutDomain + "@co.pg.md.us";                 
+                return HttpNotFound();
             }
             return View(u);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Save([Bind(Include = "UserId,Rank,FirstName,LastName,IDNumber,PayrollID,Email,ContactNumber,LDAPName")] User @user)
+        public ActionResult Save([Bind(Include = "UserId,Rank,FirstName,LastName,IDNumber,PayrollID,Email,ContactNumber,LDAPName")] UserInfoViewModel @uvm)
         {
+            bool result = false;
             if (ModelState.IsValid)
             {
-                if(@user.UserId != 0) //is known user
+                if (@uvm.UserId != 0) //is known user
                 {
-                    @user.EditUser();
+                    result = new DBFetch().UpdateUserFromViewModel(@uvm);
                 }
                 else //is new user
                 {
-                    @user.CreateUser();
+                    result = new DBFetch().CreateUserFromViewModel(@uvm);
+                }
+                if (result)
+                {
                     if (Request.Cookies["roleCookie"] != null) //overwrite the RoleProvider Cookie to refresh the User's Roles
                     {
                         HttpCookie newCookie = new HttpCookie("roleCookie");
                         newCookie.Expires = DateTime.Now.AddDays(-1d);
-                        Response.Cookies.Add(newCookie);
-                    }                    
+                        Response.Cookies.Add(newCookie);                        
+                    }
+                    return RedirectToAction("UserInfo");
+                }
+                else
+                {
+                    return HttpNotFound();
                 }
             }
-            return RedirectToAction("Index");
+            else
+            {
+                return HttpNotFound();
+            }
+            
         }
     }
 }

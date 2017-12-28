@@ -137,6 +137,7 @@
     <Content Include="Notes\EventOwnerFK.txt" />
     <Content Include="Notes\SQL_SPs.txt" />
     <Content Include="Notes\TextFile1.txt" />
+    <Content Include="Notes\ViewModel Notes.txt" />
     <Content Include="Resources\Images\blue.jpg" />
     <Content Include="Resources\Images\Caution.png" />
     <Content Include="Resources\Images\color_wheel.png" />
@@ -201,6 +202,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DBFetch.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\ErrorLog.cs" />
     <Compile Include="Helpers\MessageFactory.cs" />
@@ -232,6 +234,7 @@
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\EventRegistrationViewModel.cs" />
+    <Compile Include="ViewModels\UserInfoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -269,6 +272,7 @@
     <Content Include="Views\Shared\_LandingLayout.cshtml" />
     <Content Include="Views\UserEventRegistration\AvailableEvents.cshtml" />
     <Content Include="Views\UserEventRegistration\UserRegistrations.cshtml" />
+    <Content Include="Views\UserInfo\UserInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
