@@ -202,11 +202,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\DBFetch.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\ErrorLog.cs" />
     <Compile Include="Helpers\MessageFactory.cs" />
     <Compile Include="Helpers\SessionTimeAttribute.cs" />
+    <Compile Include="Helpers\UserService.cs" />
     <Compile Include="LTRank.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>

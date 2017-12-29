@@ -19,7 +19,7 @@ namespace EventManager.Controllers
         {
             //TODO: store this in cookie?
             string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-            UserInfoViewModel u = new DBFetch().GetUserInfoViewModelByLDAP(nameWithoutDomain);
+            UserInfoViewModel u = new UserService().GetUserInfoViewModelByLDAP(nameWithoutDomain);
 
             if (u == null) // I think this is causing an error unless I set all of the fields before the view is called
             {
@@ -37,11 +37,11 @@ namespace EventManager.Controllers
             {
                 if (@uvm.UserId != 0) //is known user
                 {
-                    result = new DBFetch().UpdateUserFromViewModel(@uvm);
+                    result = new UserService().UpdateUserFromViewModel(@uvm);
                 }
                 else //is new user
                 {
-                    result = new DBFetch().CreateUserFromViewModel(@uvm);
+                    result = new UserService().CreateUserFromViewModel(@uvm);
                 }
                 if (result)
                 {

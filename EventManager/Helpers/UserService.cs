@@ -7,8 +7,17 @@ using System.Web;
 
 namespace EventManager.Helpers
 {
-    public class DBFetch
+    /// <summary>
+    /// This class provides interface to the database for operations on the User entity
+    /// </summary>
+    public class UserService
     {
+        /// <summary>
+        /// Returns a UserInfoViewModel from the provided User LDAP or returns
+        /// a "new" User UserInfoViewModel if the LDAP name isn't found in the DB
+        /// </summary>
+        /// <param name="name">The LDAP name of the user.</param>
+        /// <returns>Populated UserInfoViewModel or "Empty" UserInfoViewModel</returns>
         public UserInfoViewModel GetUserInfoViewModelByLDAP(string name)
         {
             UserInfoViewModel uvm = new UserInfoViewModel();
@@ -54,6 +63,12 @@ namespace EventManager.Helpers
             return uvm;
         }
 
+        /// <summary>
+        /// Creates a new Entity User and writes to the DB from the 
+        /// UserInfoViewModel provided as a parameter
+        /// </summary>
+        /// <param name="uvm">A Populated UserInfoViewModel object</param>
+        /// <returns><c>true</c> if the user was added successfully; otherwise, <c>false</c></returns>
         public bool CreateUserFromViewModel(UserInfoViewModel uvm)
         {
             bool result = false;
@@ -91,6 +106,11 @@ namespace EventManager.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Updates a DB user from the provided viewmodel
+        /// </summary>
+        /// <param name="uvm">A populated UserInfoViewModel object</param>
+        /// <returns><c>true</c> if the user is updated successfully: otherwise <c>false</c></returns>
         public bool UpdateUserFromViewModel(UserInfoViewModel uvm)
         {
             bool result = false;
@@ -122,7 +142,23 @@ namespace EventManager.Helpers
                     ErrorLog.LogError(ex);
                 }
             }
-        return result;
+            return result;
+        }
+
+        public string PhoneNumberConverter(string number, int ToView = 0)
+        {
+            switch (ToView)
+            {
+                case 1: //Sterilize to save
+
+                    return new string(number.Where(c => char.IsDigit(c)).ToArray());
+
+                default: //Convert to view
+                    int x = Convert.ToInt32(number);
+
+                    number = String.Format("{0:(###) ###-####}", x);
+                    return number;
+            }
         }
     }
 }
