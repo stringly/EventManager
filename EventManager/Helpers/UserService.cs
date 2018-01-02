@@ -35,8 +35,9 @@ namespace EventManager.Helpers
                         uvm.IDNumber = u.IDNumber;
                         uvm.Email = u.Email;
                         uvm.PayrollID = u.PayRollID;
-                        uvm.ContactNumber = u.ContactNumber;
                         uvm.LDAPName = u.LDAPName;
+                        uvm.ContactNumber = PhoneNumberConverter(u.ContactNumber, 0);
+                        
                     }
                     else //User is not in DB
                     {
@@ -84,7 +85,7 @@ namespace EventManager.Helpers
                     u.IDNumber = uvm.IDNumber;
                     u.PayRollID = uvm.PayrollID;
                     u.Email = uvm.Email;
-                    u.ContactNumber = uvm.ContactNumber;
+                    u.ContactNumber = PhoneNumberConverter(uvm.ContactNumber, 1);
                     u.RegisteredDate = DateTime.Now;
                     u.LDAPName = uvm.LDAPName;
                     Role r = _dc.Roles.Where(x => x.Name == "User").FirstOrDefault();
@@ -127,8 +128,7 @@ namespace EventManager.Helpers
                         u.IDNumber = uvm.IDNumber;
                         u.PayRollID = uvm.PayrollID;
                         u.Email = uvm.Email;
-                        u.ContactNumber = uvm.ContactNumber;
-                        u.LDAPName = uvm.LDAPName;
+                        u.ContactNumber = PhoneNumberConverter(uvm.ContactNumber, 1);
                         _dc.SaveChanges();
                         result = true;
                     }
@@ -145,6 +145,12 @@ namespace EventManager.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Adds/Removes Special Characters from a phone number
+        /// </summary>
+        /// <param name="number">The phone number from which to remove/add characters</param>
+        /// <param name="ToView">Specify 1 to remove characters or 0/nothing to add characters</param>
+        /// <returns>a string with a formatted phone number</returns>
         public string PhoneNumberConverter(string number, int ToView = 0)
         {
             switch (ToView)
@@ -154,10 +160,9 @@ namespace EventManager.Helpers
                     return new string(number.Where(c => char.IsDigit(c)).ToArray());
 
                 default: //Convert to view
-                    int x = Convert.ToInt32(number);
-
-                    number = String.Format("{0:(###) ###-####}", x);
-                    return number;
+                    string n;
+                    n = Convert.ToInt64(number).ToString("(###) ###-####");
+                    return n;
             }
         }
     }

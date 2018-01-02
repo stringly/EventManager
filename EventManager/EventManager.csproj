@@ -204,6 +204,7 @@
     </Compile>
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\ErrorLog.cs" />
+    <Compile Include="Helpers\EventService.cs" />
     <Compile Include="Helpers\MessageFactory.cs" />
     <Compile Include="Helpers\SessionTimeAttribute.cs" />
     <Compile Include="Helpers\UserService.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="USER_OWNED_EVENTS_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AvailableEventsViewModel.cs" />
     <Compile Include="ViewModels\EventRegistrationViewModel.cs" />
     <Compile Include="ViewModels\UserInfoViewModel.cs" />
   </ItemGroup>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using EventManager.Models;
-using System.Diagnostics;
 using EventManager.Helpers;
 using EventManager.ViewModels;
 
@@ -21,7 +20,7 @@ namespace EventManager.Controllers
             string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
             UserInfoViewModel u = new UserService().GetUserInfoViewModelByLDAP(nameWithoutDomain);
 
-            if (u == null) // I think this is causing an error unless I set all of the fields before the view is called
+            if (u == null)
             {
                 return HttpNotFound();
             }

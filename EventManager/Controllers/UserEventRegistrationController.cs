@@ -25,10 +25,9 @@ namespace EventManager.Controllers
         //    EventRegistrationViewModel ervm = new EventRegistrationViewModel();
         //    ervm.ViewUserAvailableEvents = GetUserAvailableEvents(); 
         //    ervm.ViewUserRegistrations = GetUserRegistrations();
-
-
         //    return View(ervm);
         //}
+
         [Authorize(Roles="User")]
         public ActionResult AvailableEvents()
         {
