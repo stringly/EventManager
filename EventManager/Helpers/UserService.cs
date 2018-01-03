@@ -165,5 +165,27 @@ namespace EventManager.Helpers
                     return n;
             }
         }
+
+        public int GetUserIDFromLDAP(string name)
+        {
+            int userID = 0;
+            try
+            {
+                using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+                {
+                    userID = _dc.Users.Where(u => u.LDAPName == name).Select(a => a.UserId).SingleOrDefault();
+                }
+            }
+            catch (SqlException ex)
+            {
+                ErrorLog.LogError(ex, "SQL error number: " + ex.Number + " encountered when trying to find user: " + name);
+            }
+            catch (Exception ex)
+            {
+                ErrorLog.LogError(ex);
+            }
+
+            return userID;
+        }
     }
 }
