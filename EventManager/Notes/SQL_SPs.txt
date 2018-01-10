@@ -27,6 +27,19 @@ ORDER BY StartTime DESC
 
 //
 
+CREATE PROCEDURE AVAILABLE_EVENTS_BY_USERID
+@UserID Int
+AS SELECT *
+FROM [dbo].[Events] t1
+WHERE t1.StartTime > GetDATE() AND NOT EXISTS
+	(SELECT *
+	 FROM Registrations t2
+	 WHERE t2.UserID = @UserID 
+	 AND t2.EventID = t1.EventID)
+ORDER BY [StartTime] DESC
+
+//
+
 CREATE TABLE [dbo].[LTRanks]
 (
 	[RankId] INT NOT NULL PRIMARY KEY, 

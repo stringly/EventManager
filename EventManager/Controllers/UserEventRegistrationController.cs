@@ -31,8 +31,9 @@ namespace EventManager.Controllers
         [Authorize(Roles="User")]
         public ActionResult AvailableEvents()
         {
-            User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
-            IEnumerable<Event> list = u.GetAvailableEventListForUser();
+            //User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            //IEnumerable<Event> list = u.GetAvailableEventListForUser();
+            List<AvailableEventsViewModel> list = new EventService().GetAvailableEventsByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
             return View(list);
         }
 

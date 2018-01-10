@@ -13,10 +13,10 @@ namespace EventManager.Helpers
     public class EventService
     {
         //TODO: Rethink userID in cache?
-        public IEnumerable<AvailableEventsViewModel> GetAvailableEventsByLDAP(string name)
+        public List<AvailableEventsViewModel> GetAvailableEventsByLDAP(string name)
         {
-            IEnumerable<Event> eventList = null;
-            IEnumerable<AvailableEventsViewModel> viewList = null;
+            List<Event> eventList = null;
+            List<AvailableEventsViewModel> viewList = null;
             int UserId = new UserService().GetUserIDFromLDAP(name);
             using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
             {
@@ -24,10 +24,13 @@ namespace EventManager.Helpers
                 try
                 {
                     //TODO: Stored Proc, with User ID as a parameter and date filter in SQL? Also needs to not return full events.
-                    eventList = _dc.Events.Where(e => !_dc.Registrations.Any(r => r.UserID == UserId && r.EventID == e.EventID)
-                                   && e.StartTime >= DateTime.Now)
-                   .OrderBy(e => e.StartTime)
-                   .ToList();
+                   // eventList = _dc.Events.Where(e => !_dc.Registrations.Any(r => r.UserID == UserId && r.EventID == e.EventID)
+                   //                && e.StartTime >= DateTime.Now)
+                   //.OrderBy(e => e.StartTime)
+                   //.ToList();
+                    eventList = _dc.Events.Where(e => !e.Registrations.Any(r => r.UserID == UserId) && e.Registrations.Count(r => r.Status == RegistrationStats.Confirmed) < e.MaxStaff)
+                        .OrderBy(e => e.StartTime)
+                        .ToList();
                 }
                 catch (SqlException ex)
                 {
@@ -44,10 +47,12 @@ namespace EventManager.Helpers
                 a.EventName = e.EventName;
                 a.StartTime = e.StartTime;
                 a.EndTime = e.EndTime;
-                a.TotalHours = DateTimeOffset()
+                a.TotalHours = Math.Round(Convert.ToDecimal((e.EndTime - e.StartTime).TotalHours), 2);
+                a.Description = e.Description;
+                a.AvailableStaff = e.MaxStaff - e.Registrations.Count(r => r.Status == RegistrationStats.Confirmed);
+                a.EventOwner = e.User.Email;
+                viewList.Add(a);                
             }
-
-
             return viewList;
         }
 
