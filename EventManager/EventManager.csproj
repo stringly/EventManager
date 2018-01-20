@@ -167,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="AVAILABLE_EVENTS_BY_USERID_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

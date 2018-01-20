@@ -26,7 +26,7 @@
           </Key>
           <Property Name="RankId" Type="int" Nullable="false" />
           <Property Name="RankFullName" Type="nchar" MaxLength="30" Nullable="false" />
-          <Property Name="RankShort" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="RankShort" Type="nchar" MaxLength="5" Nullable="false" />
           <Property Name="PayGrade" Type="nchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Registrations">
@@ -143,6 +143,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="AVAILABLE_EVENTS_BY_USERID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="User" Type="int" Mode="In" />
+        </Function>
         <Function Name="EVENTS_LAST_10_DAYS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="EVENTS_LAST_6_MONTHS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="USER_OWNED_EVENTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -220,6 +223,9 @@
             <End Role="LTRank" EntitySet="LTRanks" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <FunctionImport Name="AVAILABLE_EVENTS_BY_USERID" ReturnType="Collection(EVENTS_MGR_TESTINGModel.AVAILABLE_EVENTS_BY_USERID_Result)">
+            <Parameter Name="User" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Registration">
           <Key>
@@ -364,7 +370,7 @@
           </Key>
           <Property Name="RankId" Type="Int32" Nullable="false" />
           <Property Name="RankFullName" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
-          <Property Name="RankShort" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="RankShort" Type="String" Nullable="false" MaxLength="5" FixedLength="true" Unicode="true" />
           <Property Name="PayGrade" Type="String" MaxLength="5" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Users" Relationship="EVENTS_MGR_TESTINGModel.FK_RankID" FromRole="LTRank" ToRole="User" />
         </EntityType>
@@ -380,6 +386,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="AVAILABLE_EVENTS_BY_USERID_Result">
+          <Property Type="Int32" Name="EventID" Nullable="false" />
+          <Property Type="String" Name="EventName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="TotalHours" Nullable="true" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="300" />
+          <Property Type="String" Name="OwnedBy" Nullable="true" MaxLength="61" />
+          <Property Type="Int32" Name="AvailableStaff" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -503,6 +519,20 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AVAILABLE_EVENTS_BY_USERID" FunctionName="EVENTS_MGR_TESTINGModel.Store.AVAILABLE_EVENTS_BY_USERID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EVENTS_MGR_TESTINGModel.AVAILABLE_EVENTS_BY_USERID_Result">
+                <ScalarProperty Name="EventID" ColumnName="EventID" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="TotalHours" ColumnName="TotalHours" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="OwnedBy" ColumnName="OwnedBy" />
+                <ScalarProperty Name="AvailableStaff" ColumnName="AvailableStaff" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

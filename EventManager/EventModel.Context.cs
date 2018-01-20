@@ -89,5 +89,14 @@ namespace EventManager
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Event>("USER_OWNED_EVENTS1", mergeOption, userParameter);
         }
+    
+        public virtual ObjectResult<AVAILABLE_EVENTS_BY_USERID_Result> AVAILABLE_EVENTS_BY_USERID(Nullable<int> user)
+        {
+            var userParameter = user.HasValue ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AVAILABLE_EVENTS_BY_USERID_Result>("AVAILABLE_EVENTS_BY_USERID", userParameter);
+        }
     }
 }

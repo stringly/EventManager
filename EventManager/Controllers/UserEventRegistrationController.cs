@@ -12,29 +12,14 @@ namespace EventManager.Controllers
     [SessionTimeout]
     public class UserEventRegistrationController : Controller
     {
-        private EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities();
-        private User user = new EventManager.User();
 
-        // GET: UserEventRegistration
-        //public ActionResult Index()
-        //{
-        //    //string nameWithoutDomain = User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1);
-        //    //user = _dc.Users.Where(u => u.LDAPName == nameWithoutDomain).FirstOrDefault();
-        //    int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
-        //    user = _dc.Users.Where(u => u.UserId == id).FirstOrDefault();
-        //    EventRegistrationViewModel ervm = new EventRegistrationViewModel();
-        //    ervm.ViewUserAvailableEvents = GetUserAvailableEvents(); 
-        //    ervm.ViewUserRegistrations = GetUserRegistrations();
-        //    return View(ervm);
-        //}
 
         [Authorize(Roles="User")]
         public ActionResult AvailableEvents()
         {
-            User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
-            IEnumerable<Event> list = u.GetAvailableEventListForUser();
-            return View(list);
+            return View(new EventService().GetAvailableEventsByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)));
         }
+
 
         [Authorize(Roles="User")]
         public ActionResult UserRegistrations()
@@ -44,60 +29,34 @@ namespace EventManager.Controllers
             return View(u.GetRegistrationsForUser());
         }
 
+        //public List<UserRegistrations> GetUserRegistrations()
+        //{
+        //    List<UserRegistrations> userRegistrations = new List<UserRegistrations>();
+        //    //var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
+        //    //                            && e.Event.StartTime >= DateTime.Now
+        //    //                            && (e.Status != RegistrationStats.Deleted
+        //    //                            && e.Status != RegistrationStats.Declined
+        //    //                            && e.Status != RegistrationStats.NoShow)).ToList();
 
-        public List<AvailableEvents> GetUserAvailableEvents()
-        {
-            List<AvailableEvents> availableEventsForUser = new List<AvailableEvents>();
-            var eventList = _dc.Events.Where(e =>
-                                !_dc.Registrations.Any(r => r.UserID == user.UserId && r.EventID == e.EventID && r.Status != RegistrationStats.Deleted)
-                                && e.StartTime >= DateTime.Now)
-                    .OrderBy(e => e.StartTime)
-                    .ToList();
-            foreach (var item in eventList)
-            {
-                AvailableEvents ae = new AvailableEvents();
-                ae.EventID = item.EventID;
-                ae.EventName = item.EventName;
-                ae.StartTime = item.StartTime;
-                ae.EndTime = item.EndTime;
-                ae.Description = item.Description;
-                ae.MaxStaff = item.MaxStaff;
-                ae.MinStaff = item.MinStaff;
-                ae.FundCenter = item.FundCenter;
-                ae.EnteredBy = item.EnteredBy;
-                availableEventsForUser.Add(ae);
-            }
-            return availableEventsForUser;
-        }
+        //    //I changed the below because I wanted the view to be able to show the user all of their registrations
+        //    var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId).OrderByDescending(e => e.Event.StartTime).ToList();
 
-        public List<UserRegistrations> GetUserRegistrations()
-        {
-            List<UserRegistrations> userRegistrations = new List<UserRegistrations>();
-            //var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
-            //                            && e.Event.StartTime >= DateTime.Now
-            //                            && (e.Status != RegistrationStats.Deleted
-            //                            && e.Status != RegistrationStats.Declined
-            //                            && e.Status != RegistrationStats.NoShow)).ToList();
-
-            //I changed the below because I wanted the view to be able to show the user all of their registrations
-            var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId).OrderByDescending(e => e.Event.StartTime).ToList();
-
-            foreach (var item in registrationList)
-            {
-                UserRegistrations ur = new UserRegistrations();
-                ur.RegistrationID = item.RegistrationID;
-                ur.UserID = item.UserID;
-                ur.EventID = item.EventID;
-                ur.TimeStamp = item.TimeStamp;
-                ur.Status = item.Status;
-                ur.EventName = item.Event.EventName;
-                ur.EventStartTime = item.Event.StartTime;
-                ur.EventEndTime = item.Event.EndTime;
-                ur.EventDescription = item.Event.Description;
-                userRegistrations.Add(ur);
-            }
-            return userRegistrations;
-        }
+        //    foreach (var item in registrationList)
+        //    {
+        //        UserRegistrations ur = new UserRegistrations();
+        //        ur.RegistrationID = item.RegistrationID;
+        //        ur.UserID = item.UserID;
+        //        ur.EventID = item.EventID;
+        //        ur.TimeStamp = item.TimeStamp;
+        //        ur.Status = item.Status;
+        //        ur.EventName = item.Event.EventName;
+        //        ur.EventStartTime = item.Event.StartTime;
+        //        ur.EventEndTime = item.Event.EndTime;
+        //        ur.EventDescription = item.Event.Description;
+        //        userRegistrations.Add(ur);
+        //    }
+        //    return userRegistrations;
+        //}
 
 
         //TODO:Add validation

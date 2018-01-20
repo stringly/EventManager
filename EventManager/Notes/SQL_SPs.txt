@@ -34,3 +34,23 @@ CREATE TABLE [dbo].[LTRanks]
 	[RankShort] NCHAR(10) NOT NULL,
 	[PayGrade] NCHAR(5) NULL	
 )
+
+
+CREATE PROCEDURE AVAILABLE_EVENTS_BY_USERID
+@User Int
+As
+SELECT e.EventID,
+       e.EventName, 
+       e.StartTime, 
+	   e.EndTime, 
+	   DATEDIFF(hh, e.StartTime, e.EndTime) As TotalHours, 
+	   e.Description,	   
+	   (rk.RankShort + u.LastName + ' #' + CAST(u.IDNumber as varchar(4))) As OwnedBy,
+	   (e.MaxStaff - (SELECT COUNT(*) FROM [dbo].[Registrations] r WHERE r.EventID = e.EventID AND r.[Status] = 2)) As AvailableStaff
+FROM dbo.Events e
+JOIN dbo.Users u
+	ON e.EnteredBy = u.UserId
+JOIN dbo.LTRanks rk
+    ON u.Rank = rk.RankId	
+WHERE e.StartTime > GETDATE() AND NOT EXISTS(SELECT * FROM [dbo].[Registrations] r WHERE [EventID] = e.EventID AND r.UserID = @User)
+ORDER BY StartTime DESC;

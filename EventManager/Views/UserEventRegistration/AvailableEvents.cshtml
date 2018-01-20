@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventManager.Event>
+﻿@model IEnumerable<EventManager.ViewModels.AvailableEventsViewModel>
 
 @{
     ViewBag.Title = "Available Events";
@@ -14,12 +14,12 @@
                 <!-- Link with dropdown items -->
                 <a href="#registrationsSubMenu" data-toggle="collapse" aria-expanded="false">My Registrations</a>
                 <ul class="collapse list-unstyled" id="registrationsSubMenu">
-                    <li id="registrationsSideBarAll"><a href="../UserEventRegistration/UserRegistrations" >Show All</a></li>
+                    <li id="registrationsSideBarAll"><a href="../UserEventRegistration/UserRegistrations">Show All</a></li>
                     <li id="registrationsSideBarConfirmed"><a href="../UserEventRegistration/UserRegistrations" id="registrationsSideBarConfirmed" ">Confirmed</a></li>
                     <li id="registrationsSideBarPending"><a href="../UserEventRegistration/UserRegistrations" id="registrationsSideBarPending" ">Pending</a></li>
-                    <li id="registrationsSideBarStandby"><a href="../UserEventRegistration/UserRegistrations" >Standby</a></li>
-                    <li id="registrationsSideBarDeclined"><a href="../UserEventRegistration/UserRegistrations" >Declined</a></li>
-                    <li id="registrationsSideBarDeleted"><a href="../UserEventRegistration/UserRegistrations" >Deleted</a></li>
+                    <li id="registrationsSideBarStandby"><a href="../UserEventRegistration/UserRegistrations">Standby</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="../UserEventRegistration/UserRegistrations">Declined</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="../UserEventRegistration/UserRegistrations">Deleted</a></li>
 
                 </ul>
                 @*<li><a href="#">Portfolio</a></li>
@@ -48,7 +48,10 @@
                     Description
                 </th>
                 <th style="text-align:center">
-                    Staffing
+                    Available Staffing
+                </th>
+                <th style="text-align:center">
+                    Event Contact
                 </th>
                 <th></th>
             </tr>
@@ -59,12 +62,12 @@
 
 
                 <tr>
-                    <th colspan="7" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
+                    <th colspan="8" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
                 </tr>
 
                 foreach (var item in group)
                 {
-                    var total = (item.EndTime - item.StartTime).TotalHours;
+
                     <tr id="row + @item.EventID" rel="popover">
                         <td style="vertical-align:middle">
                             @Html.DisplayFor(modelItem => item.EventName)
@@ -76,15 +79,18 @@
                             @Html.DisplayFor(modelItem => item.EndTime)
                         </td>
                         <td style="text-align:center; vertical-align:middle">
-                            @total
+                            @Html.DisplayFor(modelItem => item.TotalHours)
                         </td>
                         <td style="vertical-align:middle">
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td style="text-align:center; vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.MaxStaff)
+                            @Html.DisplayFor(modelItem => item.AvailableStaff)
                         </td>
-                        <td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @Html.DisplayFor(modelItem => item.EventOwner)
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
                             <button id="@item.EventID" onClick="RegisterClick(this.id)"
                                     value="@item.EventID,@item.EventName,@item.StartTime,@item.EndTime,@item.Description"
                                     class="btn btn-success">

@@ -13,21 +13,26 @@ namespace EventManager.Helpers
     public class EventService
     {
         //TODO: Rethink userID in cache?
-        public IEnumerable<AvailableEventsViewModel> GetAvailableEventsByLDAP(string name)
+        //TODO: Limit AVAILABLE_EVENTS_BY_USERID SP to exclude MaxStaffed events?
+        /// <summary>
+        /// This Method returns a list of events for which the user is eligible
+        /// It is populated by the AVAILABLE_EVENTS_BY_USERID Stored Proc
+        /// This stored proc excludes past events
+        /// </summary>
+        /// <param name="name">The LDAP name of the current user</param>
+        /// <returns>List of AvailableEventViewModel objects</returns>
+        public List<AvailableEventsViewModel> GetAvailableEventsByLDAP(string name)
         {
-            IEnumerable<Event> eventList = null;
-            IEnumerable<AvailableEventsViewModel> viewList = null;
+            
+            List<AvailableEventsViewModel> viewList = new List<AvailableEventsViewModel>();
             int UserId = new UserService().GetUserIDFromLDAP(name);
+            List<AVAILABLE_EVENTS_BY_USERID_Result> resultList =new List<AVAILABLE_EVENTS_BY_USERID_Result>();
             using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
             {
 
                 try
                 {
-                    //TODO: Stored Proc, with User ID as a parameter and date filter in SQL? Also needs to not return full events.
-                    eventList = _dc.Events.Where(e => !_dc.Registrations.Any(r => r.UserID == UserId && r.EventID == e.EventID)
-                                   && e.StartTime >= DateTime.Now)
-                   .OrderBy(e => e.StartTime)
-                   .ToList();
+                    resultList = _dc.AVAILABLE_EVENTS_BY_USERID(UserId).ToList();
                 }
                 catch (SqlException ex)
                 {
@@ -38,13 +43,18 @@ namespace EventManager.Helpers
                     ErrorLog.LogError(ex);
                 }
             }
-            foreach(Event e in eventList)
+            foreach(AVAILABLE_EVENTS_BY_USERID_Result e in resultList)
             {
                 AvailableEventsViewModel a = new AvailableEventsViewModel();
+                a.EventID = e.EventID;
                 a.EventName = e.EventName;
                 a.StartTime = e.StartTime;
                 a.EndTime = e.EndTime;
-                a.TotalHours = DateTimeOffset()
+                a.TotalHours = Convert.ToDouble(e.TotalHours);
+                a.Description = e.Description;
+                a.AvailableStaff = Convert.ToInt32(e.AvailableStaff);
+                a.EventOwner = e.OwnedBy;
+                viewList.Add(a);
             }
 
 
