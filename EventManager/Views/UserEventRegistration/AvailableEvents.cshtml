@@ -29,32 +29,8 @@
 
 <div class="container-fluid" id="AvailableEvents">
     <div class="col-xs-10 col-sm-10">
-        <h4>Available Events:</h4>
+        <h3>Available Events:</h3>
         <table class="table">
-            <tr style="background-color:#333333; color:#fff;">
-                <th>
-                    Event Name
-                </th>
-                <th>
-                    Start Date/Time
-                </th>
-                <th>
-                    End Date/Time
-                </th>
-                <th style="text-align:center">
-                    Total Hours
-                </th>
-                <th>
-                    Description
-                </th>
-                <th style="text-align:center">
-                    Available Staffing
-                </th>
-                <th style="text-align:center">
-                    Event Contact
-                </th>
-                <th></th>
-            </tr>
             @foreach (var group in Model.GroupBy(date => date.StartTime.ToShortDateString()))
             {
                 var d = Convert.ToString(group.Key);
@@ -62,12 +38,30 @@
 
 
                 <tr>
-                    <th colspan="8" style="background-color:#808080; color:#fff; font-weight:normal">@dt.ToLongDateString()</th>
+                    <th colspan="6" style="background-color:#f0f0f0; font-weight:bold; border-bottom:solid; border-top:solid; border-top-color:black; border-bottom-color:black">@dt.ToLongDateString()</th>
                 </tr>
-
+                <tr style="font-size:10px; vertical-align:bottom">
+                    <th style="font-weight:bolder; padding-bottom:2px">
+                        Event Name
+                    </th>
+                    <th style="font-weight:bolder; padding-bottom:2px">
+                        Start Date/Time
+                    </th>
+                    <th style="font-weight:bolder; padding-bottom:2px">
+                        End Date/Time
+                    </th>
+                    <th style="text-align:center; font-weight:bolder; padding-bottom:2px">
+                        Total Hours
+                    </th>
+                    <th style="text-align:center; font-weight:bolder; padding-bottom:2px">
+                        Available Staffing
+                    </th>
+                    <th></th>
+                </tr>
                 foreach (var item in group)
                 {
-
+                    var detailsRowID = "detailsRow" + item.EventID;
+                    var showDetailsButton = "showDetails" + item.EventID;
                     <tr id="row + @item.EventID" rel="popover">
                         <td style="vertical-align:middle">
                             @Html.DisplayFor(modelItem => item.EventName)
@@ -81,28 +75,71 @@
                         <td style="text-align:center; vertical-align:middle">
                             @Html.DisplayFor(modelItem => item.TotalHours)
                         </td>
-                        <td style="vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
                         <td style="text-align:center; vertical-align:middle">
                             @Html.DisplayFor(modelItem => item.AvailableStaff)
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.EventOwner)
-                        </td>
-                        <td style="text-align:center; vertical-align:middle">
-                            <button id="@item.EventID" onClick="RegisterClick(this.id)"
-                                    value="@item.EventID,@item.EventName,@item.StartTime,@item.EndTime,@item.Description"
-                                    class="btn btn-success">
-                                Register
+                        <td style="text-align:center; vertical-align:middle">                            
+                            <button type="button" 
+                                    class="btn btn-xs"
+                                    onClick="ShowDetails(@item.EventID)"
+                                    data-toggle="popover"
+                                    data-trigger="hover"
+                                    data-placement="bottom"
+                                    data-content="Show/Hide details"
+                                    style="padding:2px; color:blue;">
+                                <span class="glyphicon glyphicon-sort"></span>
                             </button>
+                            <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="ShowDetails(@item.EventID)">Details</a>
                         </td>
                     </tr>
+                        <tr colspan="6" id="@detailsRowID" style="display:none">
+                            <td colspan="5" class="accordion-body" style="background-color:#f0f0f0; padding-left:5px; padding-right:5px;">
+                                <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px; width:100%">
+                                    <thead>
+                                        <tr style="font-size:10px; vertical-align:bottom; font-weight:bolder; border:none">
+                                            <th width="70%" style="border:none; font-weight:bolder">Event Description</th>
+                                            <th width="30%" style="text-align:center; font-weight:bolder; border:none">Point of Contact</th>                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                            <td style="text-align:center; vertical-align:middle">@Html.DisplayFor(modelItem => item.EventOwner)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>                           
+                            <td colspan="1" style="text-align:center; vertical-align:middle; background-color:#f0f0f0">
+                                @using (Html.BeginForm("Register", "UserEventRegistration", FormMethod.Post, new { eventID = item.EventID }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("eventID", item.EventID)
+                                    <input type="submit" value="Register" class="btn btn-success" />
+                                }
+                            </td>
+                        </tr>
 
-                }
-            }
+                            }
+                        }
 
         </table>
     </div>
 </div>
 
+@section Scripts{
+<script>
+    function ShowDetails(id) {
+        var detailsSection = "detailsRow" + id;
+        if ($('#' + detailsSection).is(":visible")) {
+            $('#' + detailsSection).hide();
+        }
+        else {
+            $('#' + detailsSection).show();
+        }
+    }
+
+
+</script>    
+    
+    
+    }

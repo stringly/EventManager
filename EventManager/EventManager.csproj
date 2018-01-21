@@ -209,6 +209,7 @@
     <Compile Include="Helpers\ErrorLog.cs" />
     <Compile Include="Helpers\EventService.cs" />
     <Compile Include="Helpers\MessageFactory.cs" />
+    <Compile Include="Helpers\RegistrationService.cs" />
     <Compile Include="Helpers\SessionTimeAttribute.cs" />
     <Compile Include="Helpers\UserService.cs" />
     <Compile Include="LTRank.cs">

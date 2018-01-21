@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using EventManager.ViewModels;
 using EventManager.Models;
 using EventManager.Helpers;
+using System.Net;
 
 namespace EventManager.Controllers
 {
@@ -28,6 +29,27 @@ namespace EventManager.Controllers
             //IEnumerable<Registration> list = u.Registrations;
             return View(u.GetRegistrationsForUser());
         }
+
+        [HttpPost]
+        //[AllowAnonymous]
+        [Authorize(Roles = "User")]
+        [ValidateAntiForgeryToken]        
+        public ActionResult Register(int eventID)
+        {
+            //int idToInt = Convert.ToInt32(eventID);
+            int userID = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            bool success = new RegistrationService().CreateRegistration(userID, eventID);
+
+            if (success)
+            {
+                return RedirectToAction("AvailableEvents");
+            }
+            else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }            
+        }
+
 
         //public List<UserRegistrations> GetUserRegistrations()
         //{
@@ -61,41 +83,41 @@ namespace EventManager.Controllers
 
         //TODO:Add validation
         //TODO: Why am I using async POSTs and Javascript reloads on a page with a viewmodel? Should be Actionresults?
-        [HttpPost]
-        public JsonResult RegisterForEvent(Event e)
-        {
-            var status = false;
-            try
-            {
+        //[HttpPost]
+        //public JsonResult RegisterForEvent(Event e)
+        //{
+        //    var status = false;
+        //    try
+        //    {
                 
-                DBInteractions db = new DBInteractions();
-                int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
-                status = db.Register(e.EventID, id);
+        //        DBInteractions db = new DBInteractions();
+        //        int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+        //        status = db.Register(e.EventID, id);
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException.Message);
-            }
-            return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.InnerException.Message);
+        //    }
+        //    return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+        //}
 
-        public JsonResult CancelRegistration(Registration r)
-        {
-            var status = false;
-            try
-            {
-                DBInteractions db = new DBInteractions();
-                status = db.EditRegistration(r.RegistrationID, RegistrationStats.Deleted);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException.Message);
-            }
-            MessageFactory ms = new MessageFactory(status);
+        //public JsonResult CancelRegistration(Registration r)
+        //{
+        //    var status = false;
+        //    try
+        //    {
+        //        DBInteractions db = new DBInteractions();
+        //        status = db.EditRegistration(r.RegistrationID, RegistrationStats.Deleted);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.InnerException.Message);
+        //    }
+        //    MessageFactory ms = new MessageFactory(status);
 
-            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
+        //    return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
 
-        }
+        //}
     }
 }

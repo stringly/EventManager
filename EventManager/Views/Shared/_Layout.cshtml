@@ -99,6 +99,12 @@
             $('#currentTime').text(moment(d).format("MM/DD/YYYY HH:mm"));
         }
         setInterval(updateTime, 60 * 1000);
+
+        $('[data-toggle="popover"]').popover({
+            container: 'body'
+        });
+        
+
     </script>
 </body>
 </html>

@@ -11,7 +11,7 @@ namespace EventManager.ViewModels
         public string EventName { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public decimal TotalHours { get; set; }
+        public double TotalHours { get; set; }
         public string Description { get; set; }
         public int AvailableStaff { get; set; }
         public string EventOwner { get; set; }        
