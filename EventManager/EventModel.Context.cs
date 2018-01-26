@@ -27,11 +27,11 @@ namespace EventManager
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Registration> Registrations { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<LTRank> LTRanks { get; set; }
+        public virtual DbSet<Registration> Registrations { get; set; }
     
         public virtual ObjectResult<EVENTS_LAST_10_DAYS_Result> EVENTS_LAST_10_DAYS()
         {
@@ -97,6 +97,15 @@ namespace EventManager
                 new ObjectParameter("User", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<AVAILABLE_EVENTS_BY_USERID_Result>("AVAILABLE_EVENTS_BY_USERID", userParameter);
+        }
+    
+        public virtual ObjectResult<CURRENT_REGISTRATIONS_BY_USERID_Result> CURRENT_REGISTRATIONS_BY_USERID(Nullable<int> user)
+        {
+            var userParameter = user.HasValue ?
+                new ObjectParameter("User", user) :
+                new ObjectParameter("User", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CURRENT_REGISTRATIONS_BY_USERID_Result>("CURRENT_REGISTRATIONS_BY_USERID", userParameter);
         }
     }
 }

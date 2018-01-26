@@ -18,9 +18,9 @@ namespace EventManager
         public int UserID { get; set; }
         public int EventID { get; set; }
         public System.DateTime TimeStamp { get; set; }
-        public RegistrationStats Status { get; set; }
+        public RegistrationStatus Status { get; set; }
     
-        public virtual User User { get; set; }
         public virtual Event Event { get; set; }
+        public virtual User User { get; set; }
     }
 }

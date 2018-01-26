@@ -103,7 +103,7 @@ namespace EventManager.Helpers
             smtpClient.Send(Message);
         }
 
-        public void RegistrationBody(string title, string eventName, DateTime eventStartDate, RegistrationStats status, string ownerEmail)
+        public void RegistrationBody(string title, string eventName, DateTime eventStartDate, RegistrationStatus status, string ownerEmail)
         {
             string body;
             using (StreamReader reader = new StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Resources/RegistrationEmailTemplate.txt")))

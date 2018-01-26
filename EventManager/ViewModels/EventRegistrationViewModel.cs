@@ -21,7 +21,7 @@ namespace EventManager.ViewModels
         public DateTime EventEndTime { get; set; }
         public string EventDescription { get; set; }
         public System.DateTime TimeStamp { get; set; }
-        public RegistrationStats Status { get; set; }
+        public RegistrationStatus Status { get; set; }
     }
     public class AvailableEvents
     {

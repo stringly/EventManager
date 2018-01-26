@@ -49,7 +49,9 @@ namespace EventManager.Controllers
                 e.MaxStaff = Convert.ToInt32(fr.MaxStaff);
                 e.MinStaff = Convert.ToInt32(fr.MinStaff);
                 e.FundCenter = fr.FundCenter;
-                e.EnteredBy = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+                //I changed this to not use the cache...
+                //e.EnteredBy = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+                e.EnteredBy = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
                 e.DisplayColor = fr.DisplayColor;
 
             EventRepeater r = new EventRepeater();

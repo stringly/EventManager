@@ -64,6 +64,7 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -121,6 +122,7 @@
     <Content Include="Content\Custom.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\tinycolorpicker.css" />
+    <Content Include="Deprecated\Code Snips.txt" />
     <Content Include="EventModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>EventModel.edmx</DependentUpon>
@@ -172,12 +174,15 @@
     </Compile>
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Deprecated\Controllers\HomeController.cs" />
     <Compile Include="Controllers\LandingController.cs" />
     <Compile Include="Controllers\SessionTimeOutController.cs" />
     <Compile Include="Controllers\UserEventRegistrationController.cs" />
     <Compile Include="Controllers\UserHomeController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
+    <Compile Include="CURRENT_REGISTRATIONS_BY_USERID_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Event.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
@@ -226,7 +231,7 @@
     <Compile Include="Registration.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="RegistrationStats.cs">
+    <Compile Include="RegistrationStatus.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Role.cs">
@@ -238,8 +243,11 @@
     <Compile Include="USER_OWNED_EVENTS_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AllEventsViewModel.cs" />
     <Compile Include="ViewModels\AvailableEventsViewModel.cs" />
     <Compile Include="ViewModels\EventRegistrationViewModel.cs" />
+    <Compile Include="ViewModels\EventsCalendarViewModel.cs" />
+    <Compile Include="ViewModels\RegistrationsForUserViewModel.cs" />
     <Compile Include="ViewModels\UserInfoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -254,13 +262,12 @@
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Deprecated\Views\Index.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\UserInfo\Index.cshtml" />
-    <Content Include="Views\UserEventRegistration\Index.cshtml" />
     <Content Include="Views\Landing\Index.cshtml" />
     <Content Include="Views\Shared\_Error.cshtml" />
     <Content Include="Views\ErrorPage\ErrorMessage.cshtml" />
@@ -268,7 +275,6 @@
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
-    <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Views\Events\UserEvents.cshtml" />
     <Content Include="Views\Shared\_EventLayout.cshtml" />
     <Content Include="Views\SessionTimeOut\Index.cshtml" />
@@ -277,8 +283,10 @@
     <Content Include="Views\Landing\DevOpsHome.cshtml" />
     <Content Include="Views\Shared\_LandingLayout.cshtml" />
     <Content Include="Views\UserEventRegistration\AvailableEvents.cshtml" />
-    <Content Include="Views\UserEventRegistration\UserRegistrations.cshtml" />
     <Content Include="Views\UserInfo\UserInfo.cshtml" />
+    <Content Include="Views\UserEventRegistration\Registrations.cshtml" />
+    <Content Include="Views\Events\CalendarView.cshtml" />
+    <Content Include="Views\Events\AllEvents.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -287,6 +295,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Deprecated\Internals\" />
     <Folder Include="Resources\Fonts\" />
   </ItemGroup>
   <ItemGroup>

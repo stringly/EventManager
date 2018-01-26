@@ -1,0 +1,587 @@
+﻿@model IEnumerable<EventManager.ViewModels.RegistrationsForUserViewModel>
+@{
+    ViewBag.Title = "Current Registrations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section SideBar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px;">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li id="AvailableSideBarButton"><a href="/UserEventRegistration/AvailableEvents">Available Events</a></li>
+            <li id="UserRegistrationSideBarButton" class="active" >
+                <!-- Link with dropdown items -->
+                <a href="#registrationsSubMenu" aria-expanded="true">My Registrations</a>
+                <ul class="list-unstyled" id="registrationsSubMenu">                    
+                    <li id="registrationsSideBarInvited" value="5"><a href="#">Invitations</a></li>
+                    <li id="registrationsSideBarConfirmed" value="1"><a href="#">Confirmed</a></li>
+                    <li id="registrationsSideBarPending" value="2"><a href="#">Pending</a></li>
+                    <li id="registrationsSideBarStandby" value="3"><a href="#">Standby</a></li>
+                    <li id="registrationsSideBarDeclined" value="4"><a href="#">Inactive</a></li>
+                    <li id="registrationsSideBarAll" class="active" value="0"><a href="#">Show All</a></li>
+                    
+                </ul>
+        </ul>
+    </nav>}
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+                <div class="modal-body" style="text-align:left">
+                    <p id="confirmDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    @using (Html.BeginForm("UpdateRegistration", "UserEventRegistration", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="registrationID" id="registrationID" />
+                        <input type="hidden" name="oldStatus" id="oldStatus" />
+                        <input type="hidden" name="newStatus" id="newStatus"/>
+                        <button type="button" class="btn btn-default btn-danger pull-left" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-default btn-success pull-right">Yes</button>
+                    }
+                </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="AvailableEvents">
+    <div class="col-xs-10 col-sm-10">
+        <h3>Current Registrations:</h3>
+
+    @foreach (var item in Model)
+    {
+        var detailsRowID = "detailsRow" + item.RegistrationID;
+        var showDetailsButton = "showDetails" + item.RegistrationID;
+
+        <div id="@item.RegistrationID" class="fakeTable @item.Status">
+            <div class="fakeTable-row">
+                <div class="fakeTable-cell-icon-left">
+                    <span class="glyphicon glyphicon-list-alt fakeTable-icon"                        
+                        onClick="ShowDetails(@item.RegistrationID)"
+                        data-toggle="popover"
+                        data-trigger="hover"
+                        data-placement="bottom"
+                        data-content="Show Registration Details"></span>
+                </div>
+                <div class="fakeTable-cell" style="min-width:400px; vertical-align:middle">
+                    <a href="#" onclick="ShowDetails(@item.RegistrationID)">@item.EventName</a>
+                    <p style="margin-bottom:0px">@item.StartTime</p>
+                </div>
+                
+                    
+                    @switch (item.Status)
+                    {
+                        case RegistrationStatus.ConfirmPending:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="This registration requires a response from you">
+                                <span class="glyphicon glyphicon-asterisk fakeTable-icon" style="color:red; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:forestgreen; font-weight:bold">Invited! - Confirmation Required</p>
+                            </div>
+                            <div class="fakeTable-cell-icon-group-right-2">
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Confirmed')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Accept Invitation to this Event">
+                                    <span class="glyphicon glyphicon-ok fakeTable-icon-grouped"
+                                          style="color:green; font-weight:100"></span>
+                                </div>
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Declined')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Decline this Invitation">
+                                    <span class="glyphicon glyphicon-remove fakeTable-icon-grouped" style="color:red"></span>
+                                </div>
+                            </div>
+                            break;
+                        case RegistrationStatus.StandbyPending:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="This registration requires a response from you">
+                                <span class="glyphicon glyphicon-exclamation-sign fakeTable-icon" style="color:red; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:coral; font-weight:bold">Invited for Standby! - Confirmation Required</p>
+                            </div>
+                            <div class="fakeTable-cell-icon-group-right-2">
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Standby')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Accept Invitation to be on Standby for this Event">
+                                    <span class="glyphicon glyphicon-ok fakeTable-icon-grouped"
+                                          style="color:green; font-weight:100"></span>
+                                </div>
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Declined')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Decline this Invitation">
+                                    <span class="glyphicon glyphicon-remove fakeTable-icon-grouped" style="color:red"></span>
+                                </div>
+                            </div>
+                            break;
+                        case RegistrationStatus.Confirmed:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You are confirmed for this event">
+                                <span class="glyphicon glyphicon-ok-sign fakeTable-icon" style="color:forestgreen; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:green; font-weight:bold">Confirmed</p>
+                            </div>
+                            <div class="fakeTable-cell-icon-group-right-2">
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.TransferPending')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Request to transfer this registration to another user">
+                                    <span class="glyphicon glyphicon-envelope fakeTable-icon-grouped"
+                                          style="color:Highlight; font-weight:100"></span>
+                                </div>
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.WithdrawlPending')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Request to be excused from this registration">
+                                    <span class="glyphicon glyphicon-remove fakeTable-icon-grouped" style="color:red"></span>
+                                </div>
+                            </div>
+                            break;
+                        case RegistrationStatus.Standby:
+                            <div class="fakeTable-cell-icon">
+                                <span class="glyphicon glyphicon-earphone fakeTable-icon" style="color:orangered; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:orangered; font-weight:bold">Standby</p>
+                            </div>
+                            <div class="fakeTable-cell-icon-group-right-2">
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.TransferPending')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Request to transfer this registration to another user">
+                                    <span class="glyphicon glyphicon-envelope fakeTable-icon-grouped"
+                                          style="color:Highlight; font-weight:100"></span>
+                                </div>
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Declined')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Cancel this registration">
+                                    <span class="glyphicon glyphicon-remove fakeTable-icon-grouped" style="color:red"></span>
+                                </div>
+                            </div>
+                            break;
+                        case RegistrationStatus.WithdrawlPending:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You have requested to be excused from this event. Until the event coordinator approves this excusal, you are still responsibe for attending">
+                                <span class="glyphicon glyphicon-new-window fakeTable-icon" style="color:#ff00dc; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:#ff00dc; font-weight:bold">Withdrawl Pending - You have requested to withdraw from this event.</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.TransferPending:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You have requested to transfer this registration to another user. Until the event coordinator approves this transfer, you are still responsibe for attending">
+                                <span class="glyphicon glyphicon-transfer fakeTable-icon" style="color:#0094ff; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:#0094ff; font-weight:bold">Transfer Pending - You have requested to transfer this registration.</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.Transferred:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You transferred this registration.">
+                                <span class="glyphicon glyphicon-transfer fakeTable-icon" style="color:grey; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:grey; font-weight:bold">Transferred</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.Withdrawn:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You withdrew this registration.">
+                                <span class="glyphicon glyphicon-trash fakeTable-icon" style="color:grey; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:grey; font-weight:bold">Withdrawn</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.Declined:
+                            <div class="fakeTable-cell-icon">
+                                <span class="glyphicon glyphicon-minus-sign fakeTable-icon" style="color:red; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:Red; font-weight:bold">Declined</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.Deleted:
+                            <div class="fakeTable-cell-icon">
+                                <span class="glyphicon glyphicon-trash fakeTable-icon" style="color:gray; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:gray; font-weight:bold">Deleted</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.NoShow:
+                            <div class="fakeTable-cell-icon">
+                                <span class="glyphicon glyphicon-remove-sign fakeTable-icon" style="color:red; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:Red; font-weight:bold">Declined</p>
+                            </div>
+                            break;
+                        case RegistrationStatus.Pending:
+                            <div class="fakeTable-cell-icon"
+                                 onClick=""
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="You are registered for this event, but the Event Coordinator has not confirmed your position.">
+                                <span class="glyphicon glyphicon-plus-sign fakeTable-icon" style="color:#0094ff; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"></span>
+                            </div>
+                            <div class="fakeTable-cell" style="vertical-align:middle">
+                                <span>Registration Status:</span>
+                                <p style="margin-bottom:0px; color:#0094ff; font-weight:bold">Pending</p>
+                            </div>
+                            <div class="fakeTable-cell-icon-right">
+                                <div class="fakeTable-cell-icon"
+                                     onClick="ShowConfirmModal('@item.EventName', '@item.RegistrationID', '@item.Status', '@RegistrationStatus.Deleted')"
+                                     data-toggle="popover"
+                                     data-trigger="hover"
+                                     data-placement="bottom"
+                                     data-content="Cancel this registration">
+                                    <span class="glyphicon glyphicon-remove fakeTable-icon-grouped"
+                                          style="color:red; font-weight:100"></span>
+                                </div>
+                            </div>
+                            break;
+                    }
+
+                            </div>
+            <div id="@detailsRowID" class="fakeTable-details-row">
+                <div class="fakeTable-cell-icon-left" style="background-color:#ffffff; width:5%">
+                    <span class="glyphicon glyphicon fakeTable-icon"></span>
+                </div>
+                <div class="fakeTable-cell" style="background-color:#d3d3d3; width:25%">
+                    <span style="text-decoration:underline; font-weight:bold">Event Times:</span>
+                    <p style="margin-bottom:0px">@item.StartTime to @item.EndTime</p>
+                </div>
+                <div class="fakeTable-cell" style="background-color:#d3d3d3; width:10%; text-align:center">
+                    <span style="text-decoration:underline; font-weight:bold">Total Hours:</span>
+                    <p style="margin-bottom:0px">@item.TotalHours</p>
+                </div>
+                <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                    <span style="text-decoration:underline; font-weight:bold">Description:</span>
+                    <p style="margin-bottom:0px">@item.Description</p>
+                </div>
+                <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                    <span style="text-decoration:underline; font-weight:bold">Event Coordinator:</span>
+                    <p style="margin-bottom:0px">@item.EventOwner <br/> @item.EventOwnerEmail</p>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            if ("@TempData["Message"]" != "") {
+                ShowMessageModal("@TempData["Message"]", "@TempData["Status"]");
+            }
+        });
+        $("#registrationsSideBarAll, "+
+          "#registrationsSideBarConfirmed, " +
+          "#registrationsSideBarPending, " +
+          "#registrationsSideBarStandby, " + 
+          "#registrationsSideBarDeclined, " +
+          "#registrationsSideBarInvited").click(function () {
+              var controlList = GetControlList()
+              var divsToHide = controlList[this.value].divsToHide;
+              var divsToShow = controlList[this.value].divsToShow;
+
+              //add active to proper div
+              $('#' + controlList[this.value].controlName).addClass("active");
+              //loop to remove any "active" class from remaining controls
+              for (var i = 0; i < controlList.length; i++) {
+                  if (i != this.value) {
+                      $('#' + controlList[i].controlName).removeClass("active");
+                  }
+              }
+              //loop through and hide divs associated with the index
+              for (i = 0; i < controlList[this.value].divsToHide.length; i++) {
+                  $('.' + controlList[this.value].divsToHide[i]).hide();
+              }
+              for (i = 0; i < controlList[this.value].divsToShow.length; i++) {
+                  $('.' + controlList[this.value].divsToShow[i]).show();
+              }
+          })
+
+    function ShowDetails(id) {
+        var detailsSection = "detailsRow" + id;
+        console.log("Clicked!");
+        if ($("#" + detailsSection).is(":visible")) {
+            $("#" + detailsSection).hide();
+        }
+        else {
+            $("#" + detailsSection).show();
+        }
+    }
+    function UpdateRegistrationStatus(regId, oldStat, newStat) {
+        console.log("Update Called");
+        var regData = {
+            "registrationID": regId,
+            "oldStatus": oldStat,
+            "newStatus": newStat,
+        }
+        $.ajax({
+            type: "POST",
+            url: "/UserEventRegistration/UpdateRegistration",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(regData),
+            success: function(data){                
+                window.location.href = data.url;
+            }
+
+        })
+    }
+    function ShowConfirmModal(eventName, regId, oldStat, newStat) {
+        $('#registrationID').val(regId);
+        $('#oldStatus').val(oldStat);
+        $('#newStatus').val(newStat);
+        var $description = $("<div/>");
+        var msg = "";
+        switch (newStat) {
+            case "Declined":
+                switch (oldStat) {
+                    case "ConfirmPending":
+                        msg = "You have been invited to attend this event. Are you sure you wish to decline this invitation?";
+                        break;
+                    case "StandbyPending":
+                        msg = "You have been invited to be on Standby as an alternate for this event. Are you sure you wish to decline this invitation?";
+                        break;
+                    case "Standby":
+                        msg = "You are currently an alternate for this event. Are you sure you want to decline?";
+                        break;
+                }
+                break;
+            case "Confirmed":
+                msg = "You have been invited to attend this event. If you accept, you must attend or arrange to transfer your position with the Event Coordinator. Failure to comply can impact your ability to register for future events. Are you sure you want to accept this invitation?";
+                break;
+            case "Deleted":
+                msg = "Are you sure you want to cancel this registration?";
+                break;
+            case "TransferPending":
+                switch (oldStat) {
+                    case "Confirmed":
+                        msg = "You have been confirmed to attend this event. If you request to transfer this to another user, the transfer must be approved by the event coordinator. Until this transfer is approved, you are still required to attend this event. Do you still want to submit a request to transfer this event?";
+                        break;
+                    case "Standby":
+                        msg = "You are on standby as an alternate for this event. Are you sure you want to transfer your standby position to another user?";
+                        break;
+                }
+                break;
+            case "Standby":
+                msg = "You have been invited to be on standy as an alternate for this event. If you accept, you could be required to attend this event with little notice in the event a position opens. Do you still want to be on standby for this event?";
+                break;
+            case "WithdrawlPending":
+                msg = "You have been confirmed to attend this event. If you wish to withdraw from this event, this request must be approved by the event coordinator. Until your request to withdraw is approved, you are still required to attend this event. Do you still wish to submit a request to withdraw?"
+                break;
+        }
+        if (msg == "") {
+            msg = "Are you sure you want to take this action?"
+        }
+        $("#confirmModal #modalTitle").text("Registration for: " + eventName);
+        $description.append($("<p/>").html(msg));
+        $("#confirmModal #confirmDetails").empty().html($description);
+        $("#confirmModal").modal();
+    }
+
+    $('#confirmModal').on('hidden.bs.modal', function (e) {
+        $(this)
+          .find("input,textarea,select")
+             .val('')
+             .end()
+          .find("input[type=checkbox], input[type=radio]")
+             .prop("checked", "")
+             .end();
+    })
+
+    function ShowMessageModal(message, status){
+        $("#messageModal #modalTitle").text(status);
+        var $description = $("<div/>");
+        $description.append($("<p/>").html(message));
+        $("#messageModal #pDetails").empty().html($description);
+        $("#messageModal").modal();
+    }
+
+    function GetControlList() {
+        var list = [{
+            "controlName": "registrationsSideBarAll",
+            "divsToHide": [],
+            "divsToShow": ["ConfirmPending",
+                           "StandbyPending",
+                           "Confirmed",
+                           "Standby",
+                           "Pending",
+                           "Declined",
+                           "Deleted",
+                           "NoShow",
+                           "Transferred",
+                           "TransferPending",
+                           "Withdrawn",
+                           "WithdrawlPending"]
+        }, {
+            "controlName": "registrationsSideBarConfirmed",
+            "divsToHide": ["ConfirmPending",
+                           "StandbyPending",
+                           "Standby",
+                           "Pending",
+                           "Declined",
+                           "Deleted",
+                           "NoShow",
+                           "Withdrawn",
+                           "Transferred"],
+            "divsToShow": ["Confirmed",
+                           "WithdrawlPending",
+                           "TransferPending"]
+        }, {
+            "controlName": "registrationsSideBarPending",
+            "divsToHide": ["Confirmed",
+                           "Standby",
+                           "ConfirmPending",
+                           "StandbyPending",
+                           "Declined",
+                           "Deleted",
+                           "NoShow",
+                           "Withdrawn",
+                           "Transferred"],
+            "divsToShow": ["Pending",
+                           "WithdrawlPending",
+                           "TransferPending"]
+        }, {
+            "controlName": "registrationsSideBarStandby",
+            "divsToHide": ["ConfirmPending",
+                           "StandbyPending",
+                           "Confirmed",                           
+                           "Pending",
+                           "Declined",
+                           "Deleted",
+                           "NoShow",
+                           "Transferred",
+                           "TransferPending",
+                           "Withdrawn",
+                           "WithdrawlPending"],
+            "divsToShow": ["Standby"]
+        }, {
+            "controlName": "registrationsSideBarDeclined",
+            "divsToHide": ["ConfirmPending",
+                           "StandbyPending",
+                           "Confirmed",
+                           "Pending",
+                           "Standby",                           
+                           "NoShow",
+                           "WithdrawlPending",
+                           "TransferPending"],
+            "divsToShow": ["Deleted",
+                           "Declined",
+                           "Withdrawn",
+                           "Transferred"]
+        }, {
+            "controlName": "registrationsSideBarInvited",
+            "divsToHide": ["Deleted",
+                           "Confirmed",
+                           "Pending",
+                           "Standby",
+                           "Declined",
+                           "NoShow",
+                           "Transferred",
+                           "TransferPending",
+                           "Withdrawn",
+                           "WithdrawlPending"],
+            "divsToShow": ["ConfirmPending",
+                           "StandbyPending"]
+        }]
+        return list;
+    }
+    </script>
+
+
+}
+
+

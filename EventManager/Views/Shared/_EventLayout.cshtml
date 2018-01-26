@@ -29,14 +29,13 @@
                 <div class="pull-left">
                     <ul class="nav navbar-nav">
                         <li>@Html.ActionLink("Home", "Index", "Landing")</li>
-                        <li>@Html.ActionLink("Manage Events", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Registrations", "Index", "UserEventRegistration")</li>
+                        <li>@Html.ActionLink("Manage Events", "CalendarView", "Events")</li>
+                        <li>@Html.ActionLink("View/Register for Events", "AvailableEvents", "UserEventRegistration")</li>
+                        <li>@Html.ActionLink("View My Registrations", "Registrations", "UserEventRegistration")</li>
                     </ul>
                 </div>
                 <div class="col-sm-3 text-right pull-right" style="color: #fff; display:inline-block; height:50px; line-height:50px">
                     <span style="padding-right:20px">@Html.ActionLink(Context.User.Identity.Name.Substring(Context.User.Identity.Name.LastIndexOf(@"\") + 1), "Index", "UserInfo")</span>
-
-
                     <img src="@Url.Content("~/Resources/Images/Seal.png")" width="30" height="40" style="vertical-align:middle" />
                     <img src="@Url.Content("~/Resources/Images/SOD.png")" width="40" height="40" style="vertical-align:middle" />
 
@@ -270,7 +269,7 @@
             console.log("open form called with id: " + id);
             $.ajax({
                 type: "GET",
-                url: "/events/GetEventDetails",
+                url: "/Events/GetEventDetails",
                 cache: false,
                 data: { 'id': id },
                 success: function (data) {
@@ -330,13 +329,9 @@
         function SaveEvent(eventData) {
             $.ajax({
                 type: "POST",
-                url: "/home/SaveEvent",
+                url: "/Events/SaveEvent",
                 data: eventData,
                 success: function (data) {
-                    //alert("Event Updated")
-                    //refresh the page
-                    //window.location.href = "/Events/UserEvents";
-                    //window.location.reload();
                     $('#messageText').text(data.message);
                     Reloader();
                 },
@@ -349,14 +344,9 @@
             if (id != null && confirm('Delete this event?')) {
                 $.ajax({
                     type: "POST",
-                    url: "/home/DeleteEvent",
+                    url: "/Events/DeleteEvent",
                     data: { 'eventID': id },
                     success: function (data) {
-                        //alert("Event Deleted")
-                        //refresh the page
-                        //window.location.href = "/Events/UserEvents";
-
-                        //window.location.reload();
                         $('#messageText').text(data.message);
                         Reloader();
                     },
@@ -609,10 +599,6 @@
         }).on('dp.change', function (e) {
             RecalculateDuration();
         });
-    </script>
-    
-    
-
-    
+    </script>    
 </body>
 </html>

@@ -1,0 +1,423 @@
+﻿@{
+    ViewBag.Title = "Calendar View";
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
+}
+
+<h3></h3>
+@section SideBar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li id="calendarSideBarButton" class="active"><a href="/home/Index" onclick="">Calendar View</a></li>
+            <li>
+                <a aria-expanded="false" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="collapse list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"><a href="/Events/AllEvents">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser"><a href="@Url.Action("UserEvents", "Events")">My Events</a></li>
+                    <li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
+                </ul>
+        </ul>
+    </nav>}
+
+<div class="container-fluid pull-left" id="calendar" style="background-color:#e0e0e0; max-width:1200px; margin-right:50px; padding:10px; box-shadow:0 5px 20px 0 #000000,0 6px 20px 0 #000000;"></div>
+
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <button id="btnDelete" class="btn btn-default btn-danger btn-sm pull-right">
+                    <span class="glyphicon glyphicon-remove"></span> Remove
+                </button>
+                <button id="btnEdit" class="btn btn-default btn-success btn-sm pull-right" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                </button>
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-danger" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="~/Content/Custom.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+            
+            var calendarDisplayDate;
+            function FetchEventAndRenderCalendar() {
+                events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Events/GetEvents",
+                    cache: false,
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                eventID: v.EventID,
+                                title: v.EventName,
+                                description: v.Description,
+                                start: moment(v.StartTime),
+                                end: v.EndTime != null ? moment(v.EndTime) : null,
+                                maxStaff: v.MaxStaff,
+                                minStaff: v.MinStaff,
+                                fundCenter: v.FundCenter,
+                                enteredBy: v.EnteredBy,
+                                color: v.DisplayColor
+
+                            });
+                        })
+                        var d = new Date()
+                        $('#messageText').text("Showing Events as of " + moment(d).format("MM/DD/YYYY HH:mm"));
+                        GenerateCalendar(events);
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+            }
+
+            $(document).ready(function () {
+                FetchEventAndRenderCalendar();
+                updateTime();
+
+            })
+                var events = [];
+                var selectedEvent = null;
+
+                $('[data-toggle=offcanvas]').click(function () {
+                    $('.row-offcanvas').toggleClass('active');
+                });
+
+                function GenerateCalendar(events) {
+                    if (calendarDisplayDate != null){
+                        calendarDisplayDate = $('#calendar').fullCalendar('getDate');
+                        console.log (calendarDisplayDate);
+                    }
+                    else{
+                        calendarDisplayDate = new Date();
+                    }
+                    $('#calendar').fullCalendar('destroy');
+                    $('#calendar').fullCalendar({
+                        contentHeight: 800,
+                        defaultDate: calendarDisplayDate,
+                        timeFormat: 'h(:mm)a',
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,basicWeek,basicDay,agenda'
+                        },
+                        eventLimit: true,
+                        events: events,
+                        eventRender: function(event, element, view) {
+                            var ntoday = new Date().getTime();
+                            var eventEnd = moment( event.end ).valueOf();
+                            var eventStart = moment( event.start ).valueOf();
+                            if (!event.end){
+                                if (eventStart < ntoday){
+                                    element.addClass("past-event");
+                                    element.children().addClass("past-event");
+                                }
+                            } else {
+                                if (eventEnd < ntoday){
+                                    element.addClass("past-event");
+                                    element.children().addClass("past-event");
+                                }
+                            }
+                        },
+                        eventClick: function (calEvent, jsEvent, view) {
+                            selectedEvent = calEvent;
+                            $('#myModal #eventTitle').text(calEvent.title);
+                            var $description = $('<div/>');
+                            $description.append($('<p/>').html('<b>Starts: </b>' + calEvent.start.format("MMMM DD, YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>Ends: </b>' + calEvent.end.format("MMMM DD, YYYY HH:mm a")));
+                            $description.append($('<p/>').html('<b>Description: </b>' + calEvent.description));
+                            $('#myModal #pDetails').empty().html($description);
+                            if(@TempData["pageUser"] != calEvent.enteredBy){
+                                $('#btnEdit').hide();
+                                $('#btnDelete').hide();
+                            }
+                            else{
+                                $('#btnEdit').show();
+                                $('#btnDelete').show();
+                            }
+                            $('#myModal').modal();
+                        },
+                        selectable: true,
+                        select: function (start, end) {
+                            console.log("Select Event Fired")
+                            selectedEvent = {
+                                eventID: 0,
+                                enteredBy: 1,
+                                title: '',
+                                description: '',
+                                start: start,
+                                end: end,
+                                minStaff: 1,
+                                maxStaff: 1,
+                                fundCenter: '',
+                                color: '#e0e0e0'
+
+                            };
+                            console.log(selectedEvent);
+                            openAddEditForm();
+                            $('#calendar').fullCalendar('unselect');
+                        }
+                    })
+                }
+                $('#btnEdit').click(function () {
+                    //Open modal dialog for editing an event
+                    openAddEditForm();
+                });
+
+                function openAddEditForm() {
+                    $('#chkRepeat').attr('checked', false);
+                    $('#repeatMenu').find(':input').each(function () {
+                        switch (this.type) {
+                            case 'button':
+                            case 'text':
+                            case 'submit':
+                            case 'password':
+                            case 'file':
+                            case 'email':
+                            case 'date':
+                            case 'number':
+                                $(this).val('');
+                                break;
+                            case 'checkbox':
+                            case 'radio':
+                                this.checked = false;
+                                break;
+                            case 'select':
+                                $(this).val(1);
+                                break;
+                        }
+                    });
+                    $('#checkboxgroup').show();
+                    $('#repeatMenu').hide();
+
+                    //if (selectedEvent.eventID != 0) {
+                        //User is editing an existing event
+                        $('#hdEventID').val(selectedEvent.eventID);
+                        $('#hdEnteredBy').val(selectedEvent.enteredBy);
+                        $('#txtEventName').val(selectedEvent.title);
+                        $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                        $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                        $('#txtDescription').val(selectedEvent.description);
+                        $('#txtminStaff').val(selectedEvent.minStaff);
+                        $('#txtmaxStaff').val(selectedEvent.maxStaff);
+                        $('#txtFundCenter').val(selectedEvent.fundCenter);
+                        $('#innerColorDiv').css('background-color', selectedEvent.color);
+                        $('#eventColor').val(selectedEvent.color);
+                        $('#txtHoursCalculated').val(GetDuration(selectedEvent.start, selectedEvent.end));
+
+                    //}
+                    //else {
+                    //    $('#txtminStaff').val(1);
+                    //    $('#txtmaxStaff').val(1);
+                    //    $('#txtStart').val(selectedEvent.start.format("MM/DD/YYYY HH:mm"));
+                    //    $('#txtEnd').val(selectedEvent.end.format("MM/DD/YYYY HH:mm"));
+                    //    $('#innerColorDiv').css('background-color', '#e0e0e0');
+                    //    $('#eventColor').val('#e0e0e0');
+                    //}
+                    $('#myModal').modal('hide');
+                    $('#eventModal').modal();
+
+                }
+                $('#btnDelete').click(function () {
+                    console.log("delete clicked, EventID: " + selectedEvent.eventID);
+                    DeleteEvent(selectedEvent.eventID);
+                    $('#myModal').modal('hide');
+                    //if (selectedEvent != null && confirm('Delete this event?')) {
+
+                    //    $.ajax({
+                    //        type: "POST",
+                    //        url: "/home/DeleteEvent",
+                    //        data: { 'eventID': selectedEvent.eventID },
+                    //        success: function (data) {
+                    //            if (data.status) {
+                    //                //Refresh the calendar
+                    //                FetchEventAndRenderCalendar();
+                    //                $('#myModal').modal('hide');
+                    //            }
+                    //        },
+                    //        error: function () {
+                    //            alert('Could not delete the selected event.');
+                    //        }
+                    //    })
+                    //}
+                });
+
+
+
+
+
+
+                //$('#dtp1, #dtp2').datetimepicker({
+                //    format: 'MM/DD/YYYY HH:mm',
+                //    sideBySide: true,
+                //    showClose: true
+
+                //});
+                //$('#chkRepeat').change(function () {
+                //    if (this.checked) {
+                //        $('#repeatMenu').show();
+                //    }
+                //    else {
+                //        $('#repeatMenu').hide();
+                //    }
+                //})
+                //$('#cboRepeat').on('change', function () {
+                //    switch (this.value) {
+                //        case '1':
+                //            $('#dayRepeat').show();
+                //            $('#startsOnDate').show();
+                //            $('#weekdayRepeat').hide();
+                //            $('#weekRepeat').hide();
+                //            $('#endsOnDate').hide();
+                //            break;
+                //        case '2':
+                //            $('#dayRepeat').hide();
+                //            $('#startsOnDate').show();
+                //            $('#weekdayRepeat').show();
+                //            $('#weekRepeat').hide();
+                //            $('#endsOnDate').show();
+                //            break;
+                //        case '3':
+                //            $('#dayRepeat').hide();
+                //            $('#startsOnDate').hide();
+                //            $('#weekdayRepeat').hide();
+                //            $('#weekRepeat').show();
+                //            $('#endsOnDate').hide();
+                //            break;
+                //    }
+                //})
+
+
+                //$('#btnSave').click(function () {
+
+                //    //Begin repeat selection data
+                //    var daysOfWeek = [];
+                //    var repeatNumber;
+                //    if ($('#chkRepeat').is(':checked')) {
+                //        switch ($('#cboRepeat').val()) {
+                //            case '1':
+                //                repeatNumber = $('#repeatDayInterval').val();
+                //                break;
+                //            case '2':
+
+                //                break;
+                //            case '3':
+                //                repeatNumber = $('#repeatWeekInterval').val();
+                //                if ($('#chkSun').prop('checked') == true) {
+                //                    daysOfWeek.push(1);
+                //                }
+                //                if ($('#chkMon').prop('checked') == true) {
+                //                    daysOfWeek.push(2);
+                //                }
+                //                if ($('#chkTue').prop('checked') == true) {
+                //                    daysOfWeek.push(3);
+                //                }
+                //                if ($('#chkWed').prop('checked') == true) {
+                //                    daysOfWeek.push(4);
+                //                }
+                //                if ($('#chkThu').prop('checked') == true) {
+                //                    daysOfWeek.push(5);
+                //                }
+                //                if ($('#chkFri').prop('checked') == true) {
+                //                    daysOfWeek.push(6);
+                //                }
+                //                if ($('#chkSat').prop('checked') == true) {
+                //                    daysOfWeek.push(7);
+                //                }
+                //                break;
+                //        }
+                //        console.log("Creating Repeater eventData");
+                //        var eventData = {
+                //            EventID: $('#hdEventID').val(),
+                //            EventName: $('#txtEventName').val(),
+                //            StartTime: $('#txtStart').val(),
+                //            EndTime: $('#txtEnd').val(),
+                //            Description: $('#txtDescription').val(),
+                //            MinStaff: $('#txtminStaff').val(),
+                //            MaxStaff: $('#txtmaxStaff').val(),
+                //            FundCenter: $('#txtFundCenter').val(),
+                //            EnteredBy: 0,
+                //            repeatType: $('#cboRepeat').val(),
+                //            startDate: $('#txtRepeatStartDate').val(),
+                //            endDate: $('#txtRepeatEndDate').val(),
+                //            dow: daysOfWeek,
+                //            repeatCount: repeatNumber
+                //        }
+                //        console.log(eventData);
+                //    }
+                //    else {
+
+
+                //        var eventData = {
+                //            EventID: $('#hdEventID').val(),
+                //            EventName: $('#txtEventName').val(),
+                //            StartTime: $('#txtStart').val(),
+                //            EndTime: $('#txtEnd').val(),
+                //            Description: $('#txtDescription').val(),
+                //            MinStaff: $('#txtminStaff').val(),
+                //            MaxStaff: $('#txtmaxStaff').val(),
+                //            FundCenter: $('#txtFundCenter').val(),
+                //            EnteredBy: 0,
+                //        }
+                //    }
+
+                //    SaveEvent(eventData);
+
+                //})
+                //function SaveEvent(formData) {
+                //    $.ajax({
+                //        type: "POST",
+                //        url: "/home/SaveEvent",
+                //        data: formData,
+                //        //contentType: 'application/json; charset=utf-8',
+                //        success: function (data) {
+                //            if (data.status && data.repeat) {
+                //                alert("Event and repeats added")
+                //                //Refresh the calendar
+                //                FetchEventAndRenderCalendar();
+                //                $('#eventModal').modal('hide');
+                //            }
+                //            if (data.status && !data.repeat) {
+                //                alert("Event added, no repeats added")
+                //                FetchEventAndRenderCalendar();
+                //                $('#eventModal').modal('hide');
+                //            }
+                //        },
+                //        error: function () {
+                //            alert('Could not add the event.');
+                //        }
+                //    })
+                //}
+                //$('#myModalSave').on('hidden.bs.modal', function () {
+                //    $(this).find('form')[0].reset();
+                //});
+
+
+    </script>
+
+}

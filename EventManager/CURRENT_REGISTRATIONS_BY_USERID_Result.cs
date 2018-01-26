@@ -11,17 +11,18 @@ namespace EventManager
 {
     using System;
     
-    public partial class EVENTS_LAST_6_MONTHS_Result
+    public partial class CURRENT_REGISTRATIONS_BY_USERID_Result
     {
+        public int RegistrationID { get; set; }
         public int EventID { get; set; }
+        public System.DateTime TimeStamp { get; set; }
+        public int Status { get; set; }
         public string EventName { get; set; }
         public System.DateTime StartTime { get; set; }
         public System.DateTime EndTime { get; set; }
         public string Description { get; set; }
-        public int MaxStaff { get; set; }
-        public int MinStaff { get; set; }
-        public string FundCenter { get; set; }
-        public int EnteredBy { get; set; }
-        public string DisplayColor { get; set; }
+        public Nullable<int> TotalHours { get; set; }
+        public string EventOwner { get; set; }
+        public string EventOwnerEmail { get; set; }
     }
 }

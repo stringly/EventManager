@@ -11,30 +11,133 @@ using EventManager.Helpers;
 
 namespace EventManager.Controllers
 {
+
+    
+    
     //TODO: MOVE ALL DB Interactions into DB Model, all queries into STORED PROCS
     [SessionTimeout]
     public class EventsController : Controller
     {
         private EVENTS_MGR_TESTING_Entities db = new EVENTS_MGR_TESTING_Entities();
-        private int userID = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"]);
-        // GET: Events
-        public ActionResult Index()
+        //private int userID = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"]);
+
+        //CALENDARVIEW METHODS - ASYNC
+        public ActionResult CalendarView()
         {
-            ViewBag.CurrentUser = userID;
-            //return View(db.Events.ToList());
-            if (User.IsInRole("Development")){
-                 return View(db.EVENTS_LAST_6_MONTHS1().ToList());
+            TempData["pageUser"] = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)); 
+            return View();
+        }
+        //TODO: Move code in DB Context into DBInteractions class?
+        //TODO: Make this a Stored Procedure to limit data returned?
+        public JsonResult GetEvents()
+        {
+            using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                dc.Configuration.LazyLoadingEnabled = false;
+                //TODO: CREATE STORED PROC Limit the returned list of events to exclude full/past events
+                var events = new EventService().GetCalendarEvents();
+                //MessageFactory ms = new MessageFactory();
+                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+
+            }
+        }
+        [HttpPost]
+        public JsonResult SaveEvent(EventFormResult fr)
+        {
+            var status = false;
+            var repeatStatus = false;
+
+            Event e = new EventManager.Event();
+            e.EventID = Convert.ToInt32(fr.EventID);
+            e.EventName = fr.EventName;
+            e.StartTime = Convert.ToDateTime(fr.StartTime);
+            e.EndTime = Convert.ToDateTime(fr.EndTime);
+            e.Description = fr.Description;
+            e.MaxStaff = Convert.ToInt32(fr.MaxStaff);
+            e.MinStaff = Convert.ToInt32(fr.MinStaff);
+            e.FundCenter = fr.FundCenter;
+            //I changed this to not use the cache...
+            //e.EnteredBy = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
+            e.EnteredBy = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            e.DisplayColor = fr.DisplayColor;
+
+            EventRepeater r = new EventRepeater();
+            r.repeatType = Convert.ToInt32(fr.repeatType);
+            r.startDate = Convert.ToDateTime(fr.startDate);
+            r.endDate = Convert.ToDateTime(fr.endDate);
+            r.dow = fr.dow;
+            r.repeatCount = Convert.ToInt32(fr.repeatCount);
+
+            DBInteractions db = new DBInteractions();
+
+            if (e.EventID == 0)
+            {
+
+                status = db.AddNewEvent(e);
             }
             else
             {
-                //TODO: Limit this return for users in other roles? STORED PROC
+                status = db.EditExistingEvent(e);
+            }
+
+            if (r != null)
+            {
+                repeatStatus = db.RepeatEvent(e, r);
+            }
+            MessageFactory ms = new MessageFactory(status);
+
+            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
+        }
+        [HttpPost]
+        public JsonResult DeleteEvent(int eventID)
+        {
+            var status = false;
+            DBInteractions db = new DBInteractions();
+            status = db.DeleteEvent(eventID);
+            MessageFactory ms = new MessageFactory(status);
+            return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
+        }  
+
+    
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //OLD STUFF BELOW HERE - I added the calendarview stuff above
+
+
+        //TODO: CHANGE TO VIEWMODEL/Limit this return for users in other roles? STORED PROC
+        public ActionResult AllEvents()
+        {
+            ViewBag.CurrentUser = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            //return View(db.Events.ToList());
+            if (User.IsInRole("Development"))
+            {
+                return View(db.EVENTS_LAST_6_MONTHS1().ToList());
+            }
+            else
+            {
+                
                 return View(db.Events.ToList());
             }
-            
         }
         
         public ActionResult UserEvents()
         {
+            int userID = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
             return View(db.USER_OWNED_EVENTS1(userID).ToList());
         }
 
@@ -119,7 +222,7 @@ namespace EventManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(@event).State = EntityState.Modified;
+                db.Entry(@event).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -178,7 +281,7 @@ namespace EventManager.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DBInteractions db = new DBInteractions();
-            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Confirmed);
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStatus.Confirmed);
 
             return RedirectToAction("UserEvents");
             
@@ -190,7 +293,7 @@ namespace EventManager.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DBInteractions db = new DBInteractions();
-            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Declined);
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStatus.Declined);
 
             return RedirectToAction("UserEvents");
 
@@ -202,7 +305,7 @@ namespace EventManager.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DBInteractions db = new DBInteractions();
-            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStats.Standby);
+            var result = db.EditRegistration(Convert.ToInt32(id), RegistrationStatus.Standby);
 
             return RedirectToAction("UserEvents");
 

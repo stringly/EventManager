@@ -19,29 +19,31 @@
 
 -Click-thru? Allow links to bring users right to a view but still populate cache?
 
-
-*DONE* -Make fullCalendar remember what month I was on prior to AJAX post (it was doing this, I fucked up by changing the ViewBag.Title and not updating the Reloader Function)
-*DONE* -Add TOTAL HOURS dynamic to Event Entry form
-
 -Message Display Footer? Have JSONResult/MessageBag pass messages back to view?
-
-*IN PROGRESS* -Split the UserEventRegistration View into multiple views. Rethink the Async
-			*The AvailableEvents is model-bound to SP result.  Registrations/Register functionality needs to be rebuilt
-
-
-
 
 -There is no reason why the UserEvents Page calls the ASync JSONResult Method on the CalendarView's controller.  This needs to be a Action result redirecting to the UserEvent's Index().  Using Async is not doing anything considering that the AJAX immediately refreshes the view anyways.  You idiot.
 
 -EVENTS VIEW: 
+	-ALL VIEWS (Except Calendar) NEED VIEWMODELS MAPPED TO SPs
 	-EDIT EVENT should not show REPEATER on MOdal, unless you want to add duplicater.
 	-ADD Calendarview Event Filters
 		-My Events? AJAX GET with filter on Controller
 
 -DATABASE: 
-	-Increase varchar(1000) for Event.Description
-
+	-EVENTS ENTITY:	
+	-Add field for Event.Type
+		-Linked to LT_EVENT_TYPES
+			-Overtime
+			-Training
+			-???
 
 -WORKFLOW:
 	Adding an event:
 		-Can an officer without a cruiser work?
+
+================================================FIXED AS OF 1/24/18=========================================================
+*DONE* -Make fullCalendar remember what month I was on prior to AJAX post (it was doing this, I fucked up by changing the ViewBag.Title and not updating the Reloader Function)
+*DONE* -Add TOTAL HOURS dynamic to Event Entry form
+*DONE* -Split the UserEventRegistration View into multiple views. Rethink the Async
+			*The AvailableEvents is model-bound to SP result.  Registrations/Register functionality needs to be rebuilt
+*DONE* -Increase Event.Description to varchar(1000)

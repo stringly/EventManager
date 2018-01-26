@@ -61,6 +61,42 @@ namespace EventManager.Helpers
             return viewList;
         }
 
+        public List<EventsCalendarViewModel> GetCalendarEvents()
+        {
+            List<EventsCalendarViewModel> viewList = new List<EventsCalendarViewModel>();
+            List<EVENTS_LAST_6_MONTHS_Result> resultList = new List<EVENTS_LAST_6_MONTHS_Result>();
 
+            using (EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    resultList = _dc.EVENTS_LAST_6_MONTHS().ToList(); 
+                }
+                catch (SqlException ex)
+                {
+                    ErrorLog.LogError(ex, "SQL error number: " + ex.Number + " encountered when trying to find calendar view events.");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.LogError(ex);
+                }
+            }
+            foreach(EVENTS_LAST_6_MONTHS_Result r in resultList)
+            {
+                EventsCalendarViewModel a = new EventsCalendarViewModel();
+                a.Description = r.Description;
+                a.DisplayColor = r.DisplayColor;
+                a.EndTime = r.EndTime;
+                a.StartTime = r.StartTime;
+                a.EnteredBy = r.EnteredBy;
+                a.EventID = r.EventID;
+                a.EventName = r.EventName;
+                a.FundCenter = r.FundCenter;
+                a.MaxStaff = r.MaxStaff;
+                a.MinStaff = r.MinStaff;
+                viewList.Add(a);               
+            }
+            return viewList;
+        }
     }
 }

@@ -11,13 +11,19 @@ namespace EventManager
 {
     using System;
     
-    public enum RegistrationStats : int
+    public enum RegistrationStatus : int
     {
-        Pending = 1,
-        Confirmed = 2,
-        Standby = 3,
-        Declined = 4,
-        Deleted = 5,
-        NoShow = 6
+        Confirmed = 5,
+        Standby = 6,
+        Pending = 7,
+        Declined = 8,
+        Deleted = 11,
+        NoShow = 12,
+        ConfirmPending = 1,
+        StandbyPending = 2,
+        Transferred = 9,
+        TransferPending = 3,
+        Withdrawn = 10,
+        WithdrawlPending = 4
     }
 }

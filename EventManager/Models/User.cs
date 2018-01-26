@@ -138,7 +138,7 @@ namespace EventManager
                     r.EventID = eventID;
                     r.UserID = UserId;
                     r.TimeStamp = DateTime.Now;
-                    r.Status = RegistrationStats.Pending;
+                    r.Status = RegistrationStatus.Pending;
                     _db.Registrations.Add(r);
                     _db.SaveChanges();
                     result = true;

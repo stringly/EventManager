@@ -12,132 +12,169 @@
             <li class="active" id="AvailableSideBarButton"><a href="#">Available Events</a></li>
             <li id="UserRegistrationSideBarButton">
                 <!-- Link with dropdown items -->
-                <a href="#registrationsSubMenu" data-toggle="collapse" aria-expanded="false">My Registrations</a>
-                <ul class="collapse list-unstyled" id="registrationsSubMenu">
-                    <li id="registrationsSideBarAll"><a href="../UserEventRegistration/UserRegistrations">Show All</a></li>
-                    <li id="registrationsSideBarConfirmed"><a href="../UserEventRegistration/UserRegistrations" id="registrationsSideBarConfirmed" ">Confirmed</a></li>
-                    <li id="registrationsSideBarPending"><a href="../UserEventRegistration/UserRegistrations" id="registrationsSideBarPending" ">Pending</a></li>
-                    <li id="registrationsSideBarStandby"><a href="../UserEventRegistration/UserRegistrations">Standby</a></li>
-                    <li id="registrationsSideBarDeclined"><a href="../UserEventRegistration/UserRegistrations">Declined</a></li>
-                    <li id="registrationsSideBarDeleted"><a href="../UserEventRegistration/UserRegistrations">Deleted</a></li>
-
-                </ul>
-                @*<li><a href="#">Portfolio</a></li>
-                    <li><a href="#">Contact</a></li>*@
+                <a href="/UserEventRegistration/Registrations">My Registrations</a>
         </ul>
     </nav>}
+<div id="messageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer" style="text-align:center">
+                <button type="button" class="btn btn-default btn-success" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header" style="border-top-left-radius:4px; border-top-right-radius:4px; background-color:#1d2e4a;">
+                <button type="button" class="close" style="color:white" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="border-radius:4px; color:#fff; font-weight:normal; padding-left:5px">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+            <div class="modal-body" style="text-align:left">
+                <p id="confirmDetails"></p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("Register", "UserEventRegistration", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="eventID" id="eventID" />
+                    <button type="button" class="btn btn-default btn-danger pull-left" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-default btn-success pull-right">Register</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid" id="AvailableEvents">
     <div class="col-xs-10 col-sm-10">
         <h3>Available Events:</h3>
-        <table class="table">
-            @foreach (var group in Model.GroupBy(date => date.StartTime.ToShortDateString()))
-            {
-                var d = Convert.ToString(group.Key);
-                DateTime dt = Convert.ToDateTime(d);
 
+        @foreach (var item in Model)
+        {
+            var detailsRowID = "detailsRow" + item.EventID;
+            var showDetailsButton = "showDetails" + item.EventID;
+            var toggleID = "toggle" + item.EventID;
+            var d = Convert.ToString(item.StartTime);
+            DateTime dt = Convert.ToDateTime(d);
 
-                <tr>
-                    <th colspan="6" style="background-color:#f0f0f0; font-weight:bold; border-bottom:solid; border-top:solid; border-top-color:black; border-bottom-color:black">@dt.ToLongDateString()</th>
-                </tr>
-                <tr style="font-size:10px; vertical-align:bottom">
-                    <th style="font-weight:bolder; padding-bottom:2px">
-                        Event Name
-                    </th>
-                    <th style="font-weight:bolder; padding-bottom:2px">
-                        Start Date/Time
-                    </th>
-                    <th style="font-weight:bolder; padding-bottom:2px">
-                        End Date/Time
-                    </th>
-                    <th style="text-align:center; font-weight:bolder; padding-bottom:2px">
-                        Total Hours
-                    </th>
-                    <th style="text-align:center; font-weight:bolder; padding-bottom:2px">
-                        Available Staffing
-                    </th>
-                    <th></th>
-                </tr>
-                foreach (var item in group)
-                {
-                    var detailsRowID = "detailsRow" + item.EventID;
-                    var showDetailsButton = "showDetails" + item.EventID;
-                    <tr id="row + @item.EventID" rel="popover">
-                        <td style="vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.EventName)
-                        </td>
-                        <td style="vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.StartTime)
-                        </td>
-                        <td style="vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.EndTime)
-                        </td>
-                        <td style="text-align:center; vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.TotalHours)
-                        </td>
-                        <td style="text-align:center; vertical-align:middle">
-                            @Html.DisplayFor(modelItem => item.AvailableStaff)
-                        </td>
-                        <td style="text-align:center; vertical-align:middle">                            
-                            <button type="button" 
-                                    class="btn btn-xs"
-                                    onClick="ShowDetails(@item.EventID)"
-                                    data-toggle="popover"
-                                    data-trigger="hover"
-                                    data-placement="bottom"
-                                    data-content="Show/Hide details"
-                                    style="padding:2px; color:blue;">
-                                <span class="glyphicon glyphicon-sort"></span>
-                            </button>
-                            <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="ShowDetails(@item.EventID)">Details</a>
-                        </td>
-                    </tr>
-                        <tr colspan="6" id="@detailsRowID" style="display:none">
-                            <td colspan="5" class="accordion-body" style="background-color:#f0f0f0; padding-left:5px; padding-right:5px;">
-                                <table class="table table-condensed table-bordered table-responsive" style="margin-bottom:0px; width:100%">
-                                    <thead>
-                                        <tr style="font-size:10px; vertical-align:bottom; font-weight:bolder; border:none">
-                                            <th width="70%" style="border:none; font-weight:bolder">Event Description</th>
-                                            <th width="30%" style="text-align:center; font-weight:bolder; border:none">Point of Contact</th>                                           
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                            <td style="text-align:center; vertical-align:middle">@Html.DisplayFor(modelItem => item.EventOwner)</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>                           
-                            <td colspan="1" style="text-align:center; vertical-align:middle; background-color:#f0f0f0">
-                                @using (Html.BeginForm("Register", "UserEventRegistration", FormMethod.Post, new { eventID = item.EventID }))
-                                {
-                                    @Html.AntiForgeryToken()
-                                    @Html.Hidden("eventID", item.EventID)
-                                    <input type="submit" value="Register" class="btn btn-success" />
-                                }
-                            </td>
-                        </tr>
-
-                            }
-                        }
-
-        </table>
+            <div id="@item.EventID" class="fakeTable">
+                <div class="fakeTable-row">
+                    <div class="fakeTable-cell-icon-left"
+                         onClick="ShowDetails(@item.EventID)"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-placement="bottom"
+                         data-content="Show Event Details">
+                        <span class="glyphicon glyphicon-calendar fakeTable-icon"></span>
+                    </div>
+                    <div class="fakeTable-cell" style="width:400px; vertical-align:middle">
+                        <a href="#" onclick="ShowDetails(@item.EventID)">@item.EventName</a>
+                        <p style="margin-bottom:0px">@dt.ToLongDateString()</p>
+                    </div>
+                    <div class="fakeTable-cell" style="vertical-align:middle; text-align:center">
+                        <span style="text-decoration:underline; font-weight:bold">Total Hours:</span>
+                        <p style="margin-bottom:0px">@item.TotalHours</p>
+                    </div>
+                    <div class="fakeTable-cell" style="vertical-align:middle; text-align:center">
+                        <span style="text-decoration:underline; font-weight:bold">Available Positions:</span>
+                        <p style="margin-bottom:0px">@item.AvailableStaff</p>
+                    </div>
+                    <div class="fakeTable-cell-icon"
+                         onClick="ShowDetails(@item.EventID)"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-placement="bottom"
+                         data-content="Show/Hide Event Details">
+                        <span id="@toggleID" class="glyphicon glyphicon-download fakeTable-icon" 
+                              style="color:Highlight;">
+                        </span>
+                    </div>
+                    <div class="fakeTable-cell-icon-right">
+                        <div class="fakeTable-cell-icon"
+                             onClick="ShowRegisterModal('@item.EventName', '@item.EventID')"
+                             data-toggle="popover"
+                             data-trigger="hover"
+                             data-placement="bottom"
+                             data-content="Register for this event">
+                            <span class="glyphicon glyphicon-plus fakeTable-icon"
+                                  style="color:#099b15; font-weight:100"></span>
+                        </div>
+                    </div>
+                </div>
+                <div id="@detailsRowID" class="fakeTable-details-row">
+                    <div class="fakeTable-cell-icon-left" style="background-color:#ffffff; width:5%">
+                        <span class="glyphicon glyphicon fakeTable-icon"></span>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3; width:25%">
+                        <span style="text-decoration:underline; font-weight:bold">Event Times:</span>
+                        <p style="margin-bottom:0px">@item.StartTime to @item.EndTime</p>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                        <span style="text-decoration:underline; font-weight:bold">Description:</span>
+                        <p style="margin-bottom:0px">@item.Description</p>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                        <span style="text-decoration:underline; font-weight:bold">Event Coordinator:</span>
+                        <p style="margin-bottom:0px">@item.EventOwner</p>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
 @section Scripts{
 <script>
+    $(document).ready(function () {
+        if ("@TempData["Message"]" != "") {
+            ShowMessageModal("@TempData["Message"]", "@TempData["Status"]");
+        }
+    });
+    
     function ShowDetails(id) {
         var detailsSection = "detailsRow" + id;
+        
         if ($('#' + detailsSection).is(":visible")) {
             $('#' + detailsSection).hide();
+            $('#toggle' + id).removeClass('glyphicon-upload');
+            $('#toggle' + id).addClass('glyphicon-download');
+            
         }
         else {
             $('#' + detailsSection).show();
+            $('#toggle' + id).removeClass('glyphicon-download');
+            $('#toggle' + id).addClass('glyphicon-upload');
         }
     }
-
+    
+    function ShowRegisterModal(eventName, eventID){
+        $('#confirmModal #modalTitle').text('Confirm Registration');
+        $('#confirmModal #eventID').val(eventID);
+        var $description = $("<div/>");
+        $description.append($("<p/>").html("Are you sure you want to register for " + eventName + "?"));
+        $("#confirmModal #confirmDetails").empty().html($description);
+        $("#confirmModal").modal();
+    }
+    function ShowMessageModal(message, status){
+        $("#messageModal #modalTitle").text(status);
+        var $description = $("<div/>");
+        $description.append($("<p/>").html(message));
+        $("#messageModal #pDetails").empty().html($description);
+        $("#messageModal").modal();
+    }
 
 </script>    
     

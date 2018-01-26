@@ -48,6 +48,7 @@ CREATE TABLE [dbo].[LTRanks]
 	[PayGrade] NCHAR(5) NULL	
 )
 
+//This SP does not account for a "Deleted" status registration... it will exclude these events
 
 CREATE PROCEDURE AVAILABLE_EVENTS_BY_USERID
 @User Int
@@ -67,3 +68,29 @@ JOIN dbo.LTRanks rk
     ON u.Rank = rk.RankId	
 WHERE e.StartTime > GETDATE() AND NOT EXISTS(SELECT * FROM [dbo].[Registrations] r WHERE [EventID] = e.EventID AND r.UserID = @User)
 ORDER BY StartTime DESC;
+
+//
+
+CREATE PROCEDURE CURRENT_REGISTRATIONS_BY_USERID
+@User Int
+As
+SELECT r.RegistrationID,
+	   r.EventID,
+	   r.TimeStamp,
+	   r.Status,
+	   e.EventName,
+	   e.StartTime,
+	   e.EndTime,
+	   e.Description,
+	   DATEDIFF(hh, e.StartTime, e.EndTime) As TotalHours,
+	   (rk.RankShort + u.LastName + ' #' + CAST(u.IDNumber as varchar(4))) As EventOwner,
+	   u.Email As EventOwnerEmail
+FROM [dbo].Registrations r
+	JOIN [dbo].Events e 
+ON r.EventID = e.EventID
+	JOIN [dbo].Users u
+ON e.EnteredBy = u.UserId
+	JOIN [dbo].LTRanks rk
+ON u.Rank = rk.RankId
+WHERE r.UserID = @User
+ORDER BY r.TimeStamp DESC;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using EventManager.ViewModels;
-using EventManager.Models;
+﻿using System.Web.Mvc;
 using EventManager.Helpers;
 using System.Net;
 
@@ -14,34 +8,42 @@ namespace EventManager.Controllers
     public class UserEventRegistrationController : Controller
     {
 
-
+        /// <summary>
+        /// Main method for this controller; Uses the Event Service to show a list of AvailableEventViewModel objects for the current user
+        /// </summary>
+        /// <returns>View:UserEventRegistration/AvailableEvents</returns>
+        [HttpGet]
         [Authorize(Roles="User")]
         public ActionResult AvailableEvents()
         {
             return View(new EventService().GetAvailableEventsByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)));
         }
-
-
-        [Authorize(Roles="User")]
-        public ActionResult UserRegistrations()
+        /// <summary>
+        /// Uses the Registration Service to show a list of RegistrationsForUserViewModel objects for the current user
+        /// </summary>
+        /// <returns>View:UserEventRegistration/Registrations</returns>
+        [HttpGet]
+        [Authorize(Roles = "User")]
+        public ActionResult Registrations()
         {
-            User u = new DBInteractions().GetUserByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
-            //IEnumerable<Registration> list = u.Registrations;
-            return View(u.GetRegistrationsForUser());
+            return View(new RegistrationService().GetCurrentRegistrationsByLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)));
         }
-
+        /// <summary>
+        /// POST Method that allows a User to register for an event.
+        /// </summary>
+        /// <param name="eventID">The DB eventID of the event for which the user is trying to register</param>
+        /// <returns>RedirectToView:UserEventRegistration/AvailableEvents</returns>
         [HttpPost]
-        //[AllowAnonymous]
         [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]        
         public ActionResult Register(int eventID)
         {
-            //int idToInt = Convert.ToInt32(eventID);
             int userID = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
             bool success = new RegistrationService().CreateRegistration(userID, eventID);
 
             if (success)
             {
+                CreateTempDataMessage(RegistrationStatus.Pending);
                 return RedirectToAction("AvailableEvents");
             }
             else
@@ -49,75 +51,69 @@ namespace EventManager.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }            
         }
+        /// <summary>
+        /// POST Method that allows a User to update the status of a registration
+        /// </summary>
+        /// <param name="registrationID">The DB registrationId of the registration being updated</param>
+        /// <param name="oldStatus">The current status of the registration being updated</param>
+        /// <param name="newStatus">The new status that the user is trying to assign to the registration</param>
+        /// <returns>RedirectToView:UserEventRegistration/Registrations</returns>
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateRegistration(int registrationID, RegistrationStatus oldStatus, RegistrationStatus newStatus)
+        {
+            bool success = new RegistrationService().UpdateRegistrationStatus(registrationID, newStatus);
 
+            if (success)
+            {
+                CreateTempDataMessage(newStatus);
+                return RedirectToAction("Registrations");
 
-        //public List<UserRegistrations> GetUserRegistrations()
-        //{
-        //    List<UserRegistrations> userRegistrations = new List<UserRegistrations>();
-        //    //var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId
-        //    //                            && e.Event.StartTime >= DateTime.Now
-        //    //                            && (e.Status != RegistrationStats.Deleted
-        //    //                            && e.Status != RegistrationStats.Declined
-        //    //                            && e.Status != RegistrationStats.NoShow)).ToList();
+            }
+            else
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-        //    //I changed the below because I wanted the view to be able to show the user all of their registrations
-        //    var registrationList = _dc.Registrations.Where(e => e.UserID == user.UserId).OrderByDescending(e => e.Event.StartTime).ToList();
-
-        //    foreach (var item in registrationList)
-        //    {
-        //        UserRegistrations ur = new UserRegistrations();
-        //        ur.RegistrationID = item.RegistrationID;
-        //        ur.UserID = item.UserID;
-        //        ur.EventID = item.EventID;
-        //        ur.TimeStamp = item.TimeStamp;
-        //        ur.Status = item.Status;
-        //        ur.EventName = item.Event.EventName;
-        //        ur.EventStartTime = item.Event.StartTime;
-        //        ur.EventEndTime = item.Event.EndTime;
-        //        ur.EventDescription = item.Event.Description;
-        //        userRegistrations.Add(ur);
-        //    }
-        //    return userRegistrations;
-        //}
-
-
-        //TODO:Add validation
-        //TODO: Why am I using async POSTs and Javascript reloads on a page with a viewmodel? Should be Actionresults?
-        //[HttpPost]
-        //public JsonResult RegisterForEvent(Event e)
-        //{
-        //    var status = false;
-        //    try
-        //    {
-                
-        //        DBInteractions db = new DBInteractions();
-        //        int id = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"].ToString());
-        //        status = db.Register(e.EventID, id);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.InnerException.Message);
-        //    }
-        //    return new JsonResult { Data = status, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-        //}
-
-        //public JsonResult CancelRegistration(Registration r)
-        //{
-        //    var status = false;
-        //    try
-        //    {
-        //        DBInteractions db = new DBInteractions();
-        //        status = db.EditRegistration(r.RegistrationID, RegistrationStats.Deleted);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(ex.InnerException.Message);
-        //    }
-        //    MessageFactory ms = new MessageFactory(status);
-
-        //    return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
-
-        //}
+        }
+        /// <summary>
+        /// Method that creates TempData info to pass to a redirect so that a message can be displayed
+        /// </summary>
+        /// <param name="nStatus">The status of the registration that was altered/created</param>
+        public void CreateTempDataMessage(RegistrationStatus nStatus)
+        {
+            switch (nStatus)
+            {
+                case RegistrationStatus.Confirmed:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "Registration was confirmed.";
+                    break;
+                case RegistrationStatus.Declined:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "Registration was declined.";
+                    break;
+                case RegistrationStatus.Deleted:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "Registration was deleted.";
+                    break;
+                case RegistrationStatus.Standby:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "You have been placed on standby for this event.";
+                    break;
+                case RegistrationStatus.TransferPending:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "You have submitted a request to transfer this registration.";
+                    break;
+                case RegistrationStatus.WithdrawlPending:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "You have submitted a request to withdraw from this event.";
+                    break;
+                case RegistrationStatus.Pending:
+                    TempData["Status"] = "Success!";
+                    TempData["Message"] = "You have been registered for this event.";
+                    break;
+            }
+        }
     }
 }

@@ -233,13 +233,13 @@
                                         var hoursThisMonth = 0.0;
                                         var hoursLast30Days = 0.0;
                                         var hoursLast90Days = 0.0;
-                                        if (r.Status == RegistrationStats.Confirmed)
+                                        if (r.Status == RegistrationStatus.Confirmed)
                                         {
                                             confirmedRegs++;
                                         }
                                         foreach (var u in r.User.Registrations)
                                         {
-                                            if (u.Status == RegistrationStats.Confirmed)
+                                            if (u.Status == RegistrationStatus.Confirmed)
                                             {
                                                 if (u.Event.StartTime.Month == DateTime.Now.Month && u.Event.StartTime.Year == DateTime.Now.Year)
                                                 {
@@ -301,13 +301,13 @@
                                                 var statusStyle = "text-align:center; font-weight:bold; ";
                                                 switch (r.Status)
                                                 {
-                                                    case RegistrationStats.Confirmed:
+                                                    case RegistrationStatus.Confirmed:
                                                         statusStyle = statusStyle + "color:green";
                                                         break;
-                                                    case RegistrationStats.Declined:
+                                                    case RegistrationStatus.Declined:
                                                         statusStyle = statusStyle + "color:red";
                                                         break;
-                                                    case RegistrationStats.Standby:
+                                                    case RegistrationStatus.Standby:
                                                         statusStyle = statusStyle + "color:orange";
                                                         break;
                                                 }
@@ -319,7 +319,7 @@
                                             @switch (r.Status)
                                             {
                                                 
-                                                case RegistrationStats.Confirmed:
+                                                case RegistrationStatus.Confirmed:
 
                                                     <td style="text-align:center; border-left-width:3px; border-left-color:black;">
                                                         <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)" checked />
@@ -331,7 +331,7 @@
                                                         <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)"/>
                                                     </td>
                                                     break;
-                                                case RegistrationStats.Standby:
+                                                case RegistrationStatus.Standby:
                                                     <td style="text-align:center; border-left-width:3px; border-left-color:black;">
                                                         <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)"/>
                                                     </td>
@@ -342,7 +342,7 @@
                                                         <input type="checkbox" id="@("chkDecline" + r.RegistrationID)" OnClick="DeclineChecked(@r.RegistrationID, @r.EventID)"/>
                                                     </td>
                                                     break;
-                                                case RegistrationStats.Declined:
+                                                case RegistrationStatus.Declined:
                                                     <td style="text-align:center; border-left-width:3px; border-left-color:black;">
                                                         <input type="checkbox" id="@("chkConfirm" + r.RegistrationID)" OnClick="ConfirmChecked(@r.RegistrationID, @r.EventID)"/>
                                                     </td>

@@ -274,7 +274,7 @@ namespace EventManager.Models
                     r.EventID = eventID;
                     r.UserID = userID;
                     r.TimeStamp = DateTime.Now;
-                    r.Status = RegistrationStats.Pending;
+                    r.Status = RegistrationStatus.Pending;
                     _db.Registrations.Add(r);
                     _db.SaveChanges();
                     result = true;
@@ -354,7 +354,7 @@ namespace EventManager.Models
 
 
         //Registration Interactions
-        public Boolean EditRegistration(int registrationID, RegistrationStats status)
+        public Boolean EditRegistration(int registrationID, RegistrationStatus status)
         {
             bool result = false;
             using (EVENTS_MGR_TESTING_Entities _db = new EVENTS_MGR_TESTING_Entities())
