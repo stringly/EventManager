@@ -15,7 +15,8 @@ namespace EventManager.ViewModels
         public string Description { get; set; }
         public int AvailableStaff { get; set; }
         public string EventOwner { get; set; }
-        public string EventOwnerID { get; set; }
-        public string TotalCurrentRegistrations { get; set; }
+        public int EventOwnerID { get; set; }
+        public string EventOwnerEmail { get; set; }
+        public int TotalCurrentRegistrations { get; set; }
     }
 }

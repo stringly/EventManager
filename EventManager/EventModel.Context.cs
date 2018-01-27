@@ -107,5 +107,10 @@ namespace EventManager
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CURRENT_REGISTRATIONS_BY_USERID_Result>("CURRENT_REGISTRATIONS_BY_USERID", userParameter);
         }
+    
+        public virtual ObjectResult<ALL_EVENTS_VIEW_Result> ALL_EVENTS_VIEW()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ALL_EVENTS_VIEW_Result>("ALL_EVENTS_VIEW");
+        }
     }
 }

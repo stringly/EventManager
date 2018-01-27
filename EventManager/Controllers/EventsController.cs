@@ -27,20 +27,41 @@ namespace EventManager.Controllers
             TempData["pageUser"] = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)); 
             return View();
         }
-        //TODO: Move code in DB Context into DBInteractions class?
-        //TODO: Make this a Stored Procedure to limit data returned?
+
+        public ActionResult AllEvents()
+        {
+            TempData["pageUser"] = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            return View(new EventService().GetAllEvents());
+        }
+
+
         public JsonResult GetEvents()
         {
             using (EVENTS_MGR_TESTING_Entities dc = new EVENTS_MGR_TESTING_Entities())
             {
                 dc.Configuration.LazyLoadingEnabled = false;
-                //TODO: CREATE STORED PROC Limit the returned list of events to exclude full/past events
                 var events = new EventService().GetCalendarEvents();
-                //MessageFactory ms = new MessageFactory();
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpPost]
         public JsonResult SaveEvent(EventFormResult fr)
         {
@@ -118,23 +139,7 @@ namespace EventManager.Controllers
         
         //OLD STUFF BELOW HERE - I added the calendarview stuff above
 
-
-        //TODO: CHANGE TO VIEWMODEL/Limit this return for users in other roles? STORED PROC
-        public ActionResult AllEvents()
-        {
-            ViewBag.CurrentUser = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
-            //return View(db.Events.ToList());
-            if (User.IsInRole("Development"))
-            {
-                return View(db.EVENTS_LAST_6_MONTHS1().ToList());
-            }
-            else
-            {
-                
-                return View(db.Events.ToList());
-            }
-        }
-        
+      
         public ActionResult UserEvents()
         {
             int userID = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));

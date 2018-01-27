@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventManager.Event>
+﻿@model IEnumerable<EventManager.ViewModels.EventsViewModel>
 
 @{
     ViewBag.Title = "All Events";
@@ -6,13 +6,12 @@
 
 }
 
-<h2>View/Edit Events</h2>
-<p>
+
     @section Sidebar{
         <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
             <!-- Sidebar Links -->
             <ul class="list-unstyled components">
-                <li id="calendarSideBarButton"><a href="/home/Index" onclick="">Calendar View</a></li>
+                <li id="calendarSideBarButton"><a href="/Events/CalendarView" onclick="">Calendar View</a></li>
                 <li>
                     <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
                     <ul class="list-unstyled" id="eventManagementSubMenu">
@@ -25,108 +24,104 @@
                     </ul>
             </ul>
         </nav>}
+
+<h2>View/Edit Events</h2>
 <p>
     <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenAddEventForm()">Create New Event</a>
 </p>
-<div style="margin-right:50px">
-    <table class="table">
-        <tr style="background-color:#151827; color:#fff;">
-            <th>
-                @Html.DisplayNameFor(model => model.EventName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th style="text-align:center">
-                @Html.DisplayNameFor(model => model.MaxStaff)
-            </th>
-            <th style="text-align:center">
-                @Html.DisplayNameFor(model => model.MinStaff)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FundCenter)
-            </th>
-            <th>
-                Entered By
-            </th>
-            <th style="text-align:center">
-                Options
-            </th>
-        </tr>
-        @{
-            var rowCount = 0;
-        }
-
+<div class="container-fluid" id="AvailableEvents">
+    <div class="col-xs-10 col-sm-10">
         @foreach (var item in Model)
         {
-            var rowStyle = "";
-            rowCount++;
-            if (rowCount % 2 == 0)
-            {
-                rowStyle = "background-color:#c2bebe";
-            }
-            <tr style="@rowStyle">
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.EventName)
-                </td>
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.StartTime)
-                </td>
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td style="vertical-align:middle; text-align:center">
-                    @Html.DisplayFor(modelItem => item.MaxStaff)
-                </td>
-                <td style="vertical-align:middle; text-align:center">
-                    @Html.DisplayFor(modelItem => item.MinStaff)
-                </td>
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.FundCenter)
-                </td>
-                <td style="vertical-align:middle">
-                    @Html.DisplayFor(modelItem => item.User.LDAPName)
-                </td>
-                <td style="text-align:center">
-                    @if (item.EnteredBy == @ViewBag.CurrentUser)
-                    {
+            var detailsRowID = "detailsRow" + item.EventID;
+            var showDetailsButton = "showDetails" + item.EventID;
+            var toggleID = "toggle" + item.EventID;
+            var d = Convert.ToString(item.StartTime);
+            DateTime dt = Convert.ToDateTime(d);
 
-                        <div class="btn-group-sm">
-                            <div class="btn-group" role="group">
-                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenEditForm(@item.EventID)">View/Edit</a> |
-                            </div>
-                            <div class="btn-group" role="group">
-                                <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="DeleteEvent(@item.EventID)">Delete</a>
+            <div id="@item.EventID" class="fakeTable">
+                <div class="fakeTable-row">
+                    <div class="fakeTable-cell-icon-left"
+                         onClick="ShowDetails(@item.EventID)"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-placement="bottom"
+                         data-content="Show Event Details">
+                        <span class="glyphicon glyphicon-calendar fakeTable-icon"></span>
+                    </div>
+                    <div class="fakeTable-cell" style="width:400px; vertical-align:middle">
+                        <a href="#" onclick="ShowDetails(@item.EventID)">@item.EventName</a>
+                        <p style="margin-bottom:0px">@dt.ToLongDateString()</p>
+                    </div>
+                    <div class="fakeTable-cell" style="vertical-align:middle; text-align:center">
+                        <span style="text-decoration:underline; font-weight:bold">Total Hours:</span>
+                        <p style="margin-bottom:0px">@item.TotalHours</p>
+                    </div>
+                    <div class="fakeTable-cell" style="vertical-align:middle; text-align:center">
+                        <span style="text-decoration:underline; font-weight:bold">Available Positions:</span>
+                        <p style="margin-bottom:0px">@item.AvailableStaff</p>
+                    </div>
+                    <div class="fakeTable-cell-icon"
+                         onClick="ShowDetails(@item.EventID)"
+                         data-toggle="popover"
+                         data-trigger="hover"
+                         data-placement="bottom"
+                         data-content="Show/Hide Event Details">
+                        <span id="@toggleID" class="glyphicon glyphicon-download fakeTable-icon"
+                              style="color:Highlight;">
+                        </span>
+                    </div>
+                    
+
+@if (item.EventOwnerID == Convert.ToInt32(TempData["pageUser"]))
+{
+                        <div class="fakeTable-cell-icon-right">
+                            <div class="fakeTable-cell-icon"
+                                 onClick="OpenEditForm(@item.EventID)"
+                                 data-toggle="popover"
+                                 data-trigger="hover"
+                                 data-placement="bottom"
+                                 data-content="Edit this event">
+                                <span class="glyphicon glyphicon-edit fakeTable-icon"
+                                      style="color:#099b15; font-weight:100"></span>
                             </div>
                         </div>
-
-                    }
-                    else
-                    {
-                        <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenViewForm(@item.EventID)">Details</a>
-                    }
-
-                </td>
-            </tr>
+}
+                </div>
+                <div id="@detailsRowID" class="fakeTable-details-row">
+                    <div class="fakeTable-cell-icon-left" style="background-color:#ffffff; width:5%">
+                        <span class="glyphicon glyphicon fakeTable-icon"></span>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3; width:25%">
+                        <span style="text-decoration:underline; font-weight:bold">Event Times:</span>
+                        <p style="margin-bottom:0px">@item.StartTime to @item.EndTime</p>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                        <span style="text-decoration:underline; font-weight:bold">Description:</span>
+                        <p style="margin-bottom:0px">@item.Description</p>
+                    </div>
+                    <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                        <span style="text-decoration:underline; font-weight:bold">Event Coordinator:</span>
+                        <p style="margin-bottom:0px">@item.EventOwner/@item.EventOwnerEmail</p>
+                    </div>
+                </div>
+            </div>
         }
-
-    </table>
+    </div>
 </div>
+
 @section scripts{
     <script>
         $(document).ready(function(){
+            if ("@TempData["Message"]" != "") {
+                ShowMessageModal("@TempData["Message"]", "@TempData["Status"]");
+            }
             updateTime();
         });
 
+        $('[data-toggle="popover"]').popover({
+            container: 'body'
+        });
         function OpenViewForm(id) {
             var eventDetails = [];
             console.log("open form called with id: " + id);
@@ -162,5 +157,24 @@
                 }
             })
 
+        }
+        function ShowDetails(id) {
+            var detailsSection = "detailsRow" + id;
+
+            if ($('#' + detailsSection).is(":visible")) {
+                $('#' + detailsSection).hide();
+                $('#toggle' + id).removeClass('glyphicon-upload');
+                $('#toggle' + id).addClass('glyphicon-download');
+                $('#' + id).toggleClass("fakeTable", true);
+                $('#' + id).toggleClass("fakeTableSelected", false);
+
+            }
+            else {
+                $('#' + detailsSection).show();
+                $('#toggle' + id).removeClass('glyphicon-download');
+                $('#toggle' + id).addClass('glyphicon-upload');
+                $('#' + id).toggleClass("fakeTable", false);
+                $('#' + id).toggleClass("fakeTableSelected", true);
+            }
         }
     </script>}

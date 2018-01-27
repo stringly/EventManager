@@ -151,12 +151,16 @@
             $('#' + detailsSection).hide();
             $('#toggle' + id).removeClass('glyphicon-upload');
             $('#toggle' + id).addClass('glyphicon-download');
+            $('#' + id).toggleClass("fakeTable", true);
+            $('#' + id).toggleClass("fakeTableSelected", false);
             
         }
         else {
             $('#' + detailsSection).show();
             $('#toggle' + id).removeClass('glyphicon-download');
             $('#toggle' + id).addClass('glyphicon-upload');
+            $('#' + id).toggleClass("fakeTable", false);
+            $('#' + id).toggleClass("fakeTableSelected", true);
         }
     }
     

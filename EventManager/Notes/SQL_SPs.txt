@@ -94,3 +94,28 @@ ON e.EnteredBy = u.UserId
 ON u.Rank = rk.RankId
 WHERE r.UserID = @User
 ORDER BY r.TimeStamp DESC;
+
+
+//
+
+CREATE PROCEDURE ALL_EVENTS_VIEW
+AS 
+SELECT e.EventID, 
+	   e.EventName, 
+	   e.StartTime, 
+	   e.EndTime, 
+	   DATEDIFF(hh, e.StartTime, e.EndTime) As TotalHours,
+	   e.Description,
+	   (e.MaxStaff - (SELECT COUNT(*) FROM [dbo].[Registrations] r1 WHERE r1.EventID = e.EventID AND r1.[Status] = 5)) As AvailableStaff, 
+	   (rk.RankShort + u.LastName + ' #' + CAST(u.IDNumber as varchar(4))) As EventOwner,
+	   e.EnteredBy As EventOwnerID,
+	   u.Email As EventOwnerEmail,
+	   (SELECT COUNT(*) FROM [dbo].Registrations r2 WHERE r2.EventID = e.EventID) As TotalCurrentRegistrations 
+FROM [dbo].Events e
+JOIN [dbo].Users u
+ON e.EnteredBy = u.UserId
+JOIN [dbo].LTRanks rk
+ON u.Rank = rk.RankId
+WHERE e.StartTime > GETDATE();
+
+

@@ -98,5 +98,45 @@ namespace EventManager.Helpers
             }
             return viewList;
         }
+
+        public List<EventsViewModel> GetAllEvents()
+        {
+            List<EventsViewModel> viewList = new List<EventsViewModel>();
+            List<ALL_EVENTS_VIEW_Result> resultList = new List<ALL_EVENTS_VIEW_Result>();
+
+            using(EVENTS_MGR_TESTING_Entities _dc = new EVENTS_MGR_TESTING_Entities())
+            {
+                try
+                {
+                    resultList = _dc.ALL_EVENTS_VIEW().ToList();
+                }
+                catch (SqlException ex)
+                {
+                    ErrorLog.LogError(ex, "SQL error number: " + ex.Number + " encountered when trying to find AllEvents.");
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog.LogError(ex);
+                }
+            }
+            foreach(ALL_EVENTS_VIEW_Result r in resultList)
+            {
+                EventsViewModel e = new EventsViewModel();
+                e.AvailableStaff = Convert.ToInt32(r.AvailableStaff);
+                e.Description = r.Description;
+                e.EndTime = r.EndTime;
+                e.EventID = r.EventID;
+                e.EventName = r.EventName;
+                e.EventOwner = r.EventOwner;
+                e.EventOwnerEmail = r.EventOwnerEmail;
+                e.EventOwnerID = r.EventOwnerID;
+                e.StartTime = r.StartTime;
+                e.TotalCurrentRegistrations = Convert.ToInt32(r.TotalCurrentRegistrations);
+                e.TotalHours = Convert.ToDouble(r.TotalHours);
+                viewList.Add(e);
+
+            }
+            return viewList;
+        }
     }
 }

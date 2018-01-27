@@ -337,19 +337,19 @@
                 <div class="fakeTable-cell-icon-left" style="background-color:#ffffff; width:5%">
                     <span class="glyphicon glyphicon fakeTable-icon"></span>
                 </div>
-                <div class="fakeTable-cell" style="background-color:#d3d3d3; width:25%">
+                <div class="fakeTable-cell" style="background-color:rgba(158, 158, 158, 0.25); width:25%">
                     <span style="text-decoration:underline; font-weight:bold">Event Times:</span>
                     <p style="margin-bottom:0px">@item.StartTime to @item.EndTime</p>
                 </div>
-                <div class="fakeTable-cell" style="background-color:#d3d3d3; width:10%; text-align:center">
+                <div class="fakeTable-cell" style="background-color:rgba(158, 158, 158, 0.25); width:10%; text-align:center">
                     <span style="text-decoration:underline; font-weight:bold">Total Hours:</span>
                     <p style="margin-bottom:0px">@item.TotalHours</p>
                 </div>
-                <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                <div class="fakeTable-cell" style="background-color:rgba(158, 158, 158, 0.25);">
                     <span style="text-decoration:underline; font-weight:bold">Description:</span>
                     <p style="margin-bottom:0px">@item.Description</p>
                 </div>
-                <div class="fakeTable-cell" style="background-color:#d3d3d3;">
+                <div class="fakeTable-cell" style="background-color:rgba(158, 158, 158, 0.25);">
                     <span style="text-decoration:underline; font-weight:bold">Event Coordinator:</span>
                     <p style="margin-bottom:0px">@item.EventOwner <br/> @item.EventOwnerEmail</p>
                 </div>
@@ -397,9 +397,13 @@
         console.log("Clicked!");
         if ($("#" + detailsSection).is(":visible")) {
             $("#" + detailsSection).hide();
+            $('#' + id).toggleClass("fakeTable", true);
+            $('#' + id).toggleClass("fakeTableSelected", false);
         }
         else {
             $("#" + detailsSection).show();
+            $('#' + id).toggleClass("fakeTable", false);
+            $('#' + id).toggleClass("fakeTableSelected", true);
         }
     }
     function UpdateRegistrationStatus(regId, oldStat, newStat) {

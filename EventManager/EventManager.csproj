@@ -168,6 +168,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ALL_EVENTS_VIEW_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="AVAILABLE_EVENTS_BY_USERID_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
