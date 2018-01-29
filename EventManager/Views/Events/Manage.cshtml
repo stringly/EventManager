@@ -1,0 +1,182 @@
+﻿@model EventManager.ViewModels.ManageEventViewModel
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/Shared/_EventLayout.cshtml";
+}
+@section Sidebar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li id="calendarSideBarButton"><a href="/Events/CalendarView" onclick="">Calendar View</a></li>
+            <li>
+                <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"><a href="/Events/AllEvents">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser" class="active"><a href="/Events/MyEvents">My Events</a></li>
+                    @*<li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                        <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                        <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                        <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>*@
+                </ul>
+        </ul>
+    </nav>}
+<div>
+    <div class="pull-left">
+        <span class="glyphicon glyphicon-cog" style="font-size:30px; line-height:0.85"></span>
+    </div>
+    <h2><span style="padding-left:10px">Event Management</span></h2>
+</div>
+
+
+<form>    
+    @Html.HiddenFor(model => model.Event.EventID)
+    <div class="row form-inline" style="width:100%; margin-bottom:10px">
+        <div class="form-group col-xs-4">
+            @Html.LabelFor(model => model.Event.EventName)
+            @Html.EditorFor(model => model.Event.EventName, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } })
+        </div>
+        <div class="form-group col-xs-2">
+            @Html.LabelFor(model => model.Event.StartTime)
+            <div class="input-group date" id="dtp1">
+                @Html.EditorFor(model => model.Event.StartTime, new { htmlAttributes = new { @class = "form-control", @style = "max-width:250px" } })
+                <span class="input-group-addon" style="width:auto">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-xs-2">
+            @Html.LabelFor(model => model.Event.EndTime)
+            <div class="input-group date" id="dtp2">
+                @Html.EditorFor(model => model.Event.EndTime, new { htmlAttributes = new { @class = "form-control", @style = "max-width:250px" } })
+                <span class="input-group-addon" style="width:auto">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group col-xs-1">
+            <label>Hours:</label>
+            <div class="input-group date">
+                <input type="text" id="txtHoursCalculated" class="form-control" style="max-width:200px; text-align:center" />
+
+            </div>
+        </div>
+    </div>
+    <div class="row form-inline" style="width:100%; margin-bottom:10px">
+        <div class="form-group col-xs-12">
+            @Html.LabelFor(model => model.Event.Description)
+            @Html.TextAreaFor(model => model.Event.Description, new { @class = "form-control", @style = "max-width:100%", @rows = "3", @id= "txtDescription" } )            
+        </div>
+    </div>
+    <div class="row form-inline" style="width:100%; margin-bottom:10px">
+        <div class="form-group col-xs-1">
+            <label>Minimum Staffing</label>
+            @Html.EditorFor(model => model.Event.MinStaff, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100px", @min = "1", @max = "50" } })
+            
+        </div>
+        <div class="form-group col-xs-1">
+            <label>Maximum Staffing</label>
+            @Html.EditorFor(model => model.Event.MinStaff, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100px", @min = "1", @max = "50" } })
+        </div>
+        <div class="form-group col-xs-2">
+            <label>Fund Center:</label>
+            @Html.EditorFor(model => model.Event.EventName, new { htmlAttributes = new { @class = "form-control", @style = "max-width:100%" } })
+        </div>
+        <div class="form-group col-xs-1">
+            <label>Display Color:</label>
+            <div id="colorPicker" style="text-align:center">
+                <a class="color"><div class="colorInner" id="innerColorDiv"></div></a>
+                <div class="track"></div>
+                <ul class="dropdown"><li></li></ul>
+                @Html.HiddenFor(model => model.Event.DisplayColor, new { @class = "colorInput", @id = "eventColor" })
+            </div>
+        </div>
+    </div>
+</form>
+<div class="form-group" id="checkboxgroup" style="display:none">
+    <label><input type="checkbox" value="" id="chkRepeat"> Repeat this event</label>
+</div>
+<div id="repeatMenu" class="well row form-inline col-xs-12" style="display: none; border:solid; width:100%; margin-left:0px">
+    <div class="form-group col-xs-4">
+        <label>Repeats:</label>
+        <select class="form-control" id="cboRepeat">
+            <option value="1">Daily</option>
+            <option value="2">Every weekday (Monday to Friday)</option>
+            <option value="3">Weekly</option>
+        </select>
+    </div>
+    <div class="form-group col-xs-3" id="dayRepeat">
+        <label>Repeat for how many days?</label>
+        <select class="form-control" id="repeatDayInterval" style="max-width:70px">
+            <option value="1" selected="selected">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+        </select>
+        <label> days</label>
+    </div>
+    <div id="weekRepeat" class="form-horizontal" style="display: none">
+        <div class="form-group col-xs-3">
+            <label>Repeat for how many weeks?</label>
+            <select id="repeatWeekInterval" class="form-control" style="max-width:70px">
+                <option value="1" selected="selected">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+            <label> weeks</label>
+        </div>
+        <div class="form-group col-xs-5">
+            <label>Select Days:</label>
+            <div class="form-inline">
+                <label class="checkbox-inline"><input type="checkbox" id="chkSun" value="1">S</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkMon" value="2">M</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkTue" value="3">T</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkWed" value="4">W</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkThu" value="5">T</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkFri" value="6">F</label>
+                <label class="checkbox-inline"><input type="checkbox" id="chkSat" value="7">S</label>
+            </div>
+        </div>
+
+    </div>
+    <div class="form-group" id="startsOnDate">
+        <label>Starts On:</label>
+        <input type="date" class="form-control" id="txtRepeatStartDate" />
+    </div>
+    <div class="form-group" id="endsOnDate" style="display: none">
+        <label>Ends On:</label>
+        <input type="date" class="form-control" id="txtRepeatEndDate" />
+    </div>
+</div>

@@ -116,6 +116,62 @@ JOIN [dbo].Users u
 ON e.EnteredBy = u.UserId
 JOIN [dbo].LTRanks rk
 ON u.Rank = rk.RankId
-WHERE e.StartTime > GETDATE();
+WHERE e.StartTime > GETDATE()
+ORDER BY r.TimeStamp DESC;
 
+//
 
+CREATE PROCEDURE CONFIRMED_HOUR_TOTALS_BY_USER
+@UserID int
+AS
+SELECT Count(*) As TotalRegistrations, 
+	(
+	SELECT SUM(DATEDIFF(hh, e.StartTime, e.EndTime)) 
+	FROM [dbo].Events e
+	JOIN [dbo].Registrations r
+	ON e.EventID = r.EventID 
+	WHERE r.UserID = @UserID AND r.Status = 5 AND DATEDIFF(DD, GETDATE(), e.StartTime) < 30
+	) AS TotalHoursLast30Days,
+	(
+	SELECT SUM(DATEDIFF(hh, e.StartTime, e.EndTime)) 
+	FROM [dbo].Events e
+	JOIN [dbo].Registrations r
+	ON e.EventID = r.EventID 
+	WHERE r.UserID = @UserID AND r.Status = 5 AND DATEDIFF(DD, GETDATE(), e.StartTime) < 60
+	) AS TotalHoursLast60Days,
+	(
+	SELECT SUM(DATEDIFF(hh, e.StartTime, e.EndTime)) 
+	FROM [dbo].Events e
+	JOIN [dbo].Registrations r
+	ON e.EventID = r.EventID 
+	WHERE r.UserID = @UserID AND r.Status = 5 AND DATEDIFF(DD, GETDATE(), e.StartTime) < 90
+	) AS TotalHoursLast90Days
+FROM [dbo].Registrations r
+WHERE r.Status = 5 AND r.UserID = @UserID;
+
+//
+
+CREATE PROCEDURE REGISTRATIONDETAILS
+@EventID int
+AS
+SELECT *
+FROM [dbo].Registrations r
+JOIN [dbo].Users u 
+ON r.UserID = u.UserId
+JOIN [dbo].LTRanks rk
+ON u.Rank = rk.RankId
+WHERE r.EventID = @EventID
+ORDER BY r.TimeStamp DESC;
+
+//
+
+CREATE PROCEDURE MY_EVENTS_VIEW
+@UserId int
+AS 
+SELECT *,
+	   DATEDIFF(hh, e.StartTime, e.EndTime) As TotalHours,
+	   (e.MaxStaff - (SELECT COUNT(*) FROM [dbo].[Registrations] r1 WHERE r1.EventID = e.EventID AND r1.[Status] = 5)) As AvailableStaff, 
+	   (SELECT COUNT(*) FROM [dbo].Registrations r2 WHERE r2.EventID = e.EventID) As TotalCurrentRegistrations 
+FROM [dbo].Events e
+WHERE e.StartTime > GETDATE() AND e.EnteredBy = @UserId
+ORDER BY e.StartTime DESC;

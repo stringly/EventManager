@@ -36,6 +36,12 @@
 			-Overtime
 			-Training
 			-???
+	-Handle Coordinator Groups?
+		-Junction table for UserID/EventID pairs to establish Coordinators?
+		-SQL can evaluate isCoordinator based on @userID param?
+			-Returns an IsEditable boolean into the resultList => viewModel, view renders fields based on this?
+		-Add field (SELECT List of all users?) to the Event Entry/Editing screens?
+
 
 -WORKFLOW:
 	Adding an event:
