@@ -175,6 +175,9 @@
     <Compile Include="AVAILABLE_EVENTS_BY_USERID_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CONFIRMED_HOUR_TOTALS_BY_USER_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Deprecated\Controllers\HomeController.cs" />
@@ -230,8 +233,14 @@
     <Compile Include="Models\Registration.cs" />
     <Compile Include="Models\RegistrationUpdateListItem.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="MY_EVENTS_VIEW_Result.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration.cs">
+      <DependentUpon>EventModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="REGISTRATIONDETAILS_Result.cs">
       <DependentUpon>EventModel.tt</DependentUpon>
     </Compile>
     <Compile Include="RegistrationStatus.cs">
@@ -250,6 +259,8 @@
     <Compile Include="ViewModels\AvailableEventsViewModel.cs" />
     <Compile Include="ViewModels\EventRegistrationViewModel.cs" />
     <Compile Include="ViewModels\EventsCalendarViewModel.cs" />
+    <Compile Include="ViewModels\ManageEventViewModel.cs" />
+    <Compile Include="ViewModels\MyEventsViewModel.cs" />
     <Compile Include="ViewModels\RegistrationsForUserViewModel.cs" />
     <Compile Include="ViewModels\UserInfoViewModel.cs" />
   </ItemGroup>
@@ -290,6 +301,8 @@
     <Content Include="Views\UserEventRegistration\Registrations.cshtml" />
     <Content Include="Views\Events\CalendarView.cshtml" />
     <Content Include="Views\Events\AllEvents.cshtml" />
+    <Content Include="Views\Events\MyEvents.cshtml" />
+    <Content Include="Views\Events\Manage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

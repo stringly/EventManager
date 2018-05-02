@@ -19,14 +19,6 @@ namespace EventManager.Controllers
     public class EventsController : Controller
     {
         private EVENTS_MGR_TESTING_Entities db = new EVENTS_MGR_TESTING_Entities();
-        //private int userID = Convert.ToInt32(System.Web.HttpContext.Current.Cache["userID"]);
-
-        //CALENDARVIEW METHODS - ASYNC
-        public ActionResult CalendarView()
-        {
-            TempData["pageUser"] = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1)); 
-            return View();
-        }
 
         public ActionResult AllEvents()
         {
@@ -34,6 +26,25 @@ namespace EventManager.Controllers
             return View(new EventService().GetAllEvents());
         }
 
+        public ActionResult MyEvents()
+        {
+            int userID = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            return View(new EventService().GetMyEvents(userID));
+        }
+
+        public ActionResult Manage(int eventID)
+        {
+            return View(new EventService().GetEventToManage(eventID));
+        }
+
+
+
+        //CALENDARVIEW METHODS - ASYNC
+        public ActionResult CalendarView()
+        {
+            TempData["pageUser"] = new UserService().GetUserIDFromLDAP(User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1));
+            return View();
+        }
 
         public JsonResult GetEvents()
         {
@@ -43,24 +54,7 @@ namespace EventManager.Controllers
                 var events = new EventService().GetCalendarEvents();
                 return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }        
 
         [HttpPost]
         public JsonResult SaveEvent(EventFormResult fr)
@@ -109,6 +103,7 @@ namespace EventManager.Controllers
 
             return new JsonResult { Data = new { status = status, message = ms.GenerateMessage() } };
         }
+
         [HttpPost]
         public JsonResult DeleteEvent(int eventID)
         {

@@ -112,5 +112,32 @@ namespace EventManager
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ALL_EVENTS_VIEW_Result>("ALL_EVENTS_VIEW");
         }
+    
+        public virtual ObjectResult<MY_EVENTS_VIEW_Result> MY_EVENTS_VIEW(Nullable<int> userId)
+        {
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<MY_EVENTS_VIEW_Result>("MY_EVENTS_VIEW", userIdParameter);
+        }
+    
+        public virtual ObjectResult<REGISTRATIONDETAILS_Result> REGISTRATIONDETAILS(Nullable<int> eventID)
+        {
+            var eventIDParameter = eventID.HasValue ?
+                new ObjectParameter("EventID", eventID) :
+                new ObjectParameter("EventID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<REGISTRATIONDETAILS_Result>("REGISTRATIONDETAILS", eventIDParameter);
+        }
+    
+        public virtual ObjectResult<CONFIRMED_HOUR_TOTALS_BY_USER_Result> CONFIRMED_HOUR_TOTALS_BY_USER(Nullable<int> userID)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<CONFIRMED_HOUR_TOTALS_BY_USER_Result>("CONFIRMED_HOUR_TOTALS_BY_USER", userIDParameter);
+        }
     }
 }

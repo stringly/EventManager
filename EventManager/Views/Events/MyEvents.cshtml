@@ -1,32 +1,30 @@
-﻿@model IEnumerable<EventManager.ViewModels.EventsViewModel>
+﻿@model IEnumerable<EventManager.ViewModels.MyEventsViewModel>
 
 @{
-    ViewBag.Title = "All Events";
+    ViewBag.Title = "MyEvents";
     Layout = "~/Views/Shared/_EventLayout.cshtml";
-
 }
 
+@section Sidebar{
+    <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
+        <!-- Sidebar Links -->
+        <ul class="list-unstyled components">
+            <li id="calendarSideBarButton"><a href="/Events/CalendarView" onclick="">Calendar View</a></li>
+            <li>
+                <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
+                <ul class="list-unstyled" id="eventManagementSubMenu">
+                    <li id="eventSideBarAll"><a href="/Events/AllEvents">Show All</a></li>
+                    <li id="eventSideBarOwnedByUser" class="active"><a href="/Events/MyEvents">My Events</a></li>
+                    @*<li id="registrationsSideBarPending"><a href="#">Find</a></li>
+                    <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
+                    <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>*@
+                </ul>
+        </ul>
+    </nav>}
 
-    @section Sidebar{
-        <nav id="sidebar" data-spy="affix" style="background-color:#151827; max-width:200px; min-height:100%">
-            <!-- Sidebar Links -->
-            <ul class="list-unstyled components">
-                <li id="calendarSideBarButton"><a href="/Events/CalendarView" onclick="">Calendar View</a></li>
-                <li>
-                    <a aria-expanded="false" class="active" href="#eventManagementSubMenu" data-toggle="collapse">List Views</a>
-                    <ul class="list-unstyled" id="eventManagementSubMenu">
-                        <li id="eventSideBarAll" class="active"><a href="/Events/AllEvents">Show All</a></li>
-                        <li id="eventSideBarOwnedByUser"><a href="/Events/MyEvents">My Events</a></li>
-                        <li id="registrationsSideBarPending"><a href="#">Find</a></li>
-                        <li id="registrationsSideBarStandby"><a href="#">TBD</a></li>
-                        <li id="registrationsSideBarDeclined"><a href="#">TBD</a></li>
-                        <li id="registrationsSideBarDeleted"><a href="#">TBD</a></li>
-                    </ul>
-            </ul>
-        </nav>}
-
-<h2>All Current Events</h2>
-<p>Shows all events currently in the system. This list excludes past events.  You can only edit events for which you are the designated Event Coordinator</p>
+<h2>My Events</h2>
+<p>Shows all events for which you are the designated Event Coordinator. This list excludes past events.</p>
 <p>
     <a style="color:blue; text-decoration:underline; cursor:pointer" onclick="OpenAddEventForm()">Create New Event</a>
 </p>
@@ -40,7 +38,7 @@
             var d = Convert.ToString(item.StartTime);
             DateTime dt = Convert.ToDateTime(d);
 
-            <div id="@item.EventID" class="fakeTable">
+            <div id="@item.EventID" class="fakeTable" >
                 <div class="fakeTable-row">
                     <div class="fakeTable-cell-icon-left"
                          onClick="ShowDetails(@item.EventID)"
@@ -48,7 +46,7 @@
                          data-trigger="hover"
                          data-placement="bottom"
                          data-content="Show Event Details">
-                        <span class="glyphicon glyphicon-calendar fakeTable-icon"></span>
+                        <span class="glyphicon glyphicon-calendar fakeTable-icon" style="color:@item.DisplayColor"></span>
                     </div>
                     <div class="fakeTable-cell" style="width:400px; vertical-align:middle">
                         <a href="#" onclick="ShowDetails(@item.EventID)">@item.EventName</a>
@@ -76,49 +74,30 @@
                               style="color:Highlight;">
                         </span>
                     </div>
-                    
-
-                    @if (item.EventOwnerID == Convert.ToInt32(TempData["pageUser"]))
-                    {
-                    <div class="fakeTable-cell-icon-group-right-2">                        
+                    <div class="fakeTable-cell-icon-group-right-2">
                         <div class="fakeTable-cell-icon">
                             <div class="fakeTable-cell-icon"
-                                 onClick="OpenEditForm(@item.EventID)"
-                                 data-toggle="popover"
-                                 data-trigger="hover"
-                                 data-placement="bottom"
-                                 data-content="Edit this event">
+                                    onClick="OpenEditForm(@item.EventID)"
+                                    data-toggle="popover"
+                                    data-trigger="hover"
+                                    data-placement="bottom"
+                                    data-content="Edit this event">
                                 <span class="glyphicon glyphicon-edit fakeTable-icon"
-                                      style="color:#099b15; font-weight:100"></span>
+                                        style="color:#099b15; font-weight:100"></span>
                             </div>
                         </div>
                         <div class="fakeTable-cell-icon">
                             <div class="fakeTable-cell-icon"
-                                 onClick=""
-                                 data-toggle="popover"
-                                 data-trigger="hover"
-                                 data-placement="bottom"
-                                 data-content="Go to event Management">
+                                    onClick="location.href='@Url.Action("Manage", "Events", new { eventID = @item.EventID } )'"
+                                    data-toggle="popover"
+                                    data-trigger="hover"
+                                    data-placement="bottom"
+                                    data-content="Go to event Management">
                                 <span class="glyphicon glyphicon-cog fakeTable-icon"
-                                      style="color:#acacac; font-weight:100"></span>
+                                        style="color:#acacac; font-weight:100"></span>
                             </div>
                         </div>
                     </div>
-                    }
-                    else
-                    {
-                        <div class="fakeTable-cell-icon-right">
-                            <div class="fakeTable-cell-icon"
-                                 onClick=""
-                                 data-toggle="popover"
-                                 data-trigger="hover"
-                                 data-placement="bottom"
-                                 data-content="Only the event coordinator can edit this event">
-                                <span class="glyphicon glyphicon-edit fakeTable-icon"
-                                      style="color:lightgray; font-weight:100"></span>
-                            </div>
-                        </div>
-                    }
                 </div>
                 <div id="@detailsRowID" class="fakeTable-details-row">
                     <div class="fakeTable-cell-icon-left" style="background-color:#ffffff; width:5%">
@@ -129,19 +108,18 @@
                         <p style="margin-bottom:0px">@item.StartTime to @item.EndTime</p>
                     </div>
                     <div class="fakeTable-cell" style="background-color:#d3d3d3;">
-                        <span style="text-decoration:underline; font-weight:bold">Description:</span>
-                        <p style="margin-bottom:0px">@item.Description</p>
+                        <span style="text-decoration:underline; font-weight:bold">Max/Min Staff</span>
+                        <p style="margin-bottom:0px">@item.MaxStaff/@item.MinStaff</p>
                     </div>
                     <div class="fakeTable-cell" style="background-color:#d3d3d3;">
-                        <span style="text-decoration:underline; font-weight:bold">Event Coordinator:</span>
-                        <p style="margin-bottom:0px">@item.EventOwner/@item.EventOwnerEmail</p>
+                        <span style="text-decoration:underline; font-weight:bold">Description:</span>
+                        <p style="margin-bottom:0px">@item.Description</p>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-
 @section scripts{
     <script>
         $(document).ready(function(){
